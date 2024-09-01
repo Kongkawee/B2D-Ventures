@@ -11,6 +11,9 @@ import Typography from '@mui/material/Typography';
 import FacebookIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/X';
+import ToggleColorMode from "./ToggleColorMode";
+import LogoLight from "../images/LogoLight.png";
+import LogoDark from "../images/LogoDark.png";
 
 const logoStyle = {
   width: '140px',
@@ -21,13 +24,13 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" mt={1}>
       {'Copyright © '}
-      <Link href="https://mui.com/">Sitemark&nbsp;</Link>
+      <Link href="">B2Dventures&nbsp;</Link>
       {new Date().getFullYear()}
     </Typography>
   );
 }
 
-export default function Footer() {
+export default function Footer({mode}) {
   return (
     <Container
       sx={{
@@ -58,11 +61,9 @@ export default function Footer() {
           <Box sx={{ width: { xs: '100%', sm: '60%' } }}>
             <Box sx={{ ml: '-15px' }}>
               <img
-                src={
-                  'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
-                }
+                src={mode === "light" ? LogoLight : LogoDark}
                 style={logoStyle}
-                alt="logo of sitemark"
+                alt="logo of b2d"
               />
             </Box>
             <Typography variant="body2" fontWeight={600} gutterBottom>
@@ -191,7 +192,7 @@ export default function Footer() {
         >
           <IconButton
             color="inherit"
-            href="https://github.com/mui"
+            href="https://github.com/Kongkawee/B2D-Ventures"
             aria-label="GitHub"
             sx={{ alignSelf: 'center' }}
           >
@@ -199,7 +200,7 @@ export default function Footer() {
           </IconButton>
           <IconButton
             color="inherit"
-            href="https://x.com/MaterialUI"
+            href="" //Link to X.com
             aria-label="X"
             sx={{ alignSelf: 'center' }}
           >
@@ -207,7 +208,7 @@ export default function Footer() {
           </IconButton>
           <IconButton
             color="inherit"
-            href="https://www.linkedin.com/company/mui/"
+            href="" //Link to linkedin.com
             aria-label="LinkedIn"
             sx={{ alignSelf: 'center' }}
           >
