@@ -84,7 +84,7 @@ export default function Testimonials() {
 
   return (
     <Container
-      id="testimonials"
+      id="hotdeals"
       sx={{
         pt: { xs: 4, sm: 12 },
         pb: { xs: 8, sm: 16 },

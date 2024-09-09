@@ -12,12 +12,13 @@ import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import ToggleColorMode from "./ToggleColorMode";
-import LogoLight from "../images/LogoLight.png";
-import LogoDark from "../images/LogoDark.png";
+import LogoLight from "../../../images/LogoLight.png";
+import LogoDark from "../../../images/LogoDark.png";
+import Search from "./Search";
 
 const logoStyle = {
   width: "100px",
-  // margin: '10px',
+  margin: '10px',
   height: "auto",
   cursor: "pointer",
 };
@@ -101,7 +102,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                   </Typography>
                 </MenuItem> */}
                 <MenuItem
-                  onClick={() => scrollToSection("testimonials")}
+                  onClick={() => scrollToSection("hotdeals")}
                   sx={{ py: "6px", px: "12px" }}
                 >
                   <Typography variant="body2" color="text.primary">
@@ -124,14 +125,14 @@ function AppAppBar({ mode, toggleColorMode }) {
                     Pricing
                   </Typography>
                 </MenuItem> */}
-                {/* <MenuItem
+                <MenuItem
                   onClick={() => scrollToSection('faq')}
                   sx={{ py: '6px', px: '12px' }}
                 >
                   <Typography variant="body2" color="text.primary">
                     FAQ
                   </Typography>
-                </MenuItem> */}
+                </MenuItem>
               </Box>
             </Box>
             <Box
@@ -141,13 +142,14 @@ function AppAppBar({ mode, toggleColorMode }) {
                 alignItems: "center",
               }}
             >
+              <Search />
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
               <Button
                 color="primary"
                 variant="text"
                 size="small"
                 component="a"
-                href="login"
+                href="sin"
                 // target="_blank"
               >
                 Log in
@@ -157,7 +159,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 variant="contained"
                 size="small"
                 component="a"
-                href="register"
+                href="sup"
                 // target="_blank"
               >
                 Register
@@ -198,8 +200,8 @@ function AppAppBar({ mode, toggleColorMode }) {
                   <MenuItem onClick={() => scrollToSection("features")}>
                     Features
                   </MenuItem>
-                  <MenuItem onClick={() => scrollToSection("testimonials")}>
-                    Testimonials
+                  <MenuItem onClick={() => scrollToSection("hotdeals")}>
+                    Hot Deals
                   </MenuItem>
                   <MenuItem onClick={() => scrollToSection("highlights")}>
                     Highlights
