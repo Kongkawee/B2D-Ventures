@@ -14,3 +14,10 @@ class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = Business
+
+
+class InvestmentSerializer(serializers.ModelSerializer):
+    """Serializer for Investment model."""
+    class Meta:
+        fields = "__all__"
+        model = Investment
