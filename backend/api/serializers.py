@@ -7,4 +7,10 @@ class InvestorSerializer(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = Investor
-        
+
+
+class BusinessSerializer(serializers.ModelSerializer):
+    """Serializer for Business model."""
+    class Meta:
+        fields = "__all__"
+        model = Business
