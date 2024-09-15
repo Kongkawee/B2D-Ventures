@@ -249,7 +249,7 @@ export default function SignUp() {
                   </span>
                 </Typography>
               </Box>
-              <Divider>
+              {/* <Divider>
                 <Typography sx={{ color: "text.secondary" }}>or</Typography>
               </Divider>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -271,7 +271,7 @@ export default function SignUp() {
                 >
                   Sign up with Facebook
                 </Button>
-              </Box>
+              </Box> */}
             </Card>
           </Stack>
         </SignUpContainer>

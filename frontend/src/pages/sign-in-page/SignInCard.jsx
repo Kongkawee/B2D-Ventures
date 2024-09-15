@@ -110,7 +110,7 @@ export default function SignInCard() {
             error={emailError}
             helperText={emailErrorMessage}
             id="email"
-            type="email"
+            // type="email"
             name="email"
             placeholder="your@email.com"
             autoComplete="email"
@@ -139,7 +139,7 @@ export default function SignInCard() {
             helperText={passwordErrorMessage}
             name="password"
             placeholder="••••••"
-            type="password"
+            // type="password"
             id="password"
             autoComplete="current-password"
             autoFocus
@@ -170,7 +170,7 @@ export default function SignInCard() {
           </span>
         </Typography>
       </Box>
-      <Divider>or</Divider>
+      {/* <Divider>or</Divider>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Button
           type="submit"
@@ -190,7 +190,7 @@ export default function SignInCard() {
         >
           Sign in with Facebook
         </Button>
-      </Box>
+      </Box> */}
     </Card>
   );
 }
