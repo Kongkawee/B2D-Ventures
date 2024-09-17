@@ -18,7 +18,7 @@ import Search from "./Search";
 
 const logoStyle = {
   width: "100px",
-  margin: '10px',
+  margin: "10px",
   height: "auto",
   cursor: "pointer",
 };
@@ -52,10 +52,10 @@ function AppAppBar({ mode, toggleColorMode }) {
           boxShadow: 0,
           bgcolor: "transparent",
           backgroundImage: "none",
-          mt: 2,
+          width: "100%",
         }}
       >
-        <Container maxWidth="lg">
+        <Container disableGutters maxWidth={false}>
           <Toolbar
             variant="regular"
             sx={(theme) => ({
@@ -63,12 +63,10 @@ function AppAppBar({ mode, toggleColorMode }) {
               alignItems: "center",
               justifyContent: "space-between",
               flexShrink: 0,
-              borderRadius: "999px",
               bgcolor:
                 theme.palette.mode === "light"
-                  ? "rgba(255, 255, 255, 0.4)"
-                  : "rgba(0, 0, 0, 0.4)",
-              backdropFilter: "blur(24px)",
+                  ? "white"
+                  : "black",
               maxHeight: 40,
               border: "1px solid",
               borderColor: "divider",
@@ -126,8 +124,8 @@ function AppAppBar({ mode, toggleColorMode }) {
                   </Typography>
                 </MenuItem> */}
                 <MenuItem
-                  onClick={() => scrollToSection('faq')}
-                  sx={{ py: '6px', px: '12px' }}
+                  onClick={() => scrollToSection("faq")}
+                  sx={{ py: "6px", px: "12px" }}
                 >
                   <Typography variant="body2" color="text.primary">
                     FAQ

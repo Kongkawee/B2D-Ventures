@@ -1,13 +1,13 @@
-import * as React from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
+import * as React from "react";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function FAQ() {
   const [expanded, setExpanded] = React.useState(false);
@@ -22,10 +22,10 @@ export default function FAQ() {
       sx={{
         pt: { xs: 4, sm: 12 },
         pb: { xs: 8, sm: 16 },
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         gap: { xs: 3, sm: 6 },
       }}
     >
@@ -34,16 +34,16 @@ export default function FAQ() {
         variant="h4"
         color="text.primary"
         sx={{
-          width: { sm: '100%', md: '60%' },
-          textAlign: { sm: 'left', md: 'center' },
+          width: { sm: "100%", md: "60%" },
+          textAlign: { sm: "left", md: "center" },
         }}
       >
         Frequently asked questions
       </Typography>
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: "100%" }}>
         <Accordion
-          expanded={expanded === 'panel1'}
-          onChange={handleChange('panel1')}
+          expanded={expanded === "panel1"}
+          onChange={handleChange("panel1")}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -58,18 +58,17 @@ export default function FAQ() {
             <Typography
               variant="body2"
               gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
+              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
               You can reach our customer support team by emailing
-              <Link> b2dsupportteam@email.com </Link>
-              . We&apos;re here to assist you
-              promptly.
+              <Link> b2dsupportteam@email.com </Link>. We&apos;re here to assist
+              you promptly.
             </Typography>
           </AccordionDetails>
         </Accordion>
         <Accordion
-          expanded={expanded === 'panel2'}
-          onChange={handleChange('panel2')}
+          expanded={expanded === "panel2"}
+          onChange={handleChange("panel2")}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -84,16 +83,16 @@ export default function FAQ() {
             <Typography
               variant="body2"
               gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
+              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              We allow businesses to open fundraising and give 
-              the investors opportunities to invest in any open deals.
+              We allow businesses to open fundraising and give the investors
+              opportunities to invest in any open deals.
             </Typography>
           </AccordionDetails>
         </Accordion>
         <Accordion
-          expanded={expanded === 'panel3'}
-          onChange={handleChange('panel3')}
+          expanded={expanded === "panel3"}
+          onChange={handleChange("panel3")}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -108,17 +107,18 @@ export default function FAQ() {
             <Typography
               variant="body2"
               gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
+              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              Our application distinguishes itself through its adaptability, 
-              durability, and innovative features. We prioritize user satisfaction 
-              and continually strive to exceed expectations in every aspect.
+              Our application distinguishes itself through its adaptability,
+              durability, and innovative features. We prioritize user
+              satisfaction and continually strive to exceed expectations in
+              every aspect.
             </Typography>
           </AccordionDetails>
         </Accordion>
         <Accordion
-          expanded={expanded === 'panel4'}
-          onChange={handleChange('panel4')}
+          expanded={expanded === "panel4"}
+          onChange={handleChange("panel4")}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -126,20 +126,18 @@ export default function FAQ() {
             id="panel4d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              How can I know the business I&apos;m 
-              looking to is exists?
+              How can I know the business I&apos;m looking to is exists?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography
               variant="body2"
               gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
+              sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              With our business registration system, we have a 
-              serious concern about ensuring reliability across 
-              all businesses. Therefore, we conduct a thorough 
-              business insight analysis beforehand.
+              With our business registration system, we have a serious concern
+              about ensuring reliability across all businesses. Therefore, we
+              conduct a thorough business insight analysis beforehand.
             </Typography>
           </AccordionDetails>
         </Accordion>
