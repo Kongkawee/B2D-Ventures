@@ -1,9 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
@@ -14,7 +11,7 @@ import ToggleColorMode from './components/ToggleColorMode';
 import getCheckoutTheme from './theme/getCheckoutTheme';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  position: 'relative',
+  position: 'fixed',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -29,15 +26,10 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 }));
 
 function TemplateFrame({
-  showCustomTheme,
-  toggleCustomTheme,
   mode,
   toggleColorMode,
   children,
 }) {
-  const handleChange = (event) => {
-    toggleCustomTheme(event.target.value === 'custom');
-  };
   const checkoutTheme = createTheme(getCheckoutTheme(mode));
 
   return (
@@ -75,19 +67,6 @@ function TemplateFrame({
               <ArrowBackRoundedIcon />
             </IconButton>
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <FormControl variant="outlined" sx={{ minWidth: 180 }}>
-                <Select
-                  size="small"
-                  labelId="theme-select-label"
-                  id="theme-select"
-                  value={showCustomTheme ? 'custom' : 'material'}
-                  onChange={handleChange}
-                  label="Design Language"
-                >
-                  <MenuItem value="custom">Custom Theme</MenuItem>
-                  <MenuItem value="material">Material Design 2</MenuItem>
-                </Select>
-              </FormControl>
               <ToggleColorMode
                 data-screenshot="toggle-mode"
                 mode={mode}

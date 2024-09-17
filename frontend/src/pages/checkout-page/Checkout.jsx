@@ -17,12 +17,11 @@ import InvesmentForm from './components/InvestmentForm';
 import getCheckoutTheme from './theme/getCheckoutTheme';
 import Info from './components/Info';
 import InfoMobile from './components/InfoMobile';
-import PaymentForm from './components/PaymentForm';
 import Review from './components/Review';
 import RisksAcceptance from './components/RisksAcceptance';
 import TemplateFrame from './TemplateFrame';
 
-const steps = ['Invest detail', 'Risks acceptance', 'Payment details', 'Review your investment'];
+const steps = ['Invest detail', 'Risks acceptance', 'Review your investment'];
 function getStepContent(step) {
   switch (step) {
     case 0:
@@ -30,8 +29,6 @@ function getStepContent(step) {
     case 1:
       return <RisksAcceptance />;
     case 2:
-      return <PaymentForm />;
-    case 3:
       return <Review />;
     default:
       throw new Error('Unknown step');
@@ -96,7 +93,7 @@ export default function Checkout() {
               gap: 4,
             }}
           >
-            {/* <SitemarkIcon /> */} Icon of the business
+            {/* <BusinessIcon /> */}
             <Box
               sx={{
                 display: 'flex',
@@ -223,6 +220,7 @@ export default function Checkout() {
                   <Button
                     variant="contained"
                     sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }}
+                    href='/'
                   >
                     Go to my orders
                   </Button>
