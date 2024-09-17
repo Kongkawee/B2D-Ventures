@@ -11,8 +11,8 @@ const business = [
   {
     logo: 'This is logo',
     pic: 'picture path',
-    title: 'Business Title',
-    min_invest: '10.00',
+    title: 'Pressman Film',
+    min_invest: '200.00',
   }
 ];
 
@@ -31,7 +31,7 @@ function Info() {
             <Card sx={{py: 0, px:0 }}>
               <CardMedia 
                 component="img"
-                image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+                image="https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png"
                 alt='Business Pics'
               />
             </Card>
