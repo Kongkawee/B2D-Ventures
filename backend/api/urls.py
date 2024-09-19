@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import main
+from . import views
 
 urlpatterns = [
-    path('', main),
-    path('home', main)
+    path('', views.ListInvestor.as_view()),
+    path('<int:pk>/', views.DetailInvestor.as_view()),
 ]
