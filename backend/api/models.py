@@ -14,7 +14,7 @@ class Investor(models.Model):
 class Business(models.Model):
     """Business Model represents the business, containing their company and business details"""
     company_name = models.CharField(max_length=100)
-    business_name = models.CharField(max_length=100)
+    business_name = models.CharField(max_length=80)
     email = models.EmailField(blank=False, null=False)
     phone_number = models.CharField(max_length=10, blank=False, null=False)
     publish_date = models.DateTimeField()
