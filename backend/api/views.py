@@ -1,6 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framewrk import generics
+from .models import Investor
+from .serializers import InvestorSerializer
 
-# Create your views here.
-def main(request):
-    return HttpResponse("<h1>Hello</h1>")
+class ListInvestor(generics.ListCreateAPIView):
+    queryset = Hero.objects.all()
+    serializer_class = InvestorSerializer
+    
+class DetailHero(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Hero.objects.all()
+    serializer_class = HeroSerializer 
+    
