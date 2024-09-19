@@ -14,16 +14,16 @@ class Investor(models.Model):
 class Business(models.Model):
     """Business Model represents the business, containing their company and business details"""
     company_name = models.CharField(max_length=100)
-    business_name = models.CharField(max_length=100)
+    business_name = models.CharField(max_length=80)
     email = models.EmailField(blank=False, null=False)
     phone_number = models.CharField(max_length=10, blank=False, null=False)
     publish_date = models.DateTimeField()
     end_date = models.DateTimeField()
     description = models.TextField()
-    goal = models.DecimalField()
-    min_investment = models.DecimalField()
-    max_investment = models.DecimalField()
-    current_investment = models.DecimalField()
+    goal = models.DecimalField(max_digits=4, decimal_places=2)
+    min_investment = models.DecimalField(max_digits=4, decimal_places=2)
+    max_investment = models.DecimalField(max_digits=4, decimal_places=2)
+    current_investment = models.DecimalField(max_digits=4, decimal_places=2)
     shares_detail = models.CharField(max_length=100)
     status = models.CharField(max_length=50)
 
