@@ -96,7 +96,8 @@ export default function SignUp() {
   const validateInputs = () => {
     const email = document.getElementById("email");
     const password = document.getElementById("password");
-    const name = document.getElementById("name");
+    const firstname = document.getElementById("firstname");
+    const lastname = document.getElementById("lastname");
 
     let isValid = true;
 
@@ -118,9 +119,18 @@ export default function SignUp() {
       setPasswordErrorMessage("");
     }
 
-    if (!name.value || name.value.length < 1) {
+    if (!firstname.value || firstname.value.length < 1) {
       setNameError(true);
-      setNameErrorMessage("Name is required.");
+      setNameErrorMessage("First name is required.");
+      isValid = false;
+    } else {
+      setNameError(false);
+      setNameErrorMessage("");
+    }
+
+    if (!lastname.value || lastname.value.length < 1) {
+      setNameError(true);
+      setNameErrorMessage("Last ame is required.");
       isValid = false;
     } else {
       setNameError(false);
@@ -134,8 +144,9 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      name: data.get("name"),
+      firstName: data.get("firstName"),
       lastName: data.get("lastName"),
+      phoneNumber: data.get("phoneNumber"),
       email: data.get("email"),
       password: data.get("password"),
     });
@@ -176,18 +187,49 @@ export default function SignUp() {
                 onSubmit={handleSubmit}
                 sx={{ display: "flex", flexDirection: "column", gap: 2 }}
               >
-                <FormControl>
-                  <FormLabel htmlFor="name">Full name</FormLabel>
+                <Box
+                  component="form"
+                  sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}
+                >
+                  <FormControl sx={{ flexGrow: 1 }}>
+                  <FormLabel htmlFor="firstname">First Name</FormLabel>
                   <TextField
-                    autoComplete="name"
-                    name="name"
+                    autoComplete="firstname"
+                    name="firstname"
                     required
                     fullWidth
-                    id="name"
-                    placeholder="Jon Snow"
+                    id="firstname"
+                    placeholder="First Name"
                     error={nameError}
                     helperText={nameErrorMessage}
                     color={nameError ? "error" : "primary"}
+                  />
+                </FormControl>
+                <FormControl sx={{ flexGrow: 1 }}>
+                  <FormLabel htmlFor="lastname">Last Name</FormLabel>
+                  <TextField
+                    autoComplete="lastname"
+                    name="lastname"
+                    required
+                    fullWidth
+                    id="lastname"
+                    placeholder="Last Name"
+                    error={nameError}
+                    helperText={nameErrorMessage}
+                    color={nameError ? "error" : "primary"}
+                  />
+                </FormControl>
+                </Box>
+                <FormControl>
+                  <FormLabel htmlFor="phonenumber">Phone Number</FormLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    id="phonenumber"
+                    placeholder="0123456789"
+                    name="phonenumber"
+                    autoComplete="phonenumber"
+                    variant="outlined"
                   />
                 </FormControl>
                 <FormControl>
@@ -211,7 +253,7 @@ export default function SignUp() {
                     required
                     fullWidth
                     name="password"
-                    placeholder="••••••"
+                    placeholder="•••••••••"
                     type="password"
                     id="password"
                     autoComplete="new-password"
