@@ -51,7 +51,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 
 const logoStyle = {
   width: "100px",
-  margin: '10px',
+  margin: "10px",
   height: "auto",
   cursor: "pointer",
 };
@@ -149,11 +149,18 @@ export default function BusinessRegistration() {
           <Stack
             sx={{
               justifyContent: "center",
-              height: "100dvh",
               p: 2,
+              flexDirection: "row", // Set the Stack to row direction
+              flexWrap: "wrap", // Allow wrapping to create two columns
+              gap: 2, // Add some gap between the items
             }}
           >
-            <Card variant="outlined">
+            <Card
+              variant="outlined"
+              sx={{ width: { xs: "100%", sm: "100%" }, maxWidth: "none" }}
+            >
+              {" "}
+              {/* Ensure card takes full width */}
               <img
                 src={mode === "light" ? LogoLight : LogoDark}
                 style={logoStyle}
@@ -169,9 +176,16 @@ export default function BusinessRegistration() {
               <Box
                 component="form"
                 onSubmit={handleSubmit}
-                sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  gap: 2,
+                }}
               >
-                <FormControl>
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  {" "}
+                  {/* Adjust width for 2-column layout */}
                   <FormLabel htmlFor="name">Company name</FormLabel>
                   <TextField
                     autoComplete="name"
@@ -179,13 +193,13 @@ export default function BusinessRegistration() {
                     required
                     fullWidth
                     id="name"
-                    placeholder="Jon Snow"
+                    placeholder="Company Name"
                     error={nameError}
                     helperText={nameErrorMessage}
                     color={nameError ? "error" : "primary"}
                   />
                 </FormControl>
-                <FormControl>
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
                   <FormLabel htmlFor="name">Business name</FormLabel>
                   <TextField
                     autoComplete="name"
@@ -193,13 +207,14 @@ export default function BusinessRegistration() {
                     required
                     fullWidth
                     id="name"
-                    placeholder="Jon Snow"
+                    placeholder="Business Name"
                     error={nameError}
                     helperText={nameErrorMessage}
                     color={nameError ? "error" : "primary"}
                   />
                 </FormControl>
-                <FormControl>
+
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
                   <FormLabel htmlFor="email">Business Email</FormLabel>
                   <TextField
                     required
@@ -211,98 +226,107 @@ export default function BusinessRegistration() {
                     variant="outlined"
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="email">Business Phone Number</FormLabel>
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  <FormLabel htmlFor="phone">Business Phone Number</FormLabel>
                   <TextField
                     required
                     fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
+                    id="phone"
+                    placeholder="123-456-7890"
+                    name="phone"
+                    autoComplete="tel"
                     variant="outlined"
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="email">Fundraise Publish Date</FormLabel>
+
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  <FormLabel htmlFor="publishDate">
+                    Fundraise Publish Date
+                  </FormLabel>
                   <TextField
                     required
                     fullWidth
-                    id="email"
+                    id="publishDate"
                     type="date"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
+                    name="publishDate"
                     variant="outlined"
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="email">Fundraise Deadline Date</FormLabel>
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  <FormLabel htmlFor="deadlineDate">
+                    Fundraise Deadline Date
+                  </FormLabel>
                   <TextField
                     required
                     fullWidth
-                    id="email"
+                    id="deadlineDate"
                     type="date"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
+                    name="deadlineDate"
                     variant="outlined"
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="email">Fundraise Goal</FormLabel>
+
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  <FormLabel htmlFor="goal">Fundraise Goal</FormLabel>
                   <TextField
                     required
                     fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
+                    id="goal"
+                    placeholder="100,000"
+                    name="goal"
+                    autoComplete="off"
                     variant="outlined"
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="email">Minimum Investment</FormLabel>
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  <FormLabel htmlFor="minInvestment">
+                    Minimum Investment
+                  </FormLabel>
                   <TextField
                     required
                     fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
+                    id="minInvestment"
+                    placeholder="1,000"
+                    name="minInvestment"
+                    autoComplete="off"
                     variant="outlined"
                   />
                 </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="email">Maximum Investment</FormLabel>
+
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  <FormLabel htmlFor="maxInvestment">
+                    Maximum Investment
+                  </FormLabel>
                   <TextField
                     required
                     fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
+                    id="maxInvestment"
+                    placeholder="10,000"
+                    name="maxInvestment"
+                    autoComplete="off"
                     variant="outlined"
                   />
                 </FormControl>
-                <FormControl>
+                <FormControl sx={{ width: "calc(50% - 16px)" }}>
                   <FormLabel htmlFor="password">Password</FormLabel>
                   <TextField
                     required
                     fullWidth
                     name="password"
-                    placeholder="••••••"
+                    placeholder="••••••••"
                     type="password"
                     id="password"
                     autoComplete="new-password"
                     variant="outlined"
                   />
                 </FormControl>
+
                 <FormControlLabel
+                  sx={{ width: "100%" }} // Full width for the checkbox
                   control={
                     <Checkbox value="allowExtraEmails" color="primary" />
                   }
-                  label="I want to receive updates via email."
+                  label="I have read and agreed the Terms of Service."
                 />
                 <Button
                   type="submit"
