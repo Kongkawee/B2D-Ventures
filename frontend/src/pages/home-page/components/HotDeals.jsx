@@ -99,6 +99,7 @@ export default function HotDeals() {
           width: { sm: "100%", md: "20%" },
           textAlign: { sm: "left", md: "center" },
         }}
+        href="explore"
       >
         View All
       </Button>
