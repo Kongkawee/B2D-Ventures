@@ -7,7 +7,7 @@ import SignUp from "./pages/sign-up-page/SignUp"
 import SignInSide from "./pages/sign-in-page/SignInSide"
 import Checkout from "./pages/checkout-page/Checkout"
 import BusinessInfo from "./pages/business-info-page/Business"
-// import BusinessExplorationPage from "./pages/business-exploration-page/BusinessExploration"
+import BusinessExplorationPage from "./pages/business-exploration-page/BusinessExploration"
 
 function Logout() {
   localStorage.clear()
@@ -29,7 +29,7 @@ function App() {
         <Route path="/sup" element={<RegisterAndLogout />} /> Sign up Page
         <Route path="/checkout" element={<Checkout/>} /> Checkout
         <Route path="/bus" element={<BusinessInfo />} /> Business info Page
-        {/* <Route path="/explore" element={<BusinessExplorationPage />} /> Business exploration Page */}
+        <Route path="/explore" element={<BusinessExplorationPage />} /> Business exploration Page
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
