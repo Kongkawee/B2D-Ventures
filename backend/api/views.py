@@ -36,3 +36,4 @@ def login_investor(request):
         return Response({'refresh': str(refresh), 'access': str(refresh.access_token)})
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    
