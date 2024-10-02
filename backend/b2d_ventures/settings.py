@@ -156,3 +156,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWs_CREDENTIALS = True
+CSRF_COOKIE_NAME = "csrftoken"
