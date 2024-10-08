@@ -54,6 +54,66 @@ def login_investor(request):
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
     
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_business(request):
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.create_user(username=username, email=email, password=password)
+    user.save()
+
+    business = Business.objects.create(
+        user=user,
+        company_name=request.data.get('companyName'),
+        business_name=request.data.get('businessName'),
+        email=email,
+        phone_number=request.data.get('phoneNumber'),
+        publish_date=request.data.get('publishDate'),
+        end_date=request.data.get('endDate'),
+        description=request.data.get('description'),
+        goal=request.data.get('goal'),
+        min_investment=request.data.get('minInvestment'),
+        max_investment=request.data.get('maxInvestment'),
+        current_investment=request.data.get('currentInvestment'),
+        shares_detail=request.data.get('sharesDetail'),
+        status=request.data.get('status')
+    )
+
+    # Generate JWT tokens
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'refresh': str(refresh),
+        'access': str(refresh.access_token)
+    }, status=status.HTTP_201_CREATED)
+  
+  
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_business(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        try:
+            business = Business.objects.get(user=user)
+        except Business.DoesNotExist:
+            return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token)
+        })
+    else:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
 class ListInvestor(generics.ListCreateAPIView):
     queryset = Investor.objects.all()
     serializer_class = InvestorSerializer
@@ -82,5 +142,4 @@ class ListInvestment(generics.ListCreateAPIView):
 class DetailInvestment(generics.RetrieveUpdateDestroyAPIView):
     queryset = Investment.objects.all()
     serializer_class = BusinessSerializer 
-
 
