@@ -69,12 +69,17 @@ const businessDeals = [
   },
 ];
 
-export default function ShowDeals() {
-  const [visibleDeals, setVisibleDeals] = useState(3); // Initially show 15 deals (Changed to 3 for tests)
+export default function ShowDeals({ searchTerm }) {
+  const [visibleDeals, setVisibleDeals] = useState(3);
 
   const handleViewMore = () => {
-    setVisibleDeals((prev) => prev + 3); // Show 15 more deals when clicked (Changed to 3 for tests)
+    setVisibleDeals((prev) => prev + 3);
   };
+
+  // Filter the business deals based on the search term
+  const filteredDeals = businessDeals.filter((deal) =>
+    deal.businessTitle.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Container
@@ -89,9 +94,8 @@ export default function ShowDeals() {
         gap: { xs: 3, sm: 6 },
       }}
     >
-      {/* Grid for responsive layout */}
       <Grid container spacing={4} justifyContent="center" columns={9}>
-        {businessDeals.slice(0, visibleDeals).map((deal, index) => (
+        {filteredDeals.slice(0, visibleDeals).map((deal, index) => (
           <Grid item size={{ sm: 12, md: 3 }} xs={12} sm={6} md={4} key={index}>
             <BusinessCard
               businessTitle={deal.businessTitle}
@@ -106,7 +110,7 @@ export default function ShowDeals() {
           </Grid>
         ))}
       </Grid>
-      {visibleDeals < businessDeals.length && (
+      {visibleDeals < filteredDeals.length && (
         <Button
           fullWidth
           variant="outlined"
