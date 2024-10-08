@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -13,11 +12,12 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import axios from "axios";
 import getSignUpTheme from "./theme/getSignUpTheme";
-import { GoogleIcon, FacebookIcon } from "./CustomIcons";
 import TemplateFrame from "./TemplateFrame";
 import LogoLight from "../../images/LogoLight.png";
 import LogoDark from "../../images/LogoDark.png";
+import { useNavigate } from "react-router-dom";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -52,7 +52,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 
 const logoStyle = {
   width: "100px",
-  margin: '10px',
+  margin: "10px",
   height: "auto",
   cursor: "pointer",
 };
@@ -68,14 +68,15 @@ export default function SignUp() {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState("");
+  const [phoneError, setPhoneError] = React.useState(false);
+  const [phoneErrorMessage, setPhoneErrorMessage] = React.useState("");
+
   // This code only runs on the client side, to determine the system color preference
   React.useEffect(() => {
-    // Check if there is a preferred mode in localStorage
     const savedMode = localStorage.getItem("themeMode");
     if (savedMode) {
       setMode(savedMode);
     } else {
-      // If no preference is found, it uses system preference
       const systemPrefersDark = window.matchMedia(
         "(prefers-color-scheme: dark)"
       ).matches;
@@ -86,7 +87,7 @@ export default function SignUp() {
   const toggleColorMode = () => {
     const newMode = mode === "dark" ? "light" : "dark";
     setMode(newMode);
-    localStorage.setItem("themeMode", newMode); // Save the selected mode to localStorage
+    localStorage.setItem("themeMode", newMode);
   };
 
   const toggleCustomTheme = () => {
@@ -94,13 +95,15 @@ export default function SignUp() {
   };
 
   const validateInputs = () => {
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const name = document.getElementById("name");
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const firstname = document.getElementById("firstname").value;
+    const lastname = document.getElementById("lastname").value;
+    const phoneNumber = document.getElementById("phonenumber").value;
 
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError(true);
       setEmailErrorMessage("Please enter a valid email address.");
       isValid = false;
@@ -109,7 +112,7 @@ export default function SignUp() {
       setEmailErrorMessage("");
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!password || password.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage("Password must be at least 6 characters long.");
       isValid = false;
@@ -118,27 +121,69 @@ export default function SignUp() {
       setPasswordErrorMessage("");
     }
 
-    if (!name.value || name.value.length < 1) {
+    if (!firstname || firstname.length < 1) {
       setNameError(true);
-      setNameErrorMessage("Name is required.");
+      setNameErrorMessage("First name is required.");
       isValid = false;
     } else {
       setNameError(false);
       setNameErrorMessage("");
     }
 
+    if (!lastname || lastname.length < 1) {
+      setNameError(true);
+      setNameErrorMessage("Last name is required.");
+      isValid = false;
+    } else {
+      setNameError(false);
+      setNameErrorMessage("");
+    }
+
+    if (!phoneNumber || !/^\d{10}$/.test(phoneNumber)) {
+      setPhoneError(true);
+      setPhoneErrorMessage("Please enter a valid 10-digit phone number.");
+      isValid = false;
+    } else {
+      setPhoneError(false);
+      setPhoneErrorMessage("");
+    }
+
     return isValid;
   };
 
+  const navigate = useNavigate();
+  const csrfToken = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrftoken"))
+    ?.split("=")[1];
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get("name"),
-      lastName: data.get("lastName"),
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (validateInputs()) {
+      const data = new FormData(event.currentTarget);
+      const formData = {
+        username: data.get("email"), // Ensure username is passed
+        firstName: data.get("firstname"),
+        lastName: data.get("lastname"),
+        phoneNumber: data.get("phonenumber"),
+        email: data.get("email"),
+        password: data.get("password"),
+      };
+
+      axios
+        .post("http://127.0.0.1:8000/api/register/", formData, {
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+        })
+        .then((response) => {
+          console.log("User registered successfully:", response.data);
+          navigate("/");
+        })
+        .catch((error) => {
+          console.error("Error registering user:", error);
+        });
+    }
   };
 
   return (
@@ -176,18 +221,53 @@ export default function SignUp() {
                 onSubmit={handleSubmit}
                 sx={{ display: "flex", flexDirection: "column", gap: 2 }}
               >
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 2,
+                    width: "100%",
+                  }}
+                >
+                  <FormControl sx={{ flexGrow: 1 }}>
+                    <FormLabel htmlFor="firstname">First Name</FormLabel>
+                    <TextField
+                      autoComplete="firstname"
+                      name="firstname"
+                      required
+                      fullWidth
+                      id="firstname"
+                      placeholder="First Name"
+                      error={nameError}
+                      helperText={nameErrorMessage}
+                    />
+                  </FormControl>
+                  <FormControl sx={{ flexGrow: 1 }}>
+                    <FormLabel htmlFor="lastname">Last Name</FormLabel>
+                    <TextField
+                      autoComplete="lastname"
+                      name="lastname"
+                      required
+                      fullWidth
+                      id="lastname"
+                      placeholder="Last Name"
+                      error={nameError}
+                      helperText={nameErrorMessage}
+                    />
+                  </FormControl>
+                </Box>
                 <FormControl>
-                  <FormLabel htmlFor="name">Full name</FormLabel>
+                  <FormLabel htmlFor="phonenumber">Phone Number</FormLabel>
                   <TextField
-                    autoComplete="name"
-                    name="name"
                     required
                     fullWidth
-                    id="name"
-                    placeholder="Jon Snow"
-                    error={nameError}
-                    helperText={nameErrorMessage}
-                    color={nameError ? "error" : "primary"}
+                    id="phonenumber"
+                    placeholder="0123456789"
+                    name="phonenumber"
+                    autoComplete="phonenumber"
+                    variant="outlined"
+                    error={phoneError}
+                    helperText={phoneErrorMessage}
                   />
                 </FormControl>
                 <FormControl>
@@ -202,7 +282,6 @@ export default function SignUp() {
                     variant="outlined"
                     error={emailError}
                     helperText={emailErrorMessage}
-                    color={passwordError ? "error" : "primary"}
                   />
                 </FormControl>
                 <FormControl>
@@ -211,14 +290,13 @@ export default function SignUp() {
                     required
                     fullWidth
                     name="password"
-                    placeholder="••••••"
+                    placeholder="•••••••••"
                     type="password"
                     id="password"
                     autoComplete="new-password"
                     variant="outlined"
                     error={passwordError}
                     helperText={passwordErrorMessage}
-                    color={passwordError ? "error" : "primary"}
                   />
                 </FormControl>
                 <FormControlLabel
@@ -232,46 +310,16 @@ export default function SignUp() {
                   fullWidth
                   variant="contained"
                   onClick={validateInputs}
-                  href="/"
                 >
                   Sign up
                 </Button>
                 <Typography sx={{ textAlign: "center" }}>
                   Already have an account?{" "}
-                  <span>
-                    <Link
-                      href="/sin"
-                      variant="body2"
-                      sx={{ alignSelf: "center" }}
-                    >
-                      Sign in
-                    </Link>
-                  </span>
+                  <Link href="/signin" variant="body2">
+                    Sign in
+                  </Link>
                 </Typography>
               </Box>
-              {/* <Divider>
-                <Typography sx={{ color: "text.secondary" }}>or</Typography>
-              </Divider>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => alert("Sign up with Google")}
-                  startIcon={<GoogleIcon />}
-                >
-                  Sign up with Google
-                </Button>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => alert("Sign up with Facebook")}
-                  startIcon={<FacebookIcon />}
-                >
-                  Sign up with Facebook
-                </Button>
-              </Box> */}
             </Card>
           </Stack>
         </SignUpContainer>
