@@ -24,7 +24,7 @@ const logoStyle = {
   cursor: "pointer",
 };
 
-function AppAppBar({ mode, toggleColorMode }) {
+function AppAppBar({ mode, toggleColorMode, setSearchTerm }) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -93,7 +93,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 alignItems: "center",
               }}
             >
-              <Search />
+              <Search setSearchTerm={setSearchTerm} />
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
             </Box>
             <Box sx={{ display: { sm: "", md: "none" } }}>
@@ -130,7 +130,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                   </Box>
                   <Divider />
                   <MenuItem>
-                    <Search />
+                    <Search setSearchTerm={setSearchTerm} />
                   </MenuItem>
                 </Box>
               </Drawer>
