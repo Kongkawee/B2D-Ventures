@@ -6,40 +6,16 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import getSignUpTheme from "./theme/getSignUpTheme";
+import getSignUpTheme from "./theme/getBusinessRegistrationTheme";
 import TemplateFrame from "./TemplateFrame";
 import LogoLight from "../../images/LogoLight.png";
 import LogoDark from "../../images/LogoDark.png";
-import GeneralInformationForm from "./components/GeneralInformationForm";
-import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
 
-const steps = [
-  "General information",
-  "Business insight",
-  "Review registration order",
-];
-
-function getStepContent(step, formData, handleChange, errors) {
-  switch (step) {
-    case 0:
-      return (
-        <GeneralInformationForm
-          formData={formData}
-          handleChange={handleChange}
-          errors={errors}
-        />
-      );
-    case 1:
-      return <Typography>Business Insight Form (Placeholder)</Typography>;
-    case 2:
-      return <Typography>Review Registration (Placeholder)</Typography>;
-    default:
-      throw new Error("Unknown step");
-  }
-}
-
-// Styled Card for form layout
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -59,7 +35,6 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
-// Container styling
 const FormContainer = styled(Stack)(({ theme }) => ({
   height: "100%",
   padding: 4,
@@ -72,7 +47,6 @@ const FormContainer = styled(Stack)(({ theme }) => ({
   }),
 }));
 
-// Logo styling
 const logoStyle = {
   width: "100px",
   margin: "10px",
@@ -85,10 +59,10 @@ export default function BusinessRegistration() {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
   const SignUpTheme = createTheme(getSignUpTheme(mode));
-  const [activeStep, setActiveStep] = React.useState(0);
 
   // State for managing form data
   const [formData, setFormData] = React.useState({
+    // General Information
     companyName: "",
     businessName: "",
     email: "",
@@ -141,14 +115,6 @@ export default function BusinessRegistration() {
     }
   }, []);
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
   const toggleColorMode = () => {
     const newMode = mode === "dark" ? "light" : "dark";
     setMode(newMode);
@@ -167,173 +133,170 @@ export default function BusinessRegistration() {
     }));
   };
 
-  // Validation function for handling errors based on the current step
+  // Validation function for handling errors
   const validateInputs = () => {
     let isValid = true;
     let newErrors = { ...errors }; // Clone the current errors
 
-    if (activeStep === 0) {
-      // General Information Validation
-      // Company Name validation
-      if (!formData.companyName.trim()) {
-        newErrors.companyNameError = true;
-        newErrors.companyNameErrorMessage = "Company name is required.";
-        isValid = false;
-      } else {
-        newErrors.companyNameError = false;
-        newErrors.companyNameErrorMessage = "";
-      }
+    // General Information Validation
 
-      // Business Name validation
-      if (!formData.businessName.trim()) {
-        newErrors.businessNameError = true;
-        newErrors.businessNameErrorMessage = "Business name is required.";
-        isValid = false;
-      } else {
-        newErrors.businessNameError = false;
-        newErrors.businessNameErrorMessage = "";
-      }
+    // Company Name validation
+    if (!formData.companyName.trim()) {
+      newErrors.companyNameError = true;
+      newErrors.companyNameErrorMessage = "Company name is required.";
+      isValid = false;
+    } else {
+      newErrors.companyNameError = false;
+      newErrors.companyNameErrorMessage = "";
+    }
 
-      // Email validation
-      if (!formData.email.trim()) {
-        newErrors.emailError = true;
-        newErrors.emailErrorMessage = "Email is required.";
-        isValid = false;
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.emailError = true;
-        newErrors.emailErrorMessage = "Please enter a valid email address.";
-        isValid = false;
-      } else {
-        newErrors.emailError = false;
-        newErrors.emailErrorMessage = "";
-      }
+    // Business Name validation
+    if (!formData.businessName.trim()) {
+      newErrors.businessNameError = true;
+      newErrors.businessNameErrorMessage = "Business name is required.";
+      isValid = false;
+    } else {
+      newErrors.businessNameError = false;
+      newErrors.businessNameErrorMessage = "";
+    }
 
-      // Phone validation
-      if (!formData.phone.trim()) {
-        newErrors.phoneError = true;
-        newErrors.phoneErrorMessage = "Phone number is required.";
-        isValid = false;
-      } else if (!/^\d{3}\d{3}\d{4}$/.test(formData.phone)) {
-        newErrors.phoneError = true;
-        newErrors.phoneErrorMessage =
-          "Please enter a valid phone number (e.g., 1234567890).";
-        isValid = false;
-      } else {
-        newErrors.phoneError = false;
-        newErrors.phoneErrorMessage = "";
-      }
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.emailError = true;
+      newErrors.emailErrorMessage = "Email is required.";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.emailError = true;
+      newErrors.emailErrorMessage = "Please enter a valid email address.";
+      isValid = false;
+    } else {
+      newErrors.emailError = false;
+      newErrors.emailErrorMessage = "";
+    }
 
-      // Publish Date validation
-      if (!formData.publishDate) {
-        newErrors.publishDateError = true;
-        newErrors.publishDateErrorMessage = "Publish date is required.";
-        isValid = false;
-      } else {
-        newErrors.publishDateError = false;
-        newErrors.publishDateErrorMessage = "";
-      }
+    // Phone validation
+    if (!formData.phone.trim()) {
+      newErrors.phoneError = true;
+      newErrors.phoneErrorMessage = "Phone number is required.";
+      isValid = false;
+    } else if (!/^\d{3}\d{3}\d{4}$/.test(formData.phone.replace(/-/g, ""))) {
+      newErrors.phoneError = true;
+      newErrors.phoneErrorMessage =
+        "Please enter a valid phone number (e.g., 1234567890).";
+      isValid = false;
+    } else {
+      newErrors.phoneError = false;
+      newErrors.phoneErrorMessage = "";
+    }
 
-      // Deadline Date validation
-      if (!formData.deadlineDate) {
-        newErrors.deadlineDateError = true;
-        newErrors.deadlineDateErrorMessage = "Deadline date is required.";
-        isValid = false;
-      } else if (
-        formData.publishDate &&
-        formData.deadlineDate < formData.publishDate
-      ) {
-        newErrors.deadlineDateError = true;
-        newErrors.deadlineDateErrorMessage =
-          "Deadline date must be after publish date.";
-        isValid = false;
-      } else {
-        newErrors.deadlineDateError = false;
-        newErrors.deadlineDateErrorMessage = "";
-      }
+    // Publish Date validation
+    if (!formData.publishDate) {
+      newErrors.publishDateError = true;
+      newErrors.publishDateErrorMessage = "Publish date is required.";
+      isValid = false;
+    } else {
+      newErrors.publishDateError = false;
+      newErrors.publishDateErrorMessage = "";
+    }
 
-      // Fundraise Goal validation
-      if (!formData.goal.trim()) {
-        newErrors.goalError = true;
-        newErrors.goalErrorMessage = "Fundraise goal is required.";
-        isValid = false;
-      } else if (isNaN(formData.goal) || Number(formData.goal) <= 0) {
-        newErrors.goalError = true;
-        newErrors.goalErrorMessage =
-          "Fundraise goal must be a positive number.";
-        isValid = false;
-      } else {
-        newErrors.goalError = false;
-        newErrors.goalErrorMessage = "";
-      }
+    // Deadline Date validation
+    if (!formData.deadlineDate) {
+      newErrors.deadlineDateError = true;
+      newErrors.deadlineDateErrorMessage = "Deadline date is required.";
+      isValid = false;
+    } else if (
+      formData.publishDate &&
+      new Date(formData.deadlineDate) < new Date(formData.publishDate)
+    ) {
+      newErrors.deadlineDateError = true;
+      newErrors.deadlineDateErrorMessage =
+        "Deadline date must be after publish date.";
+      isValid = false;
+    } else {
+      newErrors.deadlineDateError = false;
+      newErrors.deadlineDateErrorMessage = "";
+    }
 
-      // Minimum Investment validation
-      if (!formData.minInvestment.trim()) {
-        newErrors.minInvestmentError = true;
-        newErrors.minInvestmentErrorMessage = "Minimum investment is required.";
-        isValid = false;
-      } else if (
-        isNaN(formData.minInvestment) ||
-        Number(formData.minInvestment) <= 0
-      ) {
-        newErrors.minInvestmentError = true;
-        newErrors.minInvestmentErrorMessage =
-          "Minimum investment must be a positive number.";
-        isValid = false;
-      } else {
-        newErrors.minInvestmentError = false;
-        newErrors.minInvestmentErrorMessage = "";
-      }
+    // Fundraise Goal validation
+    if (!formData.goal.trim()) {
+      newErrors.goalError = true;
+      newErrors.goalErrorMessage = "Fundraise goal is required.";
+      isValid = false;
+    } else if (isNaN(formData.goal) || Number(formData.goal) <= 0) {
+      newErrors.goalError = true;
+      newErrors.goalErrorMessage = "Fundraise goal must be a positive number.";
+      isValid = false;
+    } else {
+      newErrors.goalError = false;
+      newErrors.goalErrorMessage = "";
+    }
 
-      // Maximum Investment validation
-      if (!formData.maxInvestment.trim()) {
-        newErrors.maxInvestmentError = true;
-        newErrors.maxInvestmentErrorMessage = "Maximum investment is required.";
-        isValid = false;
-      } else if (
-        isNaN(formData.maxInvestment) ||
-        Number(formData.maxInvestment) <= 0
-      ) {
-        newErrors.maxInvestmentError = true;
-        newErrors.maxInvestmentErrorMessage =
-          "Maximum investment must be a positive number.";
-        isValid = false;
-      } else if (
-        Number(formData.maxInvestment) < Number(formData.minInvestment)
-      ) {
-        newErrors.maxInvestmentError = true;
-        newErrors.maxInvestmentErrorMessage =
-          "Maximum investment must be greater than minimum investment.";
-        isValid = false;
-      } else {
-        newErrors.maxInvestmentError = false;
-        newErrors.maxInvestmentErrorMessage = "";
-      }
+    // Minimum Investment validation
+    if (!formData.minInvestment.trim()) {
+      newErrors.minInvestmentError = true;
+      newErrors.minInvestmentErrorMessage = "Minimum investment is required.";
+      isValid = false;
+    } else if (
+      isNaN(formData.minInvestment) ||
+      Number(formData.minInvestment) <= 0
+    ) {
+      newErrors.minInvestmentError = true;
+      newErrors.minInvestmentErrorMessage =
+        "Minimum investment must be a positive number.";
+      isValid = false;
+    } else {
+      newErrors.minInvestmentError = false;
+      newErrors.minInvestmentErrorMessage = "";
+    }
 
-      // Password validation
-      if (!formData.password) {
-        newErrors.passwordError = true;
-        newErrors.passwordErrorMessage = "Password is required.";
-        isValid = false;
-      } else if (formData.password.length < 6) {
-        newErrors.passwordError = true;
-        newErrors.passwordErrorMessage =
-          "Password must be at least 6 characters long.";
-        isValid = false;
-      } else {
-        newErrors.passwordError = false;
-        newErrors.passwordErrorMessage = "";
-      }
+    // Maximum Investment validation
+    if (!formData.maxInvestment.trim()) {
+      newErrors.maxInvestmentError = true;
+      newErrors.maxInvestmentErrorMessage = "Maximum investment is required.";
+      isValid = false;
+    } else if (
+      isNaN(formData.maxInvestment) ||
+      Number(formData.maxInvestment) <= 0
+    ) {
+      newErrors.maxInvestmentError = true;
+      newErrors.maxInvestmentErrorMessage =
+        "Maximum investment must be a positive number.";
+      isValid = false;
+    } else if (
+      Number(formData.maxInvestment) < Number(formData.minInvestment)
+    ) {
+      newErrors.maxInvestmentError = true;
+      newErrors.maxInvestmentErrorMessage =
+        "Maximum investment must be greater than minimum investment.";
+      isValid = false;
+    } else {
+      newErrors.maxInvestmentError = false;
+      newErrors.maxInvestmentErrorMessage = "";
+    }
 
-      // Terms of Service validation
-      if (!formData.terms) {
-        newErrors.termsError = true;
-        newErrors.termsErrorMessage =
-          "You must agree to the Terms of Service.";
-        isValid = false;
-      } else {
-        newErrors.termsError = false;
-        newErrors.termsErrorMessage = "";
-      }
+    // Password validation
+    if (!formData.password) {
+      newErrors.passwordError = true;
+      newErrors.passwordErrorMessage = "Password is required.";
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      newErrors.passwordError = true;
+      newErrors.passwordErrorMessage =
+        "Password must be at least 6 characters long.";
+      isValid = false;
+    } else {
+      newErrors.passwordError = false;
+      newErrors.passwordErrorMessage = "";
+    }
+
+    // Terms of Service validation
+    if (!formData.terms) {
+      newErrors.termsError = true;
+      newErrors.termsErrorMessage = "You must agree to the Terms of Service.";
+      isValid = false;
+    } else {
+      newErrors.termsError = false;
+      newErrors.termsErrorMessage = "";
     }
 
     setErrors(newErrors);
@@ -341,17 +304,69 @@ export default function BusinessRegistration() {
   };
 
   // Submit handler for the form
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    if (validateInputs()) {
-      // Save the form data to a persistent store (e.g., backend or global state)
-      // For demonstration, we'll log it to the console
-      console.log("Form Data Submitted:", formData);
+// Submit handler for the form (mock version)
+const handleFormSubmit = async (event) => {
+  event.preventDefault();
+  if (validateInputs()) {
+    try {
+      // Mock submission for testing purposes
+      console.log("Form submitted with data:", formData);
 
-      // Proceed to the next step
-      handleNext();
+      // Uncomment this block to enable actual submission to backend
+      /*
+      // Create a FormData object to handle form data
+      const submissionData = new FormData();
+
+      // Append General Information
+      submissionData.append("companyName", formData.companyName);
+      submissionData.append("businessName", formData.businessName);
+      submissionData.append("email", formData.email);
+      submissionData.append("phone", formData.phone);
+      submissionData.append("publishDate", formData.publishDate);
+      submissionData.append("deadlineDate", formData.deadlineDate);
+      submissionData.append("goal", formData.goal);
+      submissionData.append("minInvestment", formData.minInvestment);
+      submissionData.append("maxInvestment", formData.maxInvestment);
+      submissionData.append("password", formData.password);
+      submissionData.append("terms", formData.terms);
+
+      // Send the data to the backend
+      const response = await fetch("/api/register-business", {
+        method: "POST",
+        body: submissionData,
+      });
+
+      if (response.ok) {
+        // Handle successful registration (e.g., show a success message, redirect)
+        alert("Registration successful! Awaiting admin approval.");
+        // Optionally, reset the form or navigate away
+        setFormData({
+          companyName: "",
+          businessName: "",
+          email: "",
+          phone: "",
+          publishDate: "",
+          deadlineDate: "",
+          goal: "",
+          minInvestment: "",
+          maxInvestment: "",
+          password: "",
+          terms: false,
+        });
+      } else {
+        // Handle server errors
+        const errorData = await response.json();
+        alert(`Registration failed: ${errorData.message}`);
+      }
+      */
+    } catch (error) {
+      // Handle any unexpected errors during the mock submission
+      console.error("Error during form submission:", error);
+      alert("An unexpected error occurred during mock submission.");
     }
-  };
+  }
+};
+
 
   return (
     <TemplateFrame
@@ -362,7 +377,7 @@ export default function BusinessRegistration() {
     >
       <ThemeProvider theme={showCustomTheme ? SignUpTheme : defaultTheme}>
         <CssBaseline enableColorScheme />
-        <FormContainer direction="column" justifyContent="space-between">
+        <FormContainer direction="column" justifyContent="center">
           <Stack
             sx={{
               justifyContent: "center",
@@ -372,7 +387,10 @@ export default function BusinessRegistration() {
               gap: 2,
             }}
           >
-            <Card variant="outlined" sx={{ width: { xs: "100%", sm: "100%" }, maxWidth: "none" }}>
+            <Card
+              variant="outlined"
+              sx={{ width: { xs: "100%", sm: "100%" }, maxWidth: "none" }}
+            >
               {/* Header with logo and title */}
               <Box
                 display="flex"
@@ -400,77 +418,246 @@ export default function BusinessRegistration() {
                   Business Register
                 </Typography>
               </Box>
-
-              {/* Step Content */}
-              <Box component="form" onSubmit={handleFormSubmit} id="general-information-form">
-                {getStepContent(activeStep, formData, handleChange, errors)}
-              </Box>
-
-              {/* Navigation Buttons */}
+              {/* Form Content */}
               <Box
-                sx={[
-                  {
-                    display: "flex",
-                    flexDirection: { xs: "column-reverse", sm: "row" },
-                    alignItems: "end",
-                    flexGrow: 1,
-                    gap: 1,
-                    pb: { xs: 12, sm: 0 },
-                    mt: { xs: 2, sm: 0 },
-                  },
-                  activeStep !== 0
-                    ? { justifyContent: "space-between" }
-                    : { justifyContent: "flex-end" },
-                ]}
+                component="form"
+                onSubmit={handleFormSubmit}
+                id="business-registration-form"
+                sx={{ mt: 2 }}
               >
-                {/* Previous Button */}
-                {activeStep > 0 && (
-                  <>
-                    <Button
-                      startIcon={<ChevronLeftRoundedIcon />}
-                      onClick={handleBack}
-                      variant="text"
-                      sx={{ display: { xs: "none", sm: "flex" } }}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      startIcon={<ChevronLeftRoundedIcon />}
-                      onClick={handleBack}
-                      variant="outlined"
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    gap: 2,
+                  }}
+                >
+                  {/* Company Name Field */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="companyName">Company Name</FormLabel>
+                    <TextField
+                      autoComplete="organization"
+                      name="companyName"
+                      required
                       fullWidth
-                      sx={{ display: { xs: "flex", sm: "none" } }}
-                    >
-                      Previous
-                    </Button>
-                  </>
-                )}
+                      id="companyName"
+                      placeholder="Company Name"
+                      value={formData.companyName}
+                      onChange={handleChange}
+                      error={errors.companyNameError}
+                      helperText={errors.companyNameErrorMessage}
+                      color={errors.companyNameError ? "error" : "primary"}
+                    />
+                  </FormControl>
 
-                {/* Next Button */}
-                {activeStep < steps.length - 1 && (
+                  {/* Business Name Field */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="businessName">Business Name</FormLabel>
+                    <TextField
+                      autoComplete="organization"
+                      name="businessName"
+                      required
+                      fullWidth
+                      id="businessName"
+                      placeholder="Business Name"
+                      value={formData.businessName}
+                      onChange={handleChange}
+                      error={errors.businessNameError}
+                      helperText={errors.businessNameErrorMessage}
+                      color={errors.businessNameError ? "error" : "primary"}
+                    />
+                  </FormControl>
+
+                  {/* Business Email Field */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="email">Business Email</FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      id="email"
+                      placeholder="your@email.com"
+                      name="email"
+                      autoComplete="email"
+                      variant="outlined"
+                      value={formData.email}
+                      onChange={handleChange}
+                      error={errors.emailError}
+                      helperText={errors.emailErrorMessage}
+                    />
+                  </FormControl>
+
+                  {/* Business Phone Number */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="phone">Business Phone Number</FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      id="phone"
+                      placeholder="123-456-7890"
+                      name="phone"
+                      autoComplete="tel"
+                      variant="outlined"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      error={errors.phoneError}
+                      helperText={errors.phoneErrorMessage}
+                    />
+                  </FormControl>
+
+                  {/* Fundraise Publish Date */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="publishDate">
+                      Fundraise Publish Date
+                    </FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      id="publishDate"
+                      type="date"
+                      name="publishDate"
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={formData.publishDate}
+                      onChange={handleChange}
+                      error={errors.publishDateError}
+                      helperText={errors.publishDateErrorMessage}
+                    />
+                  </FormControl>
+
+                  {/* Fundraise Deadline Date */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="deadlineDate">
+                      Fundraise Deadline Date
+                    </FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      id="deadlineDate"
+                      type="date"
+                      name="deadlineDate"
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={formData.deadlineDate}
+                      onChange={handleChange}
+                      error={errors.deadlineDateError}
+                      helperText={errors.deadlineDateErrorMessage}
+                    />
+                  </FormControl>
+
+                  {/* Fundraise Goal */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="goal">Fundraise Goal</FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      id="goal"
+                      placeholder="100,000"
+                      name="goal"
+                      autoComplete="off"
+                      variant="outlined"
+                      value={formData.goal}
+                      onChange={handleChange}
+                      error={errors.goalError}
+                      helperText={errors.goalErrorMessage}
+                    />
+                  </FormControl>
+
+                  {/* Minimum Investment */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="minInvestment">
+                      Minimum Investment
+                    </FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      id="minInvestment"
+                      placeholder="1,000"
+                      name="minInvestment"
+                      autoComplete="off"
+                      variant="outlined"
+                      value={formData.minInvestment}
+                      onChange={handleChange}
+                      error={errors.minInvestmentError}
+                      helperText={errors.minInvestmentErrorMessage}
+                    />
+                  </FormControl>
+
+                  {/* Maximum Investment */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="maxInvestment">
+                      Maximum Investment
+                    </FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      id="maxInvestment"
+                      placeholder="10,000"
+                      name="maxInvestment"
+                      autoComplete="off"
+                      variant="outlined"
+                      value={formData.maxInvestment}
+                      onChange={handleChange}
+                      error={errors.maxInvestmentError}
+                      helperText={errors.maxInvestmentErrorMessage}
+                    />
+                  </FormControl>
+
+                  {/* Password Field */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      name="password"
+                      placeholder="••••••••"
+                      type="password"
+                      id="password"
+                      autoComplete="new-password"
+                      variant="outlined"
+                      value={formData.password}
+                      onChange={handleChange}
+                      error={errors.passwordError}
+                      helperText={errors.passwordErrorMessage}
+                    />
+                  </FormControl>
+
+                  {/* Terms of Service Checkbox */}
+                  <FormControlLabel
+                    sx={{ width: "100%" }}
+                    control={
+                      <Checkbox
+                        checked={formData.terms}
+                        onChange={handleChange}
+                        name="terms"
+                        color="primary"
+                      />
+                    }
+                    label="I have read and agreed to the Terms of Service."
+                  />
+                </Box>
+
+                {/* Submit Button */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    mt: 2,
+                  }}
+                >
                   <Button
                     type="submit"
-                    form="general-information-form"
-                    endIcon={<ChevronRightRoundedIcon />}
                     variant="contained"
-                    sx={{ display: { xs: "none", sm: "flex" } }}
-                  >
-                    Next
-                  </Button>
-                )}
-
-                {/* Add "Submit" button on the final step */}
-                {activeStep === steps.length - 1 && (
-                  <Button
-                    type="submit"
-                    form="final-submit-form" // Assuming you have a final form
-                    endIcon={<ChevronRightRoundedIcon />}
-                    variant="contained"
-                    sx={{ display: { xs: "none", sm: "flex" } }}
+                    color="primary"
+                    fullWidth
                   >
                     Submit
                   </Button>
-                )}
+                </Box>
               </Box>
             </Card>
           </Stack>
