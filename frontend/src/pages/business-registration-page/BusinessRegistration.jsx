@@ -24,6 +24,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: "auto",
+  marginTop: "20vh",
   boxShadow:
     "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
   [theme.breakpoints.up("sm")]: {
@@ -36,7 +37,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const FormContainer = styled(Stack)(({ theme }) => ({
-  height: "100%",
+  height: "100vh",
   padding: 4,
   backgroundImage:
     "radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
@@ -74,6 +75,10 @@ export default function BusinessRegistration() {
     maxInvestment: "",
     password: "",
     terms: false,
+    pitching: "",
+    businessImage: null,
+    businessDescription: "",
+    pricePerShare: "",
   });
 
   // State for managing errors
@@ -100,6 +105,12 @@ export default function BusinessRegistration() {
     passwordErrorMessage: "",
     termsError: false,
     termsErrorMessage: "",
+    pitchingError: false,
+    pitchingErrorMessage: "",
+    businessDescriptionError: false,
+    businessDescriptionErrorMessage: "",
+    pricePerShareError: false,
+    pricePerShareErrorMessage: "",
   });
 
   // Set the initial theme mode based on system or saved preference
@@ -299,21 +310,54 @@ export default function BusinessRegistration() {
       newErrors.termsErrorMessage = "";
     }
 
+    // Business Pitch validation
+    if (!formData.pitching.trim()) {
+      newErrors.pitchingError = true;
+      newErrors.pitchingErrorMessage = "Pitching is required.";
+      isValid = false;
+    } else {
+      newErrors.pitchingError = false;
+      newErrors.pitchingErrorMessage = "";
+    }
+
+    if (!formData.businessDescription.trim()) {
+      newErrors.businessDescriptionError = true;
+      newErrors.businessDescriptionErrorMessage =
+        "Business description is required.";
+      isValid = false;
+    } else {
+      newErrors.businessDescriptionError = false;
+      newErrors.businessDescriptionErrorMessage = "";
+    }
+
+    if (!formData.pricePerShare.trim()) {
+      newErrors.pricePerShareError = true;
+      newErrors.pricePerShareErrorMessage = "Price per share is required.";
+      isValid = false;
+    } else if (isNaN(formData.pricePerShare) || Number(formData.pricePerShare) <= 0) {
+      newErrors.pricePerShareError = true;
+      newErrors.pricePerShareErrorMessage = "Price per share must be a positive number.";
+      isValid = false;
+    } else {
+      newErrors.pricePerShareError = false;
+      newErrors.pricePerShareErrorMessage = "";
+    }
+
     setErrors(newErrors);
     return isValid;
   };
 
   // Submit handler for the form
-// Submit handler for the form (mock version)
-const handleFormSubmit = async (event) => {
-  event.preventDefault();
-  if (validateInputs()) {
-    try {
-      // Mock submission for testing purposes
-      console.log("Form submitted with data:", formData);
+  // Submit handler for the form (mock version)
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    if (validateInputs()) {
+      try {
+        // Mock submission for testing purposes
+        console.log("Form submitted with data:", formData);
 
-      // Uncomment this block to enable actual submission to backend
-      /*
+        // Uncomment this block to enable actual submission to backend
+        /*
       // Create a FormData object to handle form data
       const submissionData = new FormData();
 
@@ -359,14 +403,13 @@ const handleFormSubmit = async (event) => {
         alert(`Registration failed: ${errorData.message}`);
       }
       */
-    } catch (error) {
-      // Handle any unexpected errors during the mock submission
-      console.error("Error during form submission:", error);
-      alert("An unexpected error occurred during mock submission.");
+      } catch (error) {
+        // Handle any unexpected errors during the mock submission
+        console.error("Error during form submission:", error);
+        alert("An unexpected error occurred during mock submission.");
+      }
     }
-  }
-};
-
+  };
 
   return (
     <TemplateFrame
@@ -423,7 +466,9 @@ const handleFormSubmit = async (event) => {
                 component="form"
                 onSubmit={handleFormSubmit}
                 id="business-registration-form"
-                sx={{ mt: 2 }}
+                sx={{ 
+                  mt: 2,
+                 }}
               >
                 <Box
                   sx={{
@@ -450,7 +495,6 @@ const handleFormSubmit = async (event) => {
                       color={errors.companyNameError ? "error" : "primary"}
                     />
                   </FormControl>
-
                   {/* Business Name Field */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="businessName">Business Name</FormLabel>
@@ -468,7 +512,6 @@ const handleFormSubmit = async (event) => {
                       color={errors.businessNameError ? "error" : "primary"}
                     />
                   </FormControl>
-
                   {/* Business Email Field */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="email">Business Email</FormLabel>
@@ -486,7 +529,24 @@ const handleFormSubmit = async (event) => {
                       helperText={errors.emailErrorMessage}
                     />
                   </FormControl>
-
+                  {/* Password Field */}
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <TextField
+                      required
+                      fullWidth
+                      name="password"
+                      placeholder="••••••••"
+                      type="password"
+                      id="password"
+                      autoComplete="new-password"
+                      variant="outlined"
+                      value={formData.password}
+                      onChange={handleChange}
+                      error={errors.passwordError}
+                      helperText={errors.passwordErrorMessage}
+                    />
+                  </FormControl>
                   {/* Business Phone Number */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="phone">Business Phone Number</FormLabel>
@@ -504,7 +564,6 @@ const handleFormSubmit = async (event) => {
                       helperText={errors.phoneErrorMessage}
                     />
                   </FormControl>
-
                   {/* Fundraise Publish Date */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="publishDate">
@@ -526,7 +585,6 @@ const handleFormSubmit = async (event) => {
                       helperText={errors.publishDateErrorMessage}
                     />
                   </FormControl>
-
                   {/* Fundraise Deadline Date */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="deadlineDate">
@@ -548,7 +606,6 @@ const handleFormSubmit = async (event) => {
                       helperText={errors.deadlineDateErrorMessage}
                     />
                   </FormControl>
-
                   {/* Fundraise Goal */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="goal">Fundraise Goal</FormLabel>
@@ -566,7 +623,6 @@ const handleFormSubmit = async (event) => {
                       helperText={errors.goalErrorMessage}
                     />
                   </FormControl>
-
                   {/* Minimum Investment */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="minInvestment">
@@ -586,7 +642,6 @@ const handleFormSubmit = async (event) => {
                       helperText={errors.minInvestmentErrorMessage}
                     />
                   </FormControl>
-
                   {/* Maximum Investment */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="maxInvestment">
@@ -607,25 +662,78 @@ const handleFormSubmit = async (event) => {
                     />
                   </FormControl>
 
-                  {/* Password Field */}
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormLabel htmlFor="pricePerShare">
+                      Price Per Share
+                    </FormLabel>
                     <TextField
-                      required
+                      id="pricePerShare"
+                      name="pricePerShare"
+                      type="number"
+                      placeholder="e.g. 50"
                       fullWidth
-                      name="password"
-                      placeholder="••••••••"
-                      type="password"
-                      id="password"
-                      autoComplete="new-password"
                       variant="outlined"
-                      value={formData.password}
+                      value={formData.pricePerShare}
                       onChange={handleChange}
-                      error={errors.passwordError}
-                      helperText={errors.passwordErrorMessage}
+                      error={errors.pricePerShareError}
+                      helperText={errors.pricePerShareErrorMessage}
                     />
                   </FormControl>
 
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <FormLabel htmlFor="businessDescription">
+                      Business Description
+                    </FormLabel>
+                    <TextField
+                      id="businessDescription"
+                      name="businessDescription"
+                      placeholder="Describe your business"
+                      multiline
+                      fullWidth
+                      variant="outlined"
+                      value={formData.businessDescription}
+                      onChange={handleChange}
+                      error={errors.businessDescriptionError}
+                      helperText={errors.businessDescriptionErrorMessage}
+                    />
+                  </FormControl>
+
+                  <FormControl sx={{ width: "100%" }}>
+                    <FormLabel htmlFor="pitching">
+                      Pitch Your Business
+                    </FormLabel>
+                    <TextField
+                      id="pitching"
+                      name="pitching"
+                      placeholder="Write a compelling pitch for your business"
+                      multiline
+                      fullWidth
+                      variant="outlined"
+                      value={formData.pitching}
+                      onChange={handleChange}
+                      error={errors.pitchingError}
+                      helperText={errors.pitchingErrorMessage}
+                    />
+                  </FormControl>
+                  <FormControl sx={{ width: "100%" }}>
+                    <FormLabel htmlFor="businessImage">
+                      Upload Business Pictures
+                    </FormLabel>
+                    <TextField
+                      id="businessImage"
+                      name="businessImage"
+                      type="file"
+                      inputProps={{ accept: "image/*" }}
+                      onChange={(e) =>
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          businessImage: e.target.files[0], // Store the file
+                        }))
+                      }
+                      error={errors.businessImageError}
+                      helperText={errors.businessImageErrorMessage}
+                    />
+                  </FormControl>
                   {/* Terms of Service Checkbox */}
                   <FormControlLabel
                     sx={{ width: "100%" }}
