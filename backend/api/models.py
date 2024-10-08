@@ -16,6 +16,7 @@ class Investor(models.Model):
 
 class Business(models.Model):
     """Business Model represents the business, containing their company and business details"""
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE, null=True, blank=True)
     company_name = models.CharField(max_length=100)
     business_name = models.CharField(max_length=80)
     email = models.EmailField(blank=False, null=False)
@@ -32,6 +33,7 @@ class Business(models.Model):
 
     def __str__(self):
         return f"{self.company_name + ': ' + {self.business_name}}"
+
 
 
 class Investment(models.Model):
