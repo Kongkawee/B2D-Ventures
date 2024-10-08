@@ -91,6 +91,28 @@ def register_business(request):
         'access': str(refresh.access_token)
     }, status=status.HTTP_201_CREATED)
   
+  
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_business(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        try:
+            business = Business.objects.get(user=user)
+        except Business.DoesNotExist:
+            return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token)
+        })
+    else:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 class ListInvestor(generics.ListCreateAPIView):
     queryset = Investor.objects.all()
