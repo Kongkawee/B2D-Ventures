@@ -1,14 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
@@ -17,7 +10,36 @@ import getSignUpTheme from "./theme/getSignUpTheme";
 import TemplateFrame from "./TemplateFrame";
 import LogoLight from "../../images/LogoLight.png";
 import LogoDark from "../../images/LogoDark.png";
+import GeneralInformationForm from "./components/GeneralInformationForm";
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
+const steps = [
+  "General information",
+  "Business insight",
+  "Review registration order",
+];
+
+function getStepContent(step, formData, handleChange, errors) {
+  switch (step) {
+    case 0:
+      return (
+        <GeneralInformationForm
+          formData={formData}
+          handleChange={handleChange}
+          errors={errors}
+        />
+      );
+    case 1:
+      return <Typography>Business Insight Form (Placeholder)</Typography>;
+    case 2:
+      return <Typography>Review Registration (Placeholder)</Typography>;
+    default:
+      throw new Error("Unknown step");
+  }
+}
+
+// Styled Card for form layout
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -37,7 +59,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
-const SignUpContainer = styled(Stack)(({ theme }) => ({
+// Container styling
+const FormContainer = styled(Stack)(({ theme }) => ({
   height: "100%",
   padding: 4,
   backgroundImage:
@@ -49,6 +72,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   }),
 }));
 
+// Logo styling
 const logoStyle = {
   width: "100px",
   margin: "10px",
@@ -61,16 +85,55 @@ export default function BusinessRegistration() {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
   const SignUpTheme = createTheme(getSignUpTheme(mode));
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState("");
-  // This code only runs on the client side, to determine the system color preference
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  // State for managing form data
+  const [formData, setFormData] = React.useState({
+    companyName: "",
+    businessName: "",
+    email: "",
+    phone: "",
+    publishDate: "",
+    deadlineDate: "",
+    goal: "",
+    minInvestment: "",
+    maxInvestment: "",
+    password: "",
+    terms: false,
+  });
+
+  // State for managing errors
+  const [errors, setErrors] = React.useState({
+    companyNameError: false,
+    companyNameErrorMessage: "",
+    businessNameError: false,
+    businessNameErrorMessage: "",
+    emailError: false,
+    emailErrorMessage: "",
+    phoneError: false,
+    phoneErrorMessage: "",
+    publishDateError: false,
+    publishDateErrorMessage: "",
+    deadlineDateError: false,
+    deadlineDateErrorMessage: "",
+    goalError: false,
+    goalErrorMessage: "",
+    minInvestmentError: false,
+    minInvestmentErrorMessage: "",
+    maxInvestmentError: false,
+    maxInvestmentErrorMessage: "",
+    passwordError: false,
+    passwordErrorMessage: "",
+    termsError: false,
+    termsErrorMessage: "",
+  });
+
+  // Set the initial theme mode based on system or saved preference
   React.useEffect(() => {
-    // Check if there is a preferred mode in localStorage
     const savedMode = localStorage.getItem("themeMode");
     if (savedMode) {
       setMode(savedMode);
     } else {
-      // If no preference is found, it uses system preference
       const systemPrefersDark = window.matchMedia(
         "(prefers-color-scheme: dark)"
       ).matches;
@@ -78,62 +141,216 @@ export default function BusinessRegistration() {
     }
   }, []);
 
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
   const toggleColorMode = () => {
     const newMode = mode === "dark" ? "light" : "dark";
     setMode(newMode);
-    localStorage.setItem("themeMode", newMode); // Save the selected mode to localStorage
+    localStorage.setItem("themeMode", newMode);
   };
 
   const toggleCustomTheme = () => {
     setShowCustomTheme((prev) => !prev);
   };
 
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  // Validation function for handling errors based on the current step
   const validateInputs = () => {
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const name = document.getElementById("name");
-
     let isValid = true;
+    let newErrors = { ...errors }; // Clone the current errors
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
+    if (activeStep === 0) {
+      // General Information Validation
+      // Company Name validation
+      if (!formData.companyName.trim()) {
+        newErrors.companyNameError = true;
+        newErrors.companyNameErrorMessage = "Company name is required.";
+        isValid = false;
+      } else {
+        newErrors.companyNameError = false;
+        newErrors.companyNameErrorMessage = "";
+      }
+
+      // Business Name validation
+      if (!formData.businessName.trim()) {
+        newErrors.businessNameError = true;
+        newErrors.businessNameErrorMessage = "Business name is required.";
+        isValid = false;
+      } else {
+        newErrors.businessNameError = false;
+        newErrors.businessNameErrorMessage = "";
+      }
+
+      // Email validation
+      if (!formData.email.trim()) {
+        newErrors.emailError = true;
+        newErrors.emailErrorMessage = "Email is required.";
+        isValid = false;
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.emailError = true;
+        newErrors.emailErrorMessage = "Please enter a valid email address.";
+        isValid = false;
+      } else {
+        newErrors.emailError = false;
+        newErrors.emailErrorMessage = "";
+      }
+
+      // Phone validation
+      if (!formData.phone.trim()) {
+        newErrors.phoneError = true;
+        newErrors.phoneErrorMessage = "Phone number is required.";
+        isValid = false;
+      } else if (!/^\d{3}\d{3}\d{4}$/.test(formData.phone)) {
+        newErrors.phoneError = true;
+        newErrors.phoneErrorMessage =
+          "Please enter a valid phone number (e.g., 1234567890).";
+        isValid = false;
+      } else {
+        newErrors.phoneError = false;
+        newErrors.phoneErrorMessage = "";
+      }
+
+      // Publish Date validation
+      if (!formData.publishDate) {
+        newErrors.publishDateError = true;
+        newErrors.publishDateErrorMessage = "Publish date is required.";
+        isValid = false;
+      } else {
+        newErrors.publishDateError = false;
+        newErrors.publishDateErrorMessage = "";
+      }
+
+      // Deadline Date validation
+      if (!formData.deadlineDate) {
+        newErrors.deadlineDateError = true;
+        newErrors.deadlineDateErrorMessage = "Deadline date is required.";
+        isValid = false;
+      } else if (
+        formData.publishDate &&
+        formData.deadlineDate < formData.publishDate
+      ) {
+        newErrors.deadlineDateError = true;
+        newErrors.deadlineDateErrorMessage =
+          "Deadline date must be after publish date.";
+        isValid = false;
+      } else {
+        newErrors.deadlineDateError = false;
+        newErrors.deadlineDateErrorMessage = "";
+      }
+
+      // Fundraise Goal validation
+      if (!formData.goal.trim()) {
+        newErrors.goalError = true;
+        newErrors.goalErrorMessage = "Fundraise goal is required.";
+        isValid = false;
+      } else if (isNaN(formData.goal) || Number(formData.goal) <= 0) {
+        newErrors.goalError = true;
+        newErrors.goalErrorMessage =
+          "Fundraise goal must be a positive number.";
+        isValid = false;
+      } else {
+        newErrors.goalError = false;
+        newErrors.goalErrorMessage = "";
+      }
+
+      // Minimum Investment validation
+      if (!formData.minInvestment.trim()) {
+        newErrors.minInvestmentError = true;
+        newErrors.minInvestmentErrorMessage = "Minimum investment is required.";
+        isValid = false;
+      } else if (
+        isNaN(formData.minInvestment) ||
+        Number(formData.minInvestment) <= 0
+      ) {
+        newErrors.minInvestmentError = true;
+        newErrors.minInvestmentErrorMessage =
+          "Minimum investment must be a positive number.";
+        isValid = false;
+      } else {
+        newErrors.minInvestmentError = false;
+        newErrors.minInvestmentErrorMessage = "";
+      }
+
+      // Maximum Investment validation
+      if (!formData.maxInvestment.trim()) {
+        newErrors.maxInvestmentError = true;
+        newErrors.maxInvestmentErrorMessage = "Maximum investment is required.";
+        isValid = false;
+      } else if (
+        isNaN(formData.maxInvestment) ||
+        Number(formData.maxInvestment) <= 0
+      ) {
+        newErrors.maxInvestmentError = true;
+        newErrors.maxInvestmentErrorMessage =
+          "Maximum investment must be a positive number.";
+        isValid = false;
+      } else if (
+        Number(formData.maxInvestment) < Number(formData.minInvestment)
+      ) {
+        newErrors.maxInvestmentError = true;
+        newErrors.maxInvestmentErrorMessage =
+          "Maximum investment must be greater than minimum investment.";
+        isValid = false;
+      } else {
+        newErrors.maxInvestmentError = false;
+        newErrors.maxInvestmentErrorMessage = "";
+      }
+
+      // Password validation
+      if (!formData.password) {
+        newErrors.passwordError = true;
+        newErrors.passwordErrorMessage = "Password is required.";
+        isValid = false;
+      } else if (formData.password.length < 6) {
+        newErrors.passwordError = true;
+        newErrors.passwordErrorMessage =
+          "Password must be at least 6 characters long.";
+        isValid = false;
+      } else {
+        newErrors.passwordError = false;
+        newErrors.passwordErrorMessage = "";
+      }
+
+      // Terms of Service validation
+      if (!formData.terms) {
+        newErrors.termsError = true;
+        newErrors.termsErrorMessage =
+          "You must agree to the Terms of Service.";
+        isValid = false;
+      } else {
+        newErrors.termsError = false;
+        newErrors.termsErrorMessage = "";
+      }
     }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
-
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage("Name is required.");
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage("");
-    }
-
+    setErrors(newErrors);
     return isValid;
   };
 
-  const handleSubmit = (event) => {
+  // Submit handler for the form
+  const handleFormSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get("name"),
-      lastName: data.get("lastName"),
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (validateInputs()) {
+      // Save the form data to a persistent store (e.g., backend or global state)
+      // For demonstration, we'll log it to the console
+      console.log("Form Data Submitted:", formData);
+
+      // Proceed to the next step
+      handleNext();
+    }
   };
 
   return (
@@ -145,202 +362,119 @@ export default function BusinessRegistration() {
     >
       <ThemeProvider theme={showCustomTheme ? SignUpTheme : defaultTheme}>
         <CssBaseline enableColorScheme />
-        <SignUpContainer direction="column" justifyContent="space-between">
+        <FormContainer direction="column" justifyContent="space-between">
           <Stack
             sx={{
               justifyContent: "center",
               p: 2,
-              flexDirection: "row", // Set the Stack to row direction
-              flexWrap: "wrap", // Allow wrapping to create two columns
-              gap: 2, // Add some gap between the items
+              flexDirection: "row",
+              flexWrap: "wrap",
+              gap: 2,
             }}
           >
-            <Card
-              variant="outlined"
-              sx={{ width: { xs: "100%", sm: "100%" }, maxWidth: "none" }}
-            >
-              {" "}
-              {/* Ensure card takes full width */}
-              <img
-                src={mode === "light" ? LogoLight : LogoDark}
-                style={logoStyle}
-                alt="logo of b2d"
-              />
-              <Typography
-                component="h1"
-                variant="h4"
-                sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
-              >
-                Business Register
-              </Typography>
+            <Card variant="outlined" sx={{ width: { xs: "100%", sm: "100%" }, maxWidth: "none" }}>
+              {/* Header with logo and title */}
               <Box
-                component="form"
-                onSubmit={handleSubmit}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: 2,
-                }}
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{ width: "100%", position: "relative" }}
               >
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  {" "}
-                  {/* Adjust width for 2-column layout */}
-                  <FormLabel htmlFor="name">Company name</FormLabel>
-                  <TextField
-                    autoComplete="name"
-                    name="name"
-                    required
-                    fullWidth
-                    id="name"
-                    placeholder="Company Name"
-                    error={nameError}
-                    helperText={nameErrorMessage}
-                    color={nameError ? "error" : "primary"}
-                  />
-                </FormControl>
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="name">Business name</FormLabel>
-                  <TextField
-                    autoComplete="name"
-                    name="name"
-                    required
-                    fullWidth
-                    id="name"
-                    placeholder="Business Name"
-                    error={nameError}
-                    helperText={nameErrorMessage}
-                    color={nameError ? "error" : "primary"}
-                  />
-                </FormControl>
-
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="email">Business Email</FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
-                    variant="outlined"
-                  />
-                </FormControl>
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="phone">Business Phone Number</FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    id="phone"
-                    placeholder="123-456-7890"
-                    name="phone"
-                    autoComplete="tel"
-                    variant="outlined"
-                  />
-                </FormControl>
-
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="publishDate">
-                    Fundraise Publish Date
-                  </FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    id="publishDate"
-                    type="date"
-                    name="publishDate"
-                    variant="outlined"
-                  />
-                </FormControl>
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="deadlineDate">
-                    Fundraise Deadline Date
-                  </FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    id="deadlineDate"
-                    type="date"
-                    name="deadlineDate"
-                    variant="outlined"
-                  />
-                </FormControl>
-
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="goal">Fundraise Goal</FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    id="goal"
-                    placeholder="100,000"
-                    name="goal"
-                    autoComplete="off"
-                    variant="outlined"
-                  />
-                </FormControl>
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="minInvestment">
-                    Minimum Investment
-                  </FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    id="minInvestment"
-                    placeholder="1,000"
-                    name="minInvestment"
-                    autoComplete="off"
-                    variant="outlined"
-                  />
-                </FormControl>
-
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="maxInvestment">
-                    Maximum Investment
-                  </FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    id="maxInvestment"
-                    placeholder="10,000"
-                    name="maxInvestment"
-                    autoComplete="off"
-                    variant="outlined"
-                  />
-                </FormControl>
-                <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                  <FormLabel htmlFor="password">Password</FormLabel>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    placeholder="••••••••"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                    variant="outlined"
-                  />
-                </FormControl>
-
-                <FormControlLabel
-                  sx={{ width: "100%" }} // Full width for the checkbox
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I have read and agreed the Terms of Service."
+                <img
+                  src={mode === "light" ? LogoLight : LogoDark}
+                  style={logoStyle}
+                  alt="logo of b2d"
                 />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  onClick={validateInputs}
-                  href="/"
+                <Typography
+                  component="h1"
+                  variant="h4"
+                  sx={{
+                    fontSize: "clamp(2rem, 10vw, 2.15rem)",
+                    position: "absolute",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    textAlign: "center",
+                  }}
                 >
-                  Register
-                </Button>
+                  Business Register
+                </Typography>
+              </Box>
+
+              {/* Step Content */}
+              <Box component="form" onSubmit={handleFormSubmit} id="general-information-form">
+                {getStepContent(activeStep, formData, handleChange, errors)}
+              </Box>
+
+              {/* Navigation Buttons */}
+              <Box
+                sx={[
+                  {
+                    display: "flex",
+                    flexDirection: { xs: "column-reverse", sm: "row" },
+                    alignItems: "end",
+                    flexGrow: 1,
+                    gap: 1,
+                    pb: { xs: 12, sm: 0 },
+                    mt: { xs: 2, sm: 0 },
+                  },
+                  activeStep !== 0
+                    ? { justifyContent: "space-between" }
+                    : { justifyContent: "flex-end" },
+                ]}
+              >
+                {/* Previous Button */}
+                {activeStep > 0 && (
+                  <>
+                    <Button
+                      startIcon={<ChevronLeftRoundedIcon />}
+                      onClick={handleBack}
+                      variant="text"
+                      sx={{ display: { xs: "none", sm: "flex" } }}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      startIcon={<ChevronLeftRoundedIcon />}
+                      onClick={handleBack}
+                      variant="outlined"
+                      fullWidth
+                      sx={{ display: { xs: "flex", sm: "none" } }}
+                    >
+                      Previous
+                    </Button>
+                  </>
+                )}
+
+                {/* Next Button */}
+                {activeStep < steps.length - 1 && (
+                  <Button
+                    type="submit"
+                    form="general-information-form"
+                    endIcon={<ChevronRightRoundedIcon />}
+                    variant="contained"
+                    sx={{ display: { xs: "none", sm: "flex" } }}
+                  >
+                    Next
+                  </Button>
+                )}
+
+                {/* Add "Submit" button on the final step */}
+                {activeStep === steps.length - 1 && (
+                  <Button
+                    type="submit"
+                    form="final-submit-form" // Assuming you have a final form
+                    endIcon={<ChevronRightRoundedIcon />}
+                    variant="contained"
+                    sx={{ display: { xs: "none", sm: "flex" } }}
+                  >
+                    Submit
+                  </Button>
+                )}
               </Box>
             </Card>
           </Stack>
-        </SignUpContainer>
+        </FormContainer>
       </ThemeProvider>
     </TemplateFrame>
   );
