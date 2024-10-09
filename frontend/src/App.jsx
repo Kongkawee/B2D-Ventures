@@ -9,6 +9,8 @@ import Checkout from "./pages/checkout-page/Checkout"
 import BusinessInfo from "./pages/business-info-page/Business"
 import BusinessRegistration from "./pages/business-registration-page/BusinessRegistration"
 import BusinessExplorationPage from "./pages/business-exploration-page/BusinessExploration"
+import InvestorProfile from "./pages/profile-portfolio-investor-page/InvestorProfile"
+// import BusinessProfile from "./pages/profile-portfolio-business-page/BusinessProfile"
 
 function Logout() {
   localStorage.clear()
@@ -32,6 +34,10 @@ function App() {
         <Route path="/bus" element={<BusinessInfo />} /> Business info Page
         <Route path="/bus-reg" element={<BusinessRegistration />} /> Business Registration Page
         <Route path="/explore" element={<BusinessExplorationPage />} /> Business exploration Page
+        <Route path="/inv-pro" element={<InvestorProfile />} /> Investor Profile Page
+        {/* <Route path="/inv-por" element={<BusinessExplorationPage />} /> Investor Portfolio Page */}
+        {/* <Route path="/bus-pro" element={<BusinessProfile />} /> Business Profile Page */}
+        {/* <Route path="/bus-por" element={<BusinessExplorationPage />} /> Business Portfolio Page */}
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
