@@ -1,6 +1,5 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,7 +13,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ToggleColorMode from "./ToggleColorMode";
 import LogoLight from "../../../images/LogoLight.png";
 import LogoDark from "../../../images/LogoDark.png";
-import Search from "./Search";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import IconButton from "@mui/material/IconButton";
+import { useNavigate } from "react-router-dom";
 
 const logoStyle = {
   width: "100px",
@@ -25,6 +27,19 @@ const logoStyle = {
 
 function AppAppBar({ mode, toggleColorMode }) {
   const [open, setOpen] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null); // For Avatar Menu
+  const navigate = useNavigate();
+
+  // Check authentication status (could be from localStorage or context)
+  React.useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []); // Run once on mount
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -42,6 +57,27 @@ function AppAppBar({ mode, toggleColorMode }) {
       });
       setOpen(false);
     }
+  };
+
+  const handleLogout = () => {
+    // localStorage.removeItem("access_token"); // Remove token on logout
+    // setIsAuthenticated(false); // Update the auth state
+    navigate("/logout")
+    handleCloseMenu(); // Close the Avatar menu
+  };
+
+  const handleProfile = () => {
+    navigate("/inv-pro")
+    handleCloseMenu(); // Close the Avatar menu
+  };
+
+  // Handlers for Avatar Menu
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -63,10 +99,7 @@ function AppAppBar({ mode, toggleColorMode }) {
               alignItems: "center",
               justifyContent: "space-between",
               flexShrink: 0,
-              bgcolor:
-                theme.palette.mode === "light"
-                  ? "white"
-                  : "black",
+              bgcolor: theme.palette.mode === "light" ? "white" : "black",
               maxHeight: 40,
               border: "1px solid",
               borderColor: "divider",
@@ -91,14 +124,6 @@ function AppAppBar({ mode, toggleColorMode }) {
                 alt="logo of b2d"
               />
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                {/* <MenuItem
-                  onClick={() => scrollToSection('features')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Features
-                  </Typography>
-                </MenuItem> */}
                 <MenuItem
                   onClick={() => scrollToSection("hotdeals")}
                   sx={{ py: "6px", px: "12px" }}
@@ -107,22 +132,6 @@ function AppAppBar({ mode, toggleColorMode }) {
                     Hot Deals
                   </Typography>
                 </MenuItem>
-                {/* <MenuItem
-                  onClick={() => scrollToSection('highlights')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Highlights
-                  </Typography>
-                </MenuItem> */}
-                {/* <MenuItem
-                  onClick={() => scrollToSection('pricing')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Pricing
-                  </Typography>
-                </MenuItem> */}
                 <MenuItem
                   onClick={() => scrollToSection("faq")}
                   sx={{ py: "6px", px: "12px" }}
@@ -140,30 +149,58 @@ function AppAppBar({ mode, toggleColorMode }) {
                 alignItems: "center",
               }}
             >
-              <Search />
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-              <Button
-                color="primary"
-                variant="text"
-                size="small"
-                component="a"
-                href="sin"
-                // target="_blank"
-              >
-                Log in
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                size="small"
-                component="a"
-                href="sup"
-                // target="_blank"
-              >
-                Register
-              </Button>
+              {!isAuthenticated ? (
+                <>
+                  <Button
+                    color="primary"
+                    variant="text"
+                    size="small"
+                    component="a"
+                    href="/sin"
+                  >
+                    Sign in
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    component="a"
+                    href="/sup"
+                  >
+                    Sign up
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      sizes="small"
+                      alt=""
+                      src="/static/images/avatar/7.jpg"
+                      sx={{ width: 36, height: 36 }}
+                    />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleCloseMenu}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </Menu>
+                </>
+              )}
             </Box>
-            <Box sx={{ display: { sm: "", md: "none" } }}>
+            <Box sx={{ display: { sm: "flex", md: "none" } }}>
               <Button
                 variant="text"
                 color="primary"
@@ -173,13 +210,19 @@ function AppAppBar({ mode, toggleColorMode }) {
               >
                 <MenuIcon />
               </Button>
-              <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+              <Drawer
+                anchor="right"
+                open={open}
+                onClose={toggleDrawer(false)}
+              >
                 <Box
                   sx={{
                     minWidth: "60dvw",
                     p: 2,
                     backgroundColor: "background.paper",
                     flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
                   <Box
@@ -195,46 +238,50 @@ function AppAppBar({ mode, toggleColorMode }) {
                       toggleColorMode={toggleColorMode}
                     />
                   </Box>
-                  <MenuItem onClick={() => scrollToSection("features")}>
-                    Features
-                  </MenuItem>
                   <MenuItem onClick={() => scrollToSection("hotdeals")}>
                     Hot Deals
-                  </MenuItem>
-                  <MenuItem onClick={() => scrollToSection("highlights")}>
-                    Highlights
-                  </MenuItem>
-                  <MenuItem onClick={() => scrollToSection("pricing")}>
-                    Pricing
                   </MenuItem>
                   <MenuItem onClick={() => scrollToSection("faq")}>
                     FAQ
                   </MenuItem>
                   <Divider />
-                  <MenuItem>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      component="a"
-                      href="/material-ui/getting-started/templates/sign-up/"
-                      target="_blank"
-                      sx={{ width: "100%" }}
-                    >
-                      Sign up
-                    </Button>
-                  </MenuItem>
-                  <MenuItem>
-                    <Button
-                      color="primary"
-                      variant="outlined"
-                      component="a"
-                      href="/material-ui/getting-started/templates/sign-in/"
-                      target="_blank"
-                      sx={{ width: "100%" }}
-                    >
-                      Sign in
-                    </Button>
-                  </MenuItem>
+                  {!isAuthenticated ? (
+                    <>
+                      <MenuItem>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          component="a"
+                          href="/sign-up"
+                          sx={{ width: "100%" }}
+                        >
+                          Sign up
+                        </Button>
+                      </MenuItem>
+                      <MenuItem>
+                        <Button
+                          color="primary"
+                          variant="outlined"
+                          component="a"
+                          href="/sign-in"
+                          sx={{ width: "100%" }}
+                        >
+                          Sign in
+                        </Button>
+                      </MenuItem>
+                    </>
+                  ) : (
+                    <MenuItem>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={handleLogout}
+                        sx={{ width: "100%" }}
+                      >
+                        Logout
+                      </Button>
+                    </MenuItem>
+                  )}
                 </Box>
               </Drawer>
             </Box>

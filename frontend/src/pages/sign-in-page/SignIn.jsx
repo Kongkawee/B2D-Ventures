@@ -7,7 +7,7 @@ import SignInCard from './SignInCard';
 import Content from './Content';
 import TemplateFrame from './TemplateFrame';
 
-export default function SignInSide() {
+export default function SignIn() {
   const [mode, setMode] = React.useState('light');
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
