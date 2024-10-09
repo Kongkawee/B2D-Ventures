@@ -8,14 +8,15 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import AppAppBar from './components/AppAppBar';
-import Hero from './components/Hero';
+import HeroSection from './components/HeroSection';
 import LogoCollection from './components/LogoCollection';
 import Highlights from './components/Highlights';
 import Pricing from './components/Pricing';
 import Features from './components/Features';
-import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
+import HotDeals from './components/HotDeals';
+import ScrollToTopButton from '../../components/ScrollToTopButton';
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
@@ -59,8 +60,8 @@ ToggleCustomTheme.propTypes = {
   toggleCustomTheme: PropTypes.func.isRequired,
 };
 
-export default function LandingPage() {
-  const [mode, setMode] = React.useState('light');
+export default function HomePage() {
+  const [mode, setMode] = React.useState('dark');
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const LPtheme = createTheme({ palette: { mode } });
   const defaultTheme = createTheme({ palette: { mode } });
@@ -77,12 +78,12 @@ export default function LandingPage() {
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
-      <Hero />
+      <HeroSection />
       <Box sx={{ bgcolor: 'background.default' }}>
         {/* <LogoCollection /> */}
         {/* <Features /> */}
         <Divider />
-        <Testimonials />
+        <HotDeals />
         {/* <Divider /> */}
         {/* <Highlights /> */}
         {/* <Divider /> */}
@@ -91,6 +92,7 @@ export default function LandingPage() {
         <FAQ />
         <Divider />
         <Footer mode={mode}/>
+        <ScrollToTopButton />
       </Box>
       {/* <ToggleCustomTheme
         showCustomTheme={showCustomTheme}
