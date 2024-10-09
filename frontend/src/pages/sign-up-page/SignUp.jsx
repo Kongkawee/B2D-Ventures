@@ -171,13 +171,14 @@ export default function SignUp() {
       };
 
       axios
-        .post("http://127.0.0.1:8000/api/register/", formData, {
+        .post("http://127.0.0.1:8000/api/investor-register/", formData, {
           headers: {
             "X-CSRFToken": csrfToken,
           },
         })
         .then((response) => {
           console.log("User registered successfully:", response.data);
+          localStorage.setItem("access_token", response.data.access);
           navigate("/");
         })
         .catch((error) => {
