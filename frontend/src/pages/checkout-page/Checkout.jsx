@@ -20,37 +20,43 @@ import InfoMobile from './components/InfoMobile';
 import Review from './components/Review';
 import RisksAcceptance from './components/RisksAcceptance';
 import TemplateFrame from './TemplateFrame';
+import axios from 'axios';
 
 const steps = ['Invest detail', 'Risks acceptance', 'Review your investment'];
-function getStepContent(step) {
+
+function getStepContent(step, formData, setFormData) {
   switch (step) {
     case 0:
-      return <InvesmentForm />;
+      return <InvesmentForm formData={formData} setFormData={setFormData} />;
     case 1:
       return <RisksAcceptance />;
     case 2:
-      return <Review />;
+      return <Review formData={formData} />;
     default:
       throw new Error('Unknown step');
   }
 }
+
 export default function Checkout() {
   const [mode, setMode] = React.useState('light');
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const checkoutTheme = createTheme(getCheckoutTheme(mode));
   const defaultTheme = createTheme({ palette: { mode } });
   const [activeStep, setActiveStep] = React.useState(0);
-  // This code only runs on the client side, to determine the system color preference
+  const [formData, setFormData] = React.useState({
+    investor_id: '',
+    business_id: '',
+    amount: ''
+  });
+  const [error, setError] = React.useState(null);
+
+  // Toggle theme based on system preference
   React.useEffect(() => {
-    // Check if there is a preferred mode in localStorage
     const savedMode = localStorage.getItem('themeMode');
     if (savedMode) {
       setMode(savedMode);
     } else {
-      // If no preference is found, it uses system preference
-      const systemPrefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)',
-      ).matches;
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setMode(systemPrefersDark ? 'dark' : 'light');
     }
   }, []);
@@ -58,17 +64,41 @@ export default function Checkout() {
   const toggleColorMode = () => {
     const newMode = mode === 'dark' ? 'light' : 'dark';
     setMode(newMode);
-    localStorage.setItem('themeMode', newMode); // Save the selected mode to localStorage
+    localStorage.setItem('themeMode', newMode);
   };
+
   const toggleCustomTheme = () => {
     setShowCustomTheme((prev) => !prev);
   };
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
+
+  // Submit the investment to the backend
+  const handleSubmitInvestment = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/invest/', {
+        investor_id: formData.investor_id,
+        business_id: formData.business_id,
+        amount: formData.amount
+      });
+      console.log('Investment success:', response.data);
+      setActiveStep(activeStep + 1); // Move to the next step if successful
+    } catch (error) {
+      console.error('Error during investment:', error);
+      setError('Failed to submit the investment. Please try again.');
+    }
   };
+
+  const handleNext = () => {
+    if (activeStep === steps.length - 1) {
+      handleSubmitInvestment(); // Submit investment on the last step
+    } else {
+      setActiveStep(activeStep + 1);
+    }
+  };
+
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
   return (
     <TemplateFrame
       toggleCustomTheme={toggleCustomTheme}
@@ -93,7 +123,6 @@ export default function Checkout() {
               gap: 4,
             }}
           >
-            {/* <BusinessIcon /> */}
             <Box
               sx={{
                 display: 'flex',
@@ -154,26 +183,13 @@ export default function Checkout() {
                 </Stepper>
               </Box>
             </Box>
-            <Card sx={{ display: { xs: 'flex', md: 'none' }, width: '100%' }}>
-              <CardContent
-                sx={{
-                  display: 'flex',
-                  width: '100%',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Investment
-                  </Typography>
-                  <Typography variant="body1">
-                    {activeStep >= 2 ? '$ 100.00' : '$ 100.00'}
-                  </Typography>
-                </div>
-                <InfoMobile totalPrice={activeStep >= 2 ? '$ 100.00' : '$ 100.00'} />
-              </CardContent>
-            </Card>
+
+            {error && (
+              <Typography variant="body1" color="error">
+                {error}
+              </Typography>
+            )}
+
             <Box
               sx={{
                 display: 'flex',
@@ -185,65 +201,31 @@ export default function Checkout() {
                 gap: { xs: 5, md: 'none' },
               }}
             >
-              <Stepper
-                id="mobile-stepper"
-                activeStep={activeStep}
-                alternativeLabel
-                sx={{ display: { sm: 'flex', md: 'none' } }}
-              >
-                {steps.map((label) => (
-                  <Step
-                    sx={{
-                      ':first-child': { pl: 0 },
-                      ':last-child': { pr: 0 },
-                      '& .MuiStepConnector-root': { top: { xs: 6, sm: 12 } },
-                    }}
-                    key={label}
-                  >
-                    <StepLabel
-                      sx={{ '.MuiStepLabel-labelContainer': { maxWidth: '70px' } }}
-                    >
-                      {label}
-                    </StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
               {activeStep === steps.length ? (
-                // Completion Page
                 <Stack spacing={2} useFlexGap>
                   <Typography variant="h5">Thank you for your investment!</Typography>
                   <Typography variant="body1" sx={{ color: 'text.secondary' }}>
                     Your order number is
-                    <strong>&nbsp;#9999</strong>. We have emailed your order
-                    confirmation and will update you once its complete.
+                    <strong>&nbsp;#9999</strong>. We have emailed your order confirmation and will update you once it's complete.
                   </Typography>
-                  <Button
-                    variant="contained"
-                    sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }}
-                    href='/'
-                  >
+                  <Button variant="contained" sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }} href="/">
                     Go to my orders
                   </Button>
                 </Stack>
               ) : (
                 <React.Fragment>
-                  {getStepContent(activeStep)}
+                  {getStepContent(activeStep, formData, setFormData)}
                   <Box
-                    sx={[
-                      {
-                        display: 'flex',
-                        flexDirection: { xs: 'column-reverse', sm: 'row' },
-                        alignItems: 'end',
-                        flexGrow: 1,
-                        gap: 1,
-                        pb: { xs: 12, sm: 0 },
-                        mt: { xs: 2, sm: 0 },
-                        mb: '60px',
-                      },
-                      activeStep !== 0
-                        ? { justifyContent: 'space-between' }
-                        : { justifyContent: 'flex-end' },
-                    ]}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: { xs: 'column-reverse', sm: 'row' },
+                      alignItems: 'end',
+                      flexGrow: 1,
+                      gap: 1,
+                      pb: { xs: 12, sm: 0 },
+                      mt: { xs: 2, sm: 0 },
+                      mb: '60px',
+                    }}
                   >
                     {activeStep !== 0 && (
                       <Button
