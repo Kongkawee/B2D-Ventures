@@ -182,5 +182,5 @@ class ListInvestment(generics.ListCreateAPIView):
 
 class DetailInvestment(generics.RetrieveUpdateDestroyAPIView):
     queryset = Investment.objects.all()
-    serializer_class = BusinessSerializer 
+    serializer_class = InvestmentSerializer 
 
