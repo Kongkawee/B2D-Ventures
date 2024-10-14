@@ -17,6 +17,9 @@ class BusinessSerializer(serializers.ModelSerializer):
 
 
 class InvestmentSerializer(serializers.ModelSerializer):
+    business = BusinessSerializer(read_only=True)
+    investor = InvestorSerializer(read_only=True)
+
     """Serializer for Investment model."""
     class Meta:
         fields = "__all__"
