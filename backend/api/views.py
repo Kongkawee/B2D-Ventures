@@ -7,22 +7,25 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.exceptions import ValidationError
 
-
+# INVESTOR REGISTRATION
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_investor(request):
-    username = request.data.get('username')  # You need to ensure username is passed from the client
+    username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
 
+    # Validation: Ensure username is unique
     if User.objects.filter(username=username).exists():
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
+    # Create the user
     user = User.objects.create_user(username=username, email=email, password=password)
     user.save()
 
-    # Create the Investor object linked to the User
+    # Create the associated investor object
     investor = Investor.objects.create(
         user=user, 
         first_name=request.data.get('firstName'), 
@@ -30,15 +33,16 @@ def register_investor(request):
         email=email, 
         phone_number=request.data.get('phoneNumber')
     )
+    investor.save()
 
-    # Generate JWT tokens
+    # Generate and return JWT tokens
     refresh = RefreshToken.for_user(user)
     return Response({
         'refresh': str(refresh), 
         'access': str(refresh.access_token)
     }, status=status.HTTP_201_CREATED)
 
-
+# INVESTOR LOGIN
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_investor(request):
@@ -51,8 +55,8 @@ def login_investor(request):
         return Response({'refresh': str(refresh), 'access': str(refresh.access_token)})
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-    
+
+# BUSINESS REGISTRATION
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_business(request):
@@ -83,14 +87,13 @@ def register_business(request):
         status=request.data.get('status')
     )
 
-    # Generate JWT tokens
     refresh = RefreshToken.for_user(user)
     return Response({
         'refresh': str(refresh),
         'access': str(refresh.access_token)
     }, status=status.HTTP_201_CREATED)
-  
-  
+
+# BUSINESS LOGIN
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_business(request):
@@ -111,8 +114,8 @@ def login_business(request):
         })
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-    
 
+# INVESTMENT HANDLING
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def invest(request):
@@ -122,7 +125,7 @@ def invest(request):
 
     if not investor_id or not business_id or not amount:
         return Response({'error': 'Missing required fields.'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     try:
         investor = Investor.objects.get(id=investor_id)
     except Investor.DoesNotExist:
@@ -161,6 +164,7 @@ class ListInvestor(generics.ListCreateAPIView):
     
 
 class DetailInvestor(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
     queryset = Investor.objects.all()
     serializer_class = InvestorSerializer 
 
@@ -184,3 +188,27 @@ class DetailInvestment(generics.RetrieveUpdateDestroyAPIView):
     queryset = Investment.objects.all()
     serializer_class = InvestmentSerializer 
 
+
+class CurrentInvestorProfile(generics.RetrieveUpdateAPIView):
+    serializer_class = InvestorSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        user = self.request.user
+        return Investor.objects.get(user=user)
+    
+class CurrentInvestorInvestment(generics.ListAPIView):
+    serializer_class = InvestmentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        investor = Investor.objects.get(user=self.request.user)
+        return Investment.objects.filter(investor=investor)
+    
+
+class InvestmentByInvestorView(generics.ListAPIView):
+    serializer_class = InvestmentSerializer
+
+    def get_queryset(self):
+        investor_id = self.kwargs['pk']
+        return Investment.objects.filter(investor_id=investor_id)
