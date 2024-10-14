@@ -10,10 +10,12 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import axios from "axios";
+import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import ForgotPassword from "./ForgotPassword";
 import { SitemarkIcon } from "./CustomIcons";
+import { useState } from "react";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -34,16 +36,12 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignInCard() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const csrfToken = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("csrftoken"))
-    ?.split("=")[1];
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -80,29 +78,30 @@ export default function SignInCard() {
     return isValid;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateInputs()) {
       const data = new FormData(event.currentTarget);
       const formData = {
-        username: data.get("email"),
-        password: data.get("password"),
+        username: data.get("email"),  // Ensure 'username' corresponds to the backend's expected field
+        password: data.get("password")
       };
 
-      axios
-        .post("http://127.0.0.1:8000/api/investor-login/", formData, {
-          headers: {
-            "X-CSRFToken": csrfToken,
-          },
-        })
-        .then((response) => {
-          console.log("User logged in successfully:", response.data);
-          localStorage.setItem("access_token", response.data.access);
-          navigate("/"); // Redirect to home or another page after login
-        })
-        .catch((error) => {
-          console.error("Error logging in user:", error);
-        });
+      try {
+        const response = await api.post("/api/token/", formData);
+        console.log("User logged in successfully:", response.data);
+        localStorage.setItem(ACCESS_TOKEN, response.data.access);
+        localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
+        navigate("/"); // Redirect to home or another page after login
+      } catch (error) {
+        console.error("Error logging in user:", error);
+        if (error.response) {
+          // Display error message to user
+          alert(error.response.data.detail || "Login failed. Please try again.");
+        } else {
+          alert("Login failed. Please check your network connection.");
+        }
+      }
     }
   };
 
@@ -173,7 +172,6 @@ export default function SignInCard() {
           type="submit"
           fullWidth
           variant="contained"
-          onClick={validateInputs}
         >
           Sign in
         </Button>

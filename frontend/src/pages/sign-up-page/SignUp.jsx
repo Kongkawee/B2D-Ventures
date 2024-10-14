@@ -12,12 +12,13 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import axios from "axios";
+import api from "../../api";
 import getSignUpTheme from "./theme/getSignUpTheme";
 import TemplateFrame from "./TemplateFrame";
 import LogoLight from "../../images/LogoLight.png";
 import LogoDark from "../../images/LogoDark.png";
 import { useNavigate } from "react-router-dom";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -157,7 +158,7 @@ export default function SignUp() {
     .find((row) => row.startsWith("csrftoken"))
     ?.split("=")[1];
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateInputs()) {
       const data = new FormData(event.currentTarget);
@@ -167,23 +168,24 @@ export default function SignUp() {
         lastName: data.get("lastname"),
         phoneNumber: data.get("phonenumber"),
         email: data.get("email"),
-        password: data.get("password"),
+        password: data.get("password")
       };
 
-      axios
-        .post("http://127.0.0.1:8000/api/investor-register/", formData, {
-          headers: {
-            "X-CSRFToken": csrfToken,
-          },
-        })
-        .then((response) => {
-          console.log("User registered successfully:", response.data);
-          localStorage.setItem("access_token", response.data.access);
-          navigate("/");
-        })
-        .catch((error) => {
-          console.error("Error registering user:", error);
-        });
+      try {
+        const response = await api.post("api/investor/register/", formData);
+        console.log("User registered successfully:", response.data);
+        localStorage.setItem(ACCESS_TOKEN, response.data.access);
+        localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
+        navigate("/sin"); // Redirect to home or another page after register
+      } catch (error) {
+        console.error("Error register user:", error);
+        if (error.response) {
+          // Display error message to user
+          alert(error.response.data.detail || "Register failed. Please try again.");
+        } else {
+          alert("Register failed. Please check your network connection.");
+        }
+      }
     }
   };
 
