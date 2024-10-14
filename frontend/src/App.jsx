@@ -10,7 +10,7 @@ import BusinessInfo from "./pages/business-info-page/Business"
 import BusinessRegistration from "./pages/business-registration-page/BusinessRegistration"
 import BusinessExplorationPage from "./pages/business-exploration-page/BusinessExploration"
 import InvestorProfile from "./pages/profile-portfolio-investor-page/InvestorProfile"
-// import BusinessProfile from "./pages/profile-portfolio-business-page/BusinessProfile"
+import BusinessProfile from "./pages/profile-portfolio-business-page/BusinessProfile"
 
 function Logout() {
   localStorage.clear()
@@ -30,14 +30,14 @@ function App() {
         <Route path="/sin" element={<SignIn />} /> Sign in page
         <Route path="/logout" element={<Logout />} /> 
         <Route path="/sup" element={<RegisterAndLogout />} /> Sign up Page
-        <Route path="/checkout" element={<Checkout/>} /> Checkout
+        <Route path="/checkout" element={<ProtectedRoute><Checkout/></ProtectedRoute>} /> Checkout
         <Route path="/bus" element={<BusinessInfo />} /> Business info Page
         <Route path="/bus-reg" element={<BusinessRegistration />} /> Business Registration Page
         <Route path="/explore" element={<BusinessExplorationPage />} /> Business exploration Page
-        <Route path="/inv-pro" element={<InvestorProfile />} /> Investor Profile Page
-        {/* <Route path="/inv-por" element={<BusinessExplorationPage />} /> Investor Portfolio Page */}
-        {/* <Route path="/bus-pro" element={<BusinessProfile />} /> Business Profile Page */}
-        {/* <Route path="/bus-por" element={<BusinessExplorationPage />} /> Business Portfolio Page */}
+        <Route path="/inv-pro" element={<ProtectedRoute><InvestorProfile /></ProtectedRoute>} /> Investor Profile Page
+        {/* <Route path="/inv-por" element={<ProtectedRoute><BusinessExplorationPage /></ProtectedRoute>} /> Investor Portfolio Page */}
+        <Route path="/bus-pro" element={<ProtectedRoute><BusinessProfile /></ProtectedRoute>} /> Business Profile Page
+        {/* <Route path="/bus-por" element={<ProtectedRoute><BusinessExplorationPage /></ProtectedRoute>} /> Business Portfolio Page */}
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
