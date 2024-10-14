@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { columns, rows } from '../internals/data/gridData';
+import { columns } from '../internals/data/gridData';
 
-export default function CustomizedDataGrid() {
+export default function InvestmentHistory({userInvestment}) {
+
   return (
     <DataGrid
       autoHeight
       // checkboxSelection
-      rows={rows}
+      rows={userInvestment}
       columns={columns}
       getRowClassName={(params) =>
         params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
