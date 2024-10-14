@@ -24,15 +24,17 @@ class Business(models.Model):
     publish_date = models.DateTimeField()
     end_date = models.DateTimeField()
     description = models.TextField()
-    goal = models.DecimalField(max_digits=4, decimal_places=2)
-    min_investment = models.DecimalField(max_digits=4, decimal_places=2)
-    max_investment = models.DecimalField(max_digits=4, decimal_places=2)
-    current_investment = models.DecimalField(max_digits=4, decimal_places=2)
+    goal = models.DecimalField(max_digits=12, decimal_places=2)
+    min_investment = models.DecimalField(max_digits=12, decimal_places=2)
+    max_investment = models.DecimalField(max_digits=12, decimal_places=2)
+    current_investment = models.DecimalField(max_digits=12, decimal_places=2)
+    price_per_share = models.DecimalField(max_digits=12, decimal_places=2)
     shares_detail = models.CharField(max_length=100)
     status = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.company_name + ': ' + {self.business_name}}"
+        return f"{self.company_name}: {self.business_name}"
+
 
 
 
@@ -41,7 +43,7 @@ class Investment(models.Model):
     investor = models.ForeignKey(Investor, on_delete=models.CASCADE)
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
-    shares = models.DecimalField(max_digits=5, decimal_places=2)
+    shares = models.DecimalField(max_digits=12, decimal_places=2)
     status = models.CharField(max_length=20)
 
     def __str__(self):
