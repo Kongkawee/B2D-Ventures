@@ -34,7 +34,7 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/sup" element={<RegisterAndLogout />} />{" Investor Sign up Page "}
         <Route
-          path="/checkout"
+          path="/checkout/:id"
           element={
             <ProtectedRoute>
               <Checkout />

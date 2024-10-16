@@ -138,9 +138,15 @@ def register_business(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def invest(request):
-    investor_id = request.data.get('investor_id')
+    try:
+        investor = Investor.objects.get(user=request.user)
+        investor_id = investor.id
+    except Investor.DoesNotExist:
+        return Response({'error': 'Investor not found.'}, status=status.HTTP_404_NOT_FOUND)
+
     business_id = request.data.get('business_id')
     amount = request.data.get('amount')
+    shares = request.data.get('shares')
 
     if not investor_id or not business_id or not amount:
         return Response({'error': 'Missing required fields.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -170,7 +176,8 @@ def invest(request):
     investment = Investment.objects.create(
         investor=investor,
         business=business,
-        amount=amount
+        amount=amount,
+        shares=shares
     )
 
     investment_serializer = InvestmentSerializer(investment)

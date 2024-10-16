@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('invest/', views.invest, name='invest'),
+    
     path('investor/', views.ListInvestor.as_view(), name='all_investor'),
     path('investor/<int:pk>/', views.DetailInvestor.as_view(), name='specific_investor'),
     path('investor/profile/', views.CurrentInvestorProfile.as_view(), name='current_investor_profile'),

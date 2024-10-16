@@ -94,7 +94,7 @@ export default function InvestInfoBox({ business }) {
         </Typography>
 
         {/* Invest Button */}
-        <Link to="/checkout" style={{ textDecoration: "none" }}>
+        <Link to={`/checkout/${business.id}`} style={{ textDecoration: "none" }}>
           <Button
             sx={{
               backgroundColor: "green",
