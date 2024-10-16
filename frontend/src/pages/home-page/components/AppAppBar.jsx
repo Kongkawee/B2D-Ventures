@@ -61,10 +61,7 @@ function AppAppBar({ mode, toggleColorMode }) {
   };
 
   const handleLogout = () => {
-    // localStorage.removeItem("access_token"); // Remove token on logout
-    // setIsAuthenticated(false); // Update the auth state
     navigate("/logout")
-    handleCloseMenu(); // Close the Avatar menu
   };
 
   const handleProfile = () => {
