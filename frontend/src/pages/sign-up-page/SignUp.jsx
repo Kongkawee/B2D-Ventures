@@ -176,6 +176,7 @@ export default function SignUp() {
         console.log("User registered successfully:", response.data);
         localStorage.setItem(ACCESS_TOKEN, response.data.access);
         localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
+        localStorage.setItem("role", response.data.role);
         navigate("/sin"); // Redirect to home or another page after register
       } catch (error) {
         console.error("Error register user:", error);
