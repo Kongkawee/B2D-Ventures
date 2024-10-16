@@ -35,9 +35,6 @@ function TemplateFrame({
   toggleColorMode,
   children,
 }) {
-  const handleChange = (event) => {
-    toggleCustomTheme(event.target.value === 'custom');
-  };
   const signUpTheme = createTheme(getSignUpTheme(mode));
 
   return (
@@ -107,7 +104,6 @@ TemplateFrame.propTypes = {
   mode: PropTypes.oneOf(['dark', 'light']).isRequired,
   showCustomTheme: PropTypes.bool.isRequired,
   toggleColorMode: PropTypes.func.isRequired,
-  toggleCustomTheme: PropTypes.func.isRequired,
 };
 
 export default TemplateFrame;
