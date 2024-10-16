@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -10,15 +10,16 @@ import PitchBox from "./PitchBox";
 import InvestInfoBox from "./InvestInfoBox";
 import DealTermsBox from "./DealTermsBox";
 
-export default function MainGrid() {
+export default function MainGrid({ business }) {
+  
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       {/* cards */}
       <Typography component="h1" variant="h1" sx={{ mb: 0 }}>
-        Pressman Film
+        {business.business_name}
       </Typography>
       <Typography component="overline" variant="overline" sx={{ mb: 2 }}>
-        New movies from the company behind 'Wall Street' & 'American Psycho'
+        {business.brief_description}
       </Typography>
       <Grid
         container
@@ -36,7 +37,7 @@ export default function MainGrid() {
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ md: 12, lg: 8 }}>
-              <PitchBox />
+              <PitchBox business={business}/>
             </Grid>
           </Grid>
         </Grid>
@@ -54,14 +55,11 @@ export default function MainGrid() {
             />
           </Grid>
           <Grid>
-            <InvestInfoBox />
+            <InvestInfoBox business={business}/>
           </Grid>
           <Grid>
-            <DealTermsBox />
+            <DealTermsBox business={business}/>
           </Grid>
-          {/* <Grid>
-            <InvestInfoBox />
-          </Grid> */}
         </Grid>
       </Grid>
       <Copyright sx={{ my: 4 }} />

@@ -1,9 +1,14 @@
+import React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Avatar, Button, Divider, LinearProgress, Card } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Divider, Card } from "@mui/material";
+import { format } from "date-fns";
 
-export default function DealTermsBox() {
+export default function DealTermsBox({ business }) {
+  const formattedDeadline = business.end_date
+    ? format(new Date(business.end_date), "MMMM d, yyyy")
+    : "N/A";
+
   return (
     <Card sx={{ p: 4 }}>
       <Box
@@ -15,51 +20,56 @@ export default function DealTermsBox() {
           spaceY: 2,
         }}
       >
-        {/* Funding Amount */}
+        {/* Deal Terms Title */}
         <Typography variant="h3" color="text.primary" sx={{ mb: 2 }}>
           Deal Terms
         </Typography>
 
+        {/* Minimum Investment */}
         <Typography variant="body1" color="text.secondary">
-          Minimum investment
+          Minimum Investment
         </Typography>
         <Typography
           variant="h4"
           color="text.primary"
           sx={{ mb: 2 }}
         >
-          $ 200
+          $ {Number(business.min_investment).toLocaleString()}
         </Typography>
 
         <Divider sx={{ my: 2, borderColor: "grey.700" }} />
 
+        {/* Maximum Investment */}
         <Typography variant="body1" color="text.secondary">
-          Maximum investment
+          Maximum Investment
         </Typography>
         <Typography
           variant="h4"
           color="text.primary"
           sx={{ mb: 2 }}
         >
-          -
+          {business.max_investment
+            ? `$ ${Number(business.max_investment).toLocaleString()}`
+            : "-"}
         </Typography>
 
         <Divider sx={{ my: 2, borderColor: "grey.700" }} />
 
-
+        {/* Funding Goal */}
         <Typography variant="body1" color="text.secondary">
-          Funding goal
+          Funding Goal
         </Typography>
         <Typography
           variant="h4"
           color="text.primary"
           sx={{ mb: 2 }}
         >
-          $ 1.5M
+          $ {Number(business.goal).toLocaleString()}
         </Typography>
 
         <Divider sx={{ my: 2, borderColor: "grey.700" }} />
 
+        {/* Deadline */}
         <Typography variant="body1" color="text.secondary">
           Deadline
         </Typography>
@@ -68,19 +78,20 @@ export default function DealTermsBox() {
           color="text.primary"
           sx={{ mb: 2 }}
         >
-          November 23, 2024
+          {formattedDeadline}
         </Typography>
 
         <Divider sx={{ my: 2, borderColor: "grey.700" }} />
 
+        {/* Price per Share */}
         <Typography variant="body1" color="text.secondary">
-          Price per share
+          Price Per Share
         </Typography>
         <Typography
           variant="h4"
           color="text.primary"
         >
-          $ 1
+          $ {Number(business.price_per_share).toLocaleString()}
         </Typography>
       </Box>
     </Card>
