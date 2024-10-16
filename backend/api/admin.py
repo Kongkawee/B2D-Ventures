@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib import messages
 from .models import Investor, Business, Investment
 
 @admin.register(Investor)
@@ -26,6 +27,15 @@ class BusinessAdmin(admin.ModelAdmin):
     list_filter = ('company_name', 'business_name', 'status', 'publish_date', 'end_date')
     ordering = ('id',)
     readonly_fields = ('user',)
+
+    # Define the custom action
+    @admin.action(description='Approve selected businesses')
+    def approve_businesses(self, request, queryset):
+        updated_count = queryset.update(status='available')
+        self.message_user(request, f'{updated_count} business(es) have been approved as available.', messages.SUCCESS)
+
+    # Register the action
+    actions = ['approve_businesses']
 
 @admin.register(Investment)
 class InvestmentAdmin(admin.ModelAdmin):
