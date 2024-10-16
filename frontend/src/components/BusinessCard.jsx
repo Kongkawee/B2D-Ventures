@@ -21,13 +21,19 @@ export default function BusinessCard({
     .map((category) => category.trim());
 
   return (
-    <Link to={`/bus/${businessId}`} style={{ textDecoration: "none", flexGrow: 1 }}>
+    <Link
+      to={`/bus/${businessId}`}
+      style={{ textDecoration: "none", flexGrow: 1 }}
+    >
       <Card
         sx={{
           display: "flex",
           flexDirection: "column",
           height: "100%",
           borderRadius: 3,
+          overflow: "hidden",
+          maxWidth: "100%", // Ensure card stays within its grid bounds
+          boxShadow: 3,
         }}
       >
         <CardMedia
@@ -35,6 +41,10 @@ export default function BusinessCard({
           alt={`${businessTitle} Picture`}
           height="200"
           image={picture}
+          sx={{
+            objectFit: "cover",
+            width: "100%", // Ensure image fits the card width
+          }}
         />
         <CardContent
           sx={{
@@ -42,22 +52,60 @@ export default function BusinessCard({
             flexDirection: "column",
             justifyContent: "space-between",
             height: "100%",
+            overflow: "hidden",
           }}
         >
           <Box>
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="div"
+              sx={{
+                whiteSpace: "nowrap", // Prevent wrapping
+                overflow: "hidden",
+                textOverflow: "ellipsis", // Add ellipsis for overflow
+              }}
+            >
               {businessTitle}
             </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               {companyName}
             </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mt: 1,
+                overflow: "hidden",
+                display: "-webkit-box",
+                WebkitLineClamp: 3, 
+                WebkitBoxOrient: "vertical",
+                textOverflow: "ellipsis",
+              }}
+            >
               {briefDescription}
             </Typography>
           </Box>
           <Box>
             <Box className="location">
-              <Typography variant="body2" sx={{ color: "gray", mt: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "gray",
+                  mt: 1,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
                 {provinceLocated}, {countryLocated}
               </Typography>
             </Box>
@@ -73,6 +121,9 @@ export default function BusinessCard({
                     px: 1,
                     py: 0.5,
                     borderRadius: "4px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                 >
                   {category}

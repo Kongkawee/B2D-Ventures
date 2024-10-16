@@ -72,7 +72,7 @@ export default function HotDeals() {
 
       <Grid container spacing={4} justifyContent="center" columns={9}>
         {limitedBusinessDeals.map((deal, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+          <Grid item xs={12} sm={6} md={4} key={index} maxWidth={"30%"}>
             <BusinessCard
               businessTitle={deal.business_name}
               businessId={deal.id}
