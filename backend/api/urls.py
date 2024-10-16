@@ -11,7 +11,7 @@ urlpatterns = [
     path('business/', views.ListBusiness.as_view(), name='all_business'),
     path('business/card/', views.ListAvailableBusinessForCard.as_view(), name='all_available_business_card'),
     path('business/<int:pk>/', views.DetailBusiness.as_view(), name='specific_business'),
-    path('business/profile/', views.CurrentBusinessFundraise.as_view(), name='current_business_profile'),
+    path('business/profile/', views.CurrentBusinessProfile.as_view(), name='current_business_profile'),
     path('business/fundraise/', views.CurrentBusinessFundraise.as_view(), name='current_business_fundraise'),
 
     path('investment/', views.ListInvestment.as_view(), name='all_investment'),

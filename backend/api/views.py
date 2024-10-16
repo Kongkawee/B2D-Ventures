@@ -245,6 +245,14 @@ class CurrentBusinessFundraise(generics.ListAPIView):
         business = Business.objects.get(user=self.request.user)
         return Investment.objects.filter(business=business)
 
+class CurrentBusinessProfile(generics.RetrieveUpdateAPIView):
+    serializer_class = BusinessSerializer
+    permission_classes = [IsAuthenticated, IsBusiness]
+
+    def get_object(self):
+        user = self.request.user
+        return Business.objects.get(user=user)
+
 
 class InvestmentByInvestorView(generics.ListAPIView):
     serializer_class = InvestmentSerializer
