@@ -1,13 +1,24 @@
 from .models import Investor, Business, Investment
-from .serializers import InvestorSerializer, BusinessSerializer, InvestmentSerializer
+from .serializers import InvestorSerializer, BusinessSerializer, InvestmentSerializer, BusinessCardSerializer
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
 from rest_framework.exceptions import ValidationError
+
+
+class IsInvestor(BasePermission):
+    def has_permission(self, request, view):
+        return hasattr(request.user, 'investor')
+    
+
+class IsBusiness(BasePermission):
+    def has_permission(self, request, view):
+        return hasattr(request.user, 'business')
+
 
 # INVESTOR REGISTRATION
 @api_view(['POST'])
@@ -39,28 +50,51 @@ def register_investor(request):
     refresh = RefreshToken.for_user(user)
     return Response({
         'refresh': str(refresh), 
-        'access': str(refresh.access_token)
+        'access': str(refresh.access_token),
+        'role': 'investor'
     }, status=status.HTTP_201_CREATED)
 
-# INVESTOR LOGIN
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def login_investor(request):
+def login_user(request):
     username = request.data.get('username')
     password = request.data.get('password')
+    user_type = request.data.get('type')  # Expecting 'investor' or 'business' in the request data
+
+    if not user_type or user_type not in ['investor', 'business']:
+        return Response({'error': 'User type must be either "investor" or "business".'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = authenticate(username=username, password=password)
     if user is not None:
+        # Check if the login request is for a business or investor
+        if user_type == 'business':
+            try:
+                business = Business.objects.get(user=user)
+                role = 'business'
+            except Business.DoesNotExist:
+                return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:  # Assume it's for an investor
+            try:
+                investor = Investor.objects.get(user=user)
+                role = 'investor'
+            except Investor.DoesNotExist:
+                return Response({'error': 'Investor not found'}, status=status.HTTP_404_NOT_FOUND)
+
         refresh = RefreshToken.for_user(user)
-        return Response({'refresh': str(refresh), 'access': str(refresh.access_token)})
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'role': role
+        }, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 # BUSINESS REGISTRATION
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_business(request):
-    username = request.data.get('username')
+    username = request.data.get('email')
     email = request.data.get('email')
     password = request.data.get('password')
 
@@ -78,42 +112,27 @@ def register_business(request):
         phone_number=request.data.get('phoneNumber'),
         publish_date=request.data.get('publishDate'),
         end_date=request.data.get('endDate'),
-        description=request.data.get('description'),
+
+
+        fundraise_purpose=request.data.get('fundraisePurpose'),
+        brief_description=request.data.get('briefDescription'),
+        pitch=request.data.get('pitch'),
+        business_category=request.data.get('businessCategory'),
+        country_located=request.data.get('countryLocated'),
+        province_located=request.data.get('provinceLocated'),
         goal=request.data.get('goal'),
         min_investment=request.data.get('minInvestment'),
         max_investment=request.data.get('maxInvestment'),
-        current_investment=request.data.get('currentInvestment'),
-        shares_detail=request.data.get('sharesDetail'),
-        status=request.data.get('status')
+        price_per_share=request.data.get('pricePerShare'),
     )
+    business.save()
 
     refresh = RefreshToken.for_user(user)
     return Response({
         'refresh': str(refresh),
-        'access': str(refresh.access_token)
+        'access': str(refresh.access_token),
+        'role': 'business'
     }, status=status.HTTP_201_CREATED)
-
-# BUSINESS LOGIN
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def login_business(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
-
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        try:
-            business = Business.objects.get(user=user)
-        except Business.DoesNotExist:
-            return Response({'error': 'Business not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        refresh = RefreshToken.for_user(user)
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token)
-        })
-    else:
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # INVESTMENT HANDLING
 @api_view(['POST'])
@@ -159,52 +178,73 @@ def invest(request):
 
 
 class ListInvestor(generics.ListCreateAPIView):
+    permission_classes = [AllowAny] # Remove after tested
     queryset = Investor.objects.all()
     serializer_class = InvestorSerializer
     
 
 class DetailInvestor(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny] # Remove after tested
     queryset = Investor.objects.all()
     serializer_class = InvestorSerializer 
 
 
 class ListBusiness(generics.ListCreateAPIView):
+    permission_classes = [AllowAny] # Remove after tested
     queryset = Business.objects.all()
     serializer_class = BusinessSerializer
+
+
+class ListAvailableBusinessForCard(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Business.objects.filter(status="available")
+    serializer_class = BusinessCardSerializer
     
 
 class DetailBusiness(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny] # Remove after tested
     queryset = Business.objects.all()
     serializer_class = BusinessSerializer 
 
 
 class ListInvestment(generics.ListCreateAPIView):
+    permission_classes = [AllowAny] # Remove after tested
     queryset = Investment.objects.all()
     serializer_class = InvestmentSerializer
     
 
 class DetailInvestment(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny] # Remove after tested
     queryset = Investment.objects.all()
     serializer_class = InvestmentSerializer 
 
 
 class CurrentInvestorProfile(generics.RetrieveUpdateAPIView):
     serializer_class = InvestorSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsInvestor]
 
     def get_object(self):
         user = self.request.user
         return Investor.objects.get(user=user)
     
+
 class CurrentInvestorInvestment(generics.ListAPIView):
     serializer_class = InvestmentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsInvestor]
 
     def get_queryset(self):
         investor = Investor.objects.get(user=self.request.user)
         return Investment.objects.filter(investor=investor)
     
+
+class CurrentBusinessFundraise(generics.ListAPIView):
+    serializer_class = InvestmentSerializer
+    permission_classes = [IsAuthenticated, IsBusiness]
+
+    def get_queryset(self):
+        business = Business.objects.get(user=self.request.user)
+        return Investment.objects.filter(business=business)
+
 
 class InvestmentByInvestorView(generics.ListAPIView):
     serializer_class = InvestmentSerializer
