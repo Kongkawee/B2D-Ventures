@@ -1,19 +1,25 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  IconButton,
+  Typography,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Checkbox,
+  Link,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@mui/material";
 import MuiCard from "@mui/material/Card";
-import Checkbox from "@mui/material/Checkbox";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import axios from "axios";
+import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import ForgotPassword from "./ForgotPassword";
 import { SitemarkIcon } from "./CustomIcons";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -34,16 +40,13 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignInCard() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [loginType, setLoginType] = useState("investor");
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const csrfToken = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("csrftoken"))
-    ?.split("=")[1];
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,13 +56,19 @@ export default function SignInCard() {
     setOpen(false);
   };
 
+  const handleLoginTypeChange = (event, newLoginType) => {
+    if (newLoginType) {
+      setLoginType(newLoginType);
+    }
+  };
+
   const validateInputs = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     let isValid = true;
 
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    if (!email || !/\S+@\S+.\S+/.test(email)) {
       setEmailError(true);
       setEmailErrorMessage("Please enter a valid email address.");
       isValid = false;
@@ -80,29 +89,35 @@ export default function SignInCard() {
     return isValid;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateInputs()) {
       const data = new FormData(event.currentTarget);
       const formData = {
-        username: data.get("email"),
+        username: data.get("email"), // Ensure 'username' corresponds to the backend's expected field
         password: data.get("password"),
+        type: loginType,
       };
 
-      axios
-        .post("http://127.0.0.1:8000/api/investor-login/", formData, {
-          headers: {
-            "X-CSRFToken": csrfToken,
-          },
-        })
-        .then((response) => {
-          console.log("User logged in successfully:", response.data);
-          localStorage.setItem("access_token", response.data.access);
-          navigate("/"); // Redirect to home or another page after login
-        })
-        .catch((error) => {
-          console.error("Error logging in user:", error);
-        });
+      try {
+        const response = await api.post("/api/login/", formData);
+        console.log("User logged in successfully:", response.data);
+        localStorage.setItem(ACCESS_TOKEN, response.data.access);
+        localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
+        localStorage.setItem("role", response.data.role);
+        if (response.data.role === "investor") {
+          navigate("/");
+        } else {
+          navigate("/bus-pro");
+        }
+      } catch (error) {
+        console.error("Error logging in user:", error);
+        if (error.response) {
+          alert(error.response.data.detail || "Login failed. Please try again.");
+        } else {
+          alert("Login failed. Please check your network connection.");
+        }
+      }
     }
   };
 
@@ -118,6 +133,20 @@ export default function SignInCard() {
       >
         Sign in
       </Typography>
+      <ToggleButtonGroup
+        value={loginType}
+        exclusive
+        onChange={handleLoginTypeChange}
+        sx={{ alignSelf: "center" }}
+        aria-label="login type"
+      >
+        <ToggleButton value="investor" aria-label="investor login">
+          Investor
+        </ToggleButton>
+        <ToggleButton value="business" aria-label="business login">
+          Business
+        </ToggleButton>
+      </ToggleButtonGroup>
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -169,12 +198,7 @@ export default function SignInCard() {
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          onClick={validateInputs}
-        >
+        <Button type="submit" fullWidth variant="contained">
           Sign in
         </Button>
         <Typography sx={{ textAlign: "center" }}>

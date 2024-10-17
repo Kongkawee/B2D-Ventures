@@ -11,9 +11,9 @@ import Typography from '@mui/material/Typography';
 import FacebookIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/X';
-import ToggleColorMode from "./ToggleColorMode";
-import LogoLight from "../../../images/LogoLight.png";
-import LogoDark from "../../../images/LogoDark.png";
+import ToggleColorMode from "../pages/business-exploration-page/components/ToggleColorMode";
+import LogoLight from "../images/LogoLight.png";
+import LogoDark from "../images/LogoDark.png";
 
 const logoStyle = {
   width: '140px',

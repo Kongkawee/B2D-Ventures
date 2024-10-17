@@ -1,6 +1,5 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
@@ -11,10 +10,10 @@ export default function BusinessCard({
   businessTitle,
   businessId,
   categories,
-  description,
-  businessLogo,
+  briefDescription,
   picture,
-  location, // New prop for location
+  countryLocated,
+  provinceLocated,
   companyName,
 }) {
   const categoryArray = categories
@@ -22,14 +21,19 @@ export default function BusinessCard({
     .map((category) => category.trim());
 
   return (
-    <Link to={`/bus`} style={{ textDecoration: "none", flexGrow: 1 }}>
-      {/* `/business/${businessId}` */}
+    <Link
+      to={`/bus/${businessId}`}
+      style={{ textDecoration: "none", flexGrow: 1 }}
+    >
       <Card
         sx={{
           display: "flex",
           flexDirection: "column",
           height: "100%",
           borderRadius: 3,
+          overflow: "hidden",
+          maxWidth: "100%", // Ensure card stays within its grid bounds
+          boxShadow: 3,
         }}
       >
         <CardMedia
@@ -37,6 +41,10 @@ export default function BusinessCard({
           alt={`${businessTitle} Picture`}
           height="200"
           image={picture}
+          sx={{
+            objectFit: "cover",
+            width: "100%", // Ensure image fits the card width
+          }}
         />
         <CardContent
           sx={{
@@ -44,31 +52,63 @@ export default function BusinessCard({
             flexDirection: "column",
             justifyContent: "space-between",
             height: "100%",
+            overflow: "hidden",
           }}
         >
-          {/* Top section */}
           <Box>
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="div"
+              sx={{
+                whiteSpace: "nowrap", // Prevent wrapping
+                overflow: "hidden",
+                textOverflow: "ellipsis", // Add ellipsis for overflow
+              }}
+            >
               {businessTitle}
             </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {categories}
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {companyName}
             </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
-              {description}
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mt: 1,
+                overflow: "hidden",
+                display: "-webkit-box",
+                WebkitLineClamp: 3, 
+                WebkitBoxOrient: "vertical",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {briefDescription}
             </Typography>
           </Box>
-
-          {/* Bottom section */}
           <Box>
-            {/* Location */}
             <Box className="location">
-              <Typography variant="body2" sx={{ color: "gray", mt: 1 }}>
-                {location}
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "gray",
+                  mt: 1,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {provinceLocated}, {countryLocated}
               </Typography>
             </Box>
-
-            {/* Categories as tags */}
             <Box className="categories" sx={{ display: "flex", gap: 1, my: 1 }}>
               {categoryArray.map((category, idx) => (
                 <Typography
@@ -81,30 +121,17 @@ export default function BusinessCard({
                     px: 1,
                     py: 0.5,
                     borderRadius: "4px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                 >
                   {category}
                 </Typography>
               ))}
             </Box>
-
-            {/* Additional Info */}
-            <Typography
-              variant="body2"
-              sx={{ color: "gray.400", fontSize: "0.75rem" }}
-            >
-              {companyName}
-            </Typography>
           </Box>
         </CardContent>
-        {/* <CardActions>
-          <CardMedia
-            component="img"
-            alt={`${businessTitle} Logo`}
-            image={businessLogo}
-            sx={{ width: 40, height: 40, borderRadius: '50%' }}
-          />
-        </CardActions> */}
       </Card>
     </Link>
   );

@@ -17,6 +17,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
+import { ACCESS_TOKEN } from "../../../constants";
 
 const logoStyle = {
   width: "100px",
@@ -33,7 +34,7 @@ function AppAppBar({ mode, toggleColorMode }) {
 
   // Check authentication status (could be from localStorage or context)
   React.useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
       setIsAuthenticated(true);
     } else {
@@ -60,10 +61,7 @@ function AppAppBar({ mode, toggleColorMode }) {
   };
 
   const handleLogout = () => {
-    // localStorage.removeItem("access_token"); // Remove token on logout
-    // setIsAuthenticated(false); // Update the auth state
     navigate("/logout")
-    handleCloseMenu(); // Close the Avatar menu
   };
 
   const handleProfile = () => {

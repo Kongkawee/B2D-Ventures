@@ -1,9 +1,21 @@
+import React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Avatar, Button, Divider, LinearProgress, Card } from "@mui/material";
+import { Button, Divider, LinearProgress, Card } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function InvestInfoBox() {
+export default function InvestInfoBox({ business }) {
+  // Calculate percentage raised based on current investment and goal
+  const percentageRaised = (business.current_investment / business.goal) * 100;
+
+  // Placeholder for number of investors (you may need to replace it with a dynamic value)
+  const investorsCount = 125; 
+
+  // Calculate days left to invest based on publish_date and end_date
+  const endDate = new Date(business.end_date);
+  const currentDate = new Date();
+  const daysLeft = Math.max(0, Math.ceil((endDate - currentDate) / (1000 * 60 * 60 * 24))); // days left
+
   return (
     <Card sx={{ p: 4 }}>
       <Box
@@ -17,19 +29,18 @@ export default function InvestInfoBox() {
       >
         {/* Funding Amount */}
         <Typography variant="h3" fontWeight="bold" color="text.primary">
-          $524,072
+          $ {Number(business.current_investment).toLocaleString()}
         </Typography>
 
         {/* Percentage Raised */}
         <Typography variant="body1" color="text.secondary">
-          34% raised of $1.5M funding goal{" "}
+          {percentageRaised.toFixed(2)}% raised of ${Number(business.goal).toLocaleString()} funding goal
         </Typography>
 
-        {/* Progress Bar */}
         <Box sx={{ width: "100%", mt: 2 }}>
           <LinearProgress
             variant="determinate"
-            value={34}
+            value={percentageRaised}
             sx={{
               height: 10,
               borderRadius: 5,
@@ -42,7 +53,7 @@ export default function InvestInfoBox() {
           />
         </Box>
 
-        {/* Funding Info Box */}
+        {/* Fundraise Purpose */}
         <Box
           sx={{
             display: "flex",
@@ -54,25 +65,8 @@ export default function InvestInfoBox() {
             mt: 2,
           }}
         >
-          {/* <Avatar
-          src="https://placehold.co/40x40"
-          alt="Logo"
-          sx={{ width: 40, height: 40, mr: 2 }}
-        /> */}
           <Typography variant="body2">
-            Funding goal of $1.5M will allow us to develop six different films.
-            Should we exceed our Funding Goal, the additional funds will enable
-            us to pursue higher-value intellectual properties and engage
-            higher-level writers.
-            {/* <Typography
-            component="a"
-            href="#"
-            color="inherit"
-            fontWeight="bold"
-            sx={{ textDecoration: "none", cursor: "pointer" }}
-          >
-            View more
-          </Typography> */}
+            {business.fundraise_purpose}
           </Typography>
         </Box>
 
@@ -83,39 +77,40 @@ export default function InvestInfoBox() {
           color="text.primary"
           sx={{ mt: 2 }}
         >
-          125
+          {investorsCount}
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Investors
         </Typography>
 
-        {/* Divider */}
         <Divider sx={{ my: 2, borderColor: "grey.300" }} />
 
-        {/* Days Left */}
+        {/* Days Left to Invest */}
         <Typography variant="h3" fontWeight="bold" color="text.primary">
-          72 days
+          {daysLeft} days
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Left to invest
         </Typography>
-        <Link to="/checkout" style={{ textDecoration: "none" }} >
+
+        {/* Invest Button */}
+        <Link to={`/checkout/${business.id}`} style={{ textDecoration: "none" }}>
           <Button
             sx={{
-              backgroundColor: "green", // Button background color
-              color: "white", // White text
+              backgroundColor: "green",
+              color: "white",
               fontWeight: "bold",
-              fontSize: "16px", // Font size
-              textTransform: "none", // No uppercase text
-              borderRadius: "8px", // Rounded corners
+              fontSize: "16px",
+              textTransform: "none",
+              borderRadius: "8px",
               mt: 2,
-              padding: "12px 24px", // Padding
+              padding: "12px 24px",
               "&:hover": {
-                backgroundColor: "darkgreen", // Darker green on hover
+                backgroundColor: "darkgreen",
               },
             }}
           >
-            Invest in Pressman Film
+            Invest in {business.business_name}
           </Button>
         </Link>
       </Box>

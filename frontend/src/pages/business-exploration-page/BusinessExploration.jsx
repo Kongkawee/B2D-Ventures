@@ -4,9 +4,9 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import AppAppBar from './components/AppAppBar';
-import Footer from './components/Footer';
 import ShowDeals from './components/ShowDeals';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
+import Footer from '../../components/Footer';
 
 export default function BusinessExplorationPage() {
   const [mode, setMode] = React.useState('dark');

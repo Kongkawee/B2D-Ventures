@@ -8,7 +8,7 @@ export default function ScrollToTopButton() {
   // Handle scroll behavior
   useEffect(() => {
     const handleScroll = () => {
-      const currentScroll = window.pageYOffset;
+      const currentScroll = window.scrollY;
       if (currentScroll > 300) {
         setVisible(true);
       } else {
