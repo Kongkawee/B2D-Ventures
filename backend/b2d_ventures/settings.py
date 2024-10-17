@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -159,3 +160,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 
 # CSRF_COOKIE_NAME = "csrftoken"
+
+# AWS S3 credentials and bucket settings
+AWS_ACCESS_KEY_ID = getenv('AWS_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = getenv('SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = getenv('BUCKET_NAME')
+AWS_S3_REGION_NAME = getenv('S3_REGION_NAME')
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
