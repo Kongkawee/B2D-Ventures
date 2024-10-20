@@ -16,3 +16,4 @@ from .list_business import ListBusiness
 from .login import login_user
 from .register_business import register_business
 from .register_investor import register_investor
+from .upload_business_image import upload_business_images
