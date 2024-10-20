@@ -18,4 +18,6 @@ urlpatterns = [
     path('investment/', ListInvestment.as_view(), name='all_investment'),
     path('investment/<int:pk>/', DetailInvestment.as_view(), name='specific_investment'),
     path('investment/investor/<int:pk>/', InvestmentByInvestorView.as_view(), name='investment_by_investor'),
+    
+    path('business/<int:business_id>/upload_images/', upload_business_images, name='upload_business_images'),
 ]
