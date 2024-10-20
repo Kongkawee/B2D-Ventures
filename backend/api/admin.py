@@ -1,6 +1,12 @@
 from django.contrib import admin
 from django.contrib import messages
-from .models import Investor, Business, Investment
+from .models import Investor, Business, Investment, BusinessImage
+
+class BusinessImageInline(admin.TabularInline):  # Use StackedInline for a stacked layout
+    model = BusinessImage
+    extra = 1  # Number of empty image forms to display
+    fields = ['image']  # Fields to display
+    readonly_fields = []  # Add 'image_tag' here if you want to show image previews
 
 @admin.register(Investor)
 class InvestorAdmin(admin.ModelAdmin):
@@ -27,6 +33,9 @@ class BusinessAdmin(admin.ModelAdmin):
     list_filter = ('company_name', 'business_name', 'status', 'publish_date', 'end_date')
     ordering = ('id',)
     readonly_fields = ('user',)
+    
+    # Include the inline for BusinessImage
+    inlines = [BusinessImageInline]
 
     # Define the custom action
     @admin.action(description='Approve selected businesses')
