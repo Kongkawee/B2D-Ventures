@@ -1,14 +1,12 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
-import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import ToggleColorMode from "./ToggleColorMode";
 import LogoLight from "../../../images/LogoLight.png";
@@ -18,6 +16,7 @@ import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN } from "../../../constants";
+import { Button, ListItemText, Drawer } from "@mui/material";
 
 const logoStyle = {
   width: "100px",
@@ -26,14 +25,16 @@ const logoStyle = {
   cursor: "pointer",
 };
 
-function AppAppBar({ mode, toggleColorMode }) {
-  const [open, setOpen] = React.useState(false);
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null); // For Avatar Menu
+function AppNavBar({ mode, toggleColorMode }) {
+  const [open, setOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [anchorElBusiness, setAnchorElBusiness] = useState(null); // Business Menu Anchor
+  const [anchorElInvestor, setAnchorElInvestor] = useState(null); // Investor Menu Anchor
+  const [anchorElAvatar, setAnchorElAvatar] = useState(null); // Avatar Menu Anchor
   const navigate = useNavigate();
 
   // Check authentication status (could be from localStorage or context)
-  React.useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
       setIsAuthenticated(true);
@@ -41,6 +42,42 @@ function AppAppBar({ mode, toggleColorMode }) {
       setIsAuthenticated(false);
     }
   }, []); // Run once on mount
+
+  const handleLogout = () => {
+    navigate("/logout");
+  };
+
+  const handleProfile = () => {
+    navigate("/inv-pro");
+    handleCloseAvatarMenu(); // Close the Avatar menu
+  };
+
+  // Handlers for Business Dropdown
+  const handleOpenBusinessMenu = (event) => {
+    setAnchorElBusiness(event.currentTarget);
+  };
+
+  const handleCloseBusinessMenu = () => {
+    setAnchorElBusiness(null);
+  };
+
+  // Handlers for Investor Dropdown
+  const handleOpenInvestorMenu = (event) => {
+    setAnchorElInvestor(event.currentTarget);
+  };
+
+  const handleCloseInvestorMenu = () => {
+    setAnchorElInvestor(null);
+  };
+
+  // Handlers for Avatar Menu
+  const handleOpenAvatarMenu = (event) => {
+    setAnchorElAvatar(event.currentTarget);
+  };
+
+  const handleCloseAvatarMenu = () => {
+    setAnchorElAvatar(null);
+  };
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -58,24 +95,6 @@ function AppAppBar({ mode, toggleColorMode }) {
       });
       setOpen(false);
     }
-  };
-
-  const handleLogout = () => {
-    navigate("/logout")
-  };
-
-  const handleProfile = () => {
-    navigate("/inv-pro")
-    handleCloseMenu(); // Close the Avatar menu
-  };
-
-  // Handlers for Avatar Menu
-  const handleOpenMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
   };
 
   return (
@@ -119,7 +138,7 @@ function AppAppBar({ mode, toggleColorMode }) {
               <img
                 src={mode === "light" ? LogoLight : LogoDark}
                 style={logoStyle}
-                alt="logo of b2d"
+                alt="logo"
               />
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 <MenuItem
@@ -154,24 +173,49 @@ function AppAppBar({ mode, toggleColorMode }) {
                     color="primary"
                     variant="text"
                     size="small"
-                    component="a"
-                    href="/sin"
+                    onClick={handleOpenBusinessMenu}
                   >
-                    Sign in
+                    Business
                   </Button>
+                  <Menu
+                    anchorEl={anchorElBusiness}
+                    open={Boolean(anchorElBusiness)}
+                    onClose={handleCloseBusinessMenu}
+                  >
+                    <MenuItem onClick={() => navigate("/bus-reg")}>
+                      <ListItemText primary="Business Registration" />
+                    </MenuItem>
+                  </Menu>
+                  <Button
+                    color="primary"
+                    variant="text"
+                    size="small"
+                    onClick={handleOpenInvestorMenu}
+                  >
+                    Investor
+                  </Button>
+                  <Menu
+                    anchorEl={anchorElInvestor}
+                    open={Boolean(anchorElInvestor)}
+                    onClose={handleCloseInvestorMenu}
+                  >
+                    <MenuItem onClick={() => navigate("/sup")}>
+                      <ListItemText primary="Investor Registration" />
+                    </MenuItem>
+                  </Menu>
                   <Button
                     color="primary"
                     variant="contained"
                     size="small"
                     component="a"
-                    href="/sup"
+                    href="/sin"
                   >
-                    Sign up
+                    Sign in
                   </Button>
                 </>
               ) : (
                 <>
-                  <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
+                  <IconButton onClick={handleOpenAvatarMenu} sx={{ p: 0 }}>
                     <Avatar
                       sizes="small"
                       alt=""
@@ -180,9 +224,9 @@ function AppAppBar({ mode, toggleColorMode }) {
                     />
                   </IconButton>
                   <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleCloseMenu}
+                    anchorEl={anchorElAvatar}
+                    open={Boolean(anchorElAvatar)}
+                    onClose={handleCloseAvatarMenu}
                     anchorOrigin={{
                       vertical: "bottom",
                       horizontal: "right",
@@ -208,11 +252,7 @@ function AppAppBar({ mode, toggleColorMode }) {
               >
                 <MenuIcon />
               </Button>
-              <Drawer
-                anchor="right"
-                open={open}
-                onClose={toggleDrawer(false)}
-              >
+              <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
                 <Box
                   sx={{
                     minWidth: "60dvw",
@@ -245,17 +285,40 @@ function AppAppBar({ mode, toggleColorMode }) {
                   <Divider />
                   {!isAuthenticated ? (
                     <>
-                      <MenuItem>
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          component="a"
-                          href="/sign-up"
-                          sx={{ width: "100%" }}
-                        >
-                          Sign up
-                        </Button>
-                      </MenuItem>
+                      <Button
+                        color="primary"
+                        variant="text"
+                        size="small"
+                        onClick={handleOpenBusinessMenu}
+                      >
+                        Business
+                      </Button>
+                      <Menu
+                        anchorEl={anchorElBusiness}
+                        open={Boolean(anchorElBusiness)}
+                        onClose={handleCloseBusinessMenu}
+                      >
+                        <MenuItem onClick={() => navigate("/bus-reg")}>
+                          <ListItemText primary="Business Registration" />
+                        </MenuItem>
+                      </Menu>
+                      <Button
+                        color="primary"
+                        variant="text"
+                        size="small"
+                        onClick={handleOpenInvestorMenu}
+                      >
+                        Investor
+                      </Button>
+                      <Menu
+                        anchorEl={anchorElInvestor}
+                        open={Boolean(anchorElInvestor)}
+                        onClose={handleCloseInvestorMenu}
+                      >
+                        <MenuItem onClick={() => navigate("/sup")}>
+                          <ListItemText primary="Investor Registration" />
+                        </MenuItem>
+                      </Menu>
                       <MenuItem>
                         <Button
                           color="primary"
@@ -290,9 +353,9 @@ function AppAppBar({ mode, toggleColorMode }) {
   );
 }
 
-AppAppBar.propTypes = {
+AppNavBar.propTypes = {
   mode: PropTypes.oneOf(["dark", "light"]).isRequired,
   toggleColorMode: PropTypes.func.isRequired,
 };
 
-export default AppAppBar;
+export default AppNavBar;

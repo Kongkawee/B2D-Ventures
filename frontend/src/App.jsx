@@ -29,22 +29,31 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />{" Home Page "}
-        <Route path="/sin" element={<SignIn />} />{" Investor and Business Sign in page "}
+        <Route path="/" element={<HomePage />} />
+        {" Home Page "}
+        <Route path="/sin" element={<SignIn />} />
+        {" Investor and Business Sign in page "}
         <Route path="/logout" element={<Logout />} />
-        <Route path="/sup" element={<RegisterAndLogout />} />{" Investor Sign up Page "}
+        <Route path="/sup" element={<RegisterAndLogout />} />
+        {" Investor Sign up Page "}
         <Route
           path="/checkout/:id"
           element={
             <ProtectedRoute>
-              <Checkout />
+              <InvestorOnlyRoute>
+                <Checkout />
+              </InvestorOnlyRoute>
             </ProtectedRoute>
           }
-        />{" Checkout Page "}
-        
-        <Route path="/bus/:id" element={<BusinessInfo />} />{" Business information Page "}
-        <Route path="/bus-reg" element={<BusinessRegistration />} />{" Business Registration Page "}
-        <Route path="/explore" element={<BusinessExplorationPage />} />{" Business Exploration Page "}
+        />
+        {" Checkout Page "}
+
+        <Route path="/bus/:id" element={<BusinessInfo />} />
+        {" Business information Page "}
+        <Route path="/bus-reg" element={<BusinessRegistration />} />
+        {" Business Registration Page "}
+        <Route path="/explore" element={<BusinessExplorationPage />} />
+        {" Business Exploration Page "}
         <Route
           path="/inv-pro"
           element={
@@ -54,7 +63,8 @@ function App() {
               </InvestorOnlyRoute>
             </ProtectedRoute>
           }
-        />{" Investor Profile Page "}
+        />
+        {" Investor Profile Page "}
 
         {/* <Route path="/inv-por" element={<ProtectedRoute><BusinessExplorationPage /></ProtectedRoute>} /> Investor Portfolio Page */}
 
@@ -67,8 +77,9 @@ function App() {
               </BusinessOnlyRoute>
             </ProtectedRoute>
           }
-        />{" Business Profile Page "}
-        
+        />
+        {" Business Profile Page "}
+
         {/* <Route path="/bus-por" element={<ProtectedRoute><BusinessExplorationPage /></ProtectedRoute>} /> Business Portfolio Page */}
         <Route path="/not-authorized" element={<NotAuthorized />}></Route>
         <Route path="*" element={<NotFound />}></Route>
