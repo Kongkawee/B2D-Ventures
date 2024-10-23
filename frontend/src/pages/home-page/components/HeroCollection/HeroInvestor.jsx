@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { alpha } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -6,8 +6,19 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import PopUpTerms from "../../../../components/PopUp/PopUpTerms";
 
 export default function HeroBusiness() {
+  const [openTermsDialog, setOpenTermsDialog] = useState(false);
+
+  const handleOpenTermsDialog = () => {
+    setOpenTermsDialog(true);
+  };
+
+  const handleCloseTermsDialog = () => {
+    setOpenTermsDialog(false);
+  };
+
   return (
     <Box
       id="hero"
@@ -83,11 +94,19 @@ export default function HeroBusiness() {
             sx={{ opacity: 0.8 }}
           >
             By clicking &quot;Start now&quot; you agree to our&nbsp;
-            <Link href="#" color="primary">
+            <Link
+              color="primary"
+              onClick={handleOpenTermsDialog}
+              sx={{ cursor: "pointer" }}
+            >
               Terms & Conditions
             </Link>
             .
           </Typography>
+          <PopUpTerms
+            open={openTermsDialog}
+            handleClose={handleCloseTermsDialog}
+          />
         </Stack>
       </Container>
     </Box>
