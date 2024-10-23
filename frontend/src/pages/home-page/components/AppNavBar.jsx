@@ -154,7 +154,7 @@ function AppNavBar({ mode, toggleColorMode }) {
                   sx={{ py: "6px", px: "12px" }}
                 >
                   <Typography variant="body2" color="text.primary">
-                    FAQ
+                    FAQs
                   </Typography>
                 </MenuItem>
               </Box>
@@ -280,7 +280,7 @@ function AppNavBar({ mode, toggleColorMode }) {
                     Hot Deals
                   </MenuItem>
                   <MenuItem onClick={() => scrollToSection("faq")}>
-                    FAQ
+                    FAQs
                   </MenuItem>
                   <Divider />
                   {!isAuthenticated ? (
