@@ -5,17 +5,17 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid2';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { styled } from '@mui/system';
+import { styled, Link } from '@mui/material';
 
 const FormGrid = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'column',
 }));
 
-export default function InvesmentForm({ business, onDetailsChange }) {
+export default function InvestmentForm({ business, onDetailsChange, handleOpenTermsDialog }) {
   const [investmentAmount, setInvestmentAmount] = useState('');
   const [capitalGain, setCapitalGain] = useState('');
- 
+
   const calculateCapitalGain = (amount) => {
     const pricePerShare = parseFloat(business.price_per_share);
     if (pricePerShare && !isNaN(amount)) {
@@ -23,7 +23,7 @@ export default function InvesmentForm({ business, onDetailsChange }) {
     }
     return 0;
   };
- 
+
   const handleInvestmentChange = (e) => {
     const value = e.target.value; 
     if (!/^\d*\.?\d*$/.test(value)) {
@@ -77,7 +77,18 @@ export default function InvesmentForm({ business, onDetailsChange }) {
       <FormGrid item xs={12}>
         <FormControlLabel
           control={<Checkbox name="read" value="yes" />}
-          label="You have read our Terms of Services."
+          label={
+            <>
+              You have read our&nbsp;
+              <Link
+                onClick={handleOpenTermsDialog}
+                color="primary"
+                sx={{ cursor: 'pointer' }}
+              >
+                Terms of Services
+              </Link>.
+            </>
+          }
         />
       </FormGrid>
     </Grid>
