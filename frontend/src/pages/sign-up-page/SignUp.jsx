@@ -71,6 +71,7 @@ export default function SignUp() {
   const [nameErrorMessage, setNameErrorMessage] = React.useState("");
   const [phoneError, setPhoneError] = React.useState(false);
   const [phoneErrorMessage, setPhoneErrorMessage] = React.useState("");
+  const [profilePicture, setProfilePicture] = React.useState(null); // New state for profile picture
 
   // This code only runs on the client side, to determine the system color preference
   React.useEffect(() => {
@@ -158,31 +159,47 @@ export default function SignUp() {
     .find((row) => row.startsWith("csrftoken"))
     ?.split("=")[1];
 
+  const handleProfilePictureChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setProfilePicture(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateInputs()) {
-      const data = new FormData(event.currentTarget);
-      const formData = {
-        username: data.get("email"), // Ensure username is passed
-        firstName: data.get("firstname"),
-        lastName: data.get("lastname"),
-        phoneNumber: data.get("phonenumber"),
-        email: data.get("email"),
-        password: data.get("password")
-      };
+      const formData = new FormData();
+      formData.append("username", document.getElementById("email").value); // Assuming username is email
+      formData.append("firstName", document.getElementById("firstname").value);
+      formData.append("lastName", document.getElementById("lastname").value);
+      formData.append("phoneNumber", document.getElementById("phonenumber").value);
+      formData.append("email", document.getElementById("email").value);
+      formData.append("password", document.getElementById("password").value);
+      if (profilePicture) {
+        formData.append("profile_picture", profilePicture);
+      }
 
       try {
-        const response = await api.post("api/investor/register/", formData);
+        const response = await api.post("http://localhost:8000/api/investor/register/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-CSRFToken": csrfToken, // Include CSRF token if required
+          },
+        });
         console.log("User registered successfully:", response.data);
         localStorage.setItem(ACCESS_TOKEN, response.data.access);
         localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
         localStorage.setItem("role", response.data.role);
-        navigate("/sin"); // Redirect to home or another page after register
+        navigate("/signin"); // Redirect to sign-in page after register
       } catch (error) {
-        console.error("Error register user:", error);
+        console.error("Error registering user:", error);
         if (error.response) {
           // Display error message to user
-          alert(error.response.data.detail || "Register failed. Please try again.");
+          alert(
+            error.response.data.detail ||
+              error.response.data.error ||
+              "Register failed. Please try again."
+          );
         } else {
           alert("Register failed. Please check your network connection.");
         }
@@ -224,6 +241,7 @@ export default function SignUp() {
                 component="form"
                 onSubmit={handleSubmit}
                 sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                encType="multipart/form-data"
               >
                 <Box
                   sx={{
@@ -303,17 +321,24 @@ export default function SignUp() {
                     helperText={passwordErrorMessage}
                   />
                 </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="profile_picture">Profile Picture</FormLabel>
+                  <input
+                    type="file"
+                    id="profile_picture"
+                    name="profile_picture"
+                    accept="image/*"
+                    onChange={handleProfilePictureChange}
+                  />
+                </FormControl>
                 <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
+                  control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive updates via email."
                 />
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
-                  onClick={validateInputs}
                 >
                   Sign up
                 </Button>
