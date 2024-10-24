@@ -3,12 +3,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import AppAppBar from './components/AppAppBar';
+import AppNavBar from './components/AppNavBar';
 import HeroSection from './components/HeroSection';
-import LogoCollection from './components/LogoCollection';
-import Highlights from './components/Highlights';
-import Pricing from './components/Pricing';
-import Features from './components/Features';
 import FAQ from './components/FAQ';
 import HotDeals from './components/HotDeals';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
@@ -26,17 +22,11 @@ export default function HomePage() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
+      <AppNavBar mode={mode} toggleColorMode={toggleColorMode} />
       <HeroSection />
       <Box sx={{ bgcolor: 'background.default' }}>
-        {/* <LogoCollection /> */}
-        {/* <Features /> */}
         <Divider />
         <HotDeals />
-        {/* <Divider /> */}
-        {/* <Highlights /> */}
-        {/* <Divider /> */}
-        {/* <Pricing /> */}
         <Divider />
         <FAQ />
         <Divider />

@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import InvesmentForm from "./components/InvestmentForm";
+import InvestmentForm from "./components/InvestmentForm";
 import getCheckoutTheme from "./theme/getCheckoutTheme";
 import Info from "./components/Info";
 import InfoMobile from "./components/InfoMobile";
@@ -23,6 +23,7 @@ import TemplateFrame from "./TemplateFrame";
 import api from "../../api";
 import { useParams } from "react-router-dom";
 import { Divider } from "@mui/material";
+import PopUpTerms from "../../components/PopUp/PopUpTerms";
 
 const steps = ["Invest detail", "Risks acceptance", "Review your investment"];
 
@@ -41,6 +42,15 @@ function Checkout() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  const [openTermsDialog, setOpenTermsDialog] = useState(false);
+
+  const handleOpenTermsDialog = () => {
+    setOpenTermsDialog(true);
+  };
+
+  const handleCloseTermsDialog = () => {
+    setOpenTermsDialog(false);
+  };
 
   useEffect(() => {
     const fetchBusinessData = async () => {
@@ -60,7 +70,6 @@ function Checkout() {
     fetchBusinessData();
   }, [id]);
 
-  // This code only runs on the client side, to determine the system color preference
   useEffect(() => {
     const savedMode = localStorage.getItem("themeMode");
     if (savedMode) {
@@ -141,10 +150,14 @@ function Checkout() {
     switch (step) {
       case 0:
         return (
-          <InvesmentForm
+          <div>
+          <InvestmentForm
             business={business}
             onDetailsChange={handleInvestmentDetailsChange}
+            handleOpenTermsDialog={handleOpenTermsDialog}
           />
+          <PopUpTerms open={openTermsDialog} handleClose={handleCloseTermsDialog} />
+        </div>
         );
       case 1:
         return <RisksAcceptance />;

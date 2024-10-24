@@ -170,9 +170,7 @@ export default function BusinessRegistration() {
   // const validateInputs = () => {
   //   let isValid = true;
   //   let newErrors = { ...errors }; // Clone the current errors
-
   //   // General Information Validation
-
   //   // Company Name validation
   //   if (!formData.companyName.trim()) {
   //     newErrors.companyNameError = true;
@@ -182,7 +180,6 @@ export default function BusinessRegistration() {
   //     newErrors.companyNameError = false;
   //     newErrors.companyNameErrorMessage = "";
   //   }
-
   //   // Business Name validation
   //   if (!formData.businessName.trim()) {
   //     newErrors.businessNameError = true;
@@ -192,7 +189,6 @@ export default function BusinessRegistration() {
   //     newErrors.businessNameError = false;
   //     newErrors.businessNameErrorMessage = "";
   //   }
-
   //   // Email validation
   //   if (!formData.email.trim()) {
   //     newErrors.emailError = true;
@@ -206,7 +202,6 @@ export default function BusinessRegistration() {
   //     newErrors.emailError = false;
   //     newErrors.emailErrorMessage = "";
   //   }
-
   //   // Phone validation
   //   if (!formData.phone.trim()) {
   //     newErrors.phoneError = true;
@@ -221,7 +216,6 @@ export default function BusinessRegistration() {
   //     newErrors.phoneError = false;
   //     newErrors.phoneErrorMessage = "";
   //   }
-
   //   // Publish Date validation
   //   if (!formData.publishDate) {
   //     newErrors.publishDateError = true;
@@ -231,7 +225,6 @@ export default function BusinessRegistration() {
   //     newErrors.publishDateError = false;
   //     newErrors.publishDateErrorMessage = "";
   //   }
-
   //   // Deadline Date validation
   //   if (!formData.deadlineDate) {
   //     newErrors.deadlineDateError = true;
@@ -249,7 +242,6 @@ export default function BusinessRegistration() {
   //     newErrors.deadlineDateError = false;
   //     newErrors.deadlineDateErrorMessage = "";
   //   }
-
   //   // Fundraise Goal validation
   //   if (!formData.goal.trim()) {
   //     newErrors.goalError = true;
@@ -263,7 +255,6 @@ export default function BusinessRegistration() {
   //     newErrors.goalError = false;
   //     newErrors.goalErrorMessage = "";
   //   }
-
   //   // Minimum Investment validation
   //   if (!formData.minInvestment.trim()) {
   //     newErrors.minInvestmentError = true;
@@ -281,7 +272,6 @@ export default function BusinessRegistration() {
   //     newErrors.minInvestmentError = false;
   //     newErrors.minInvestmentErrorMessage = "";
   //   }
-
   //   // Maximum Investment validation
   //   if (!formData.maxInvestment.trim()) {
   //     newErrors.maxInvestmentError = true;
@@ -306,7 +296,6 @@ export default function BusinessRegistration() {
   //     newErrors.maxInvestmentError = false;
   //     newErrors.maxInvestmentErrorMessage = "";
   //   }
-
   //   // Password validation
   //   if (!formData.password) {
   //     newErrors.passwordError = true;
@@ -321,7 +310,6 @@ export default function BusinessRegistration() {
   //     newErrors.passwordError = false;
   //     newErrors.passwordErrorMessage = "";
   //   }
-
   //   // Terms of Service validation
   //   if (!formData.terms) {
   //     newErrors.termsError = true;
@@ -331,7 +319,6 @@ export default function BusinessRegistration() {
   //     newErrors.termsError = false;
   //     newErrors.termsErrorMessage = "";
   //   }
-
   //   // Business Pitch validation
   //   if (!formData.pitching.trim()) {
   //     newErrors.pitchingError = true;
@@ -341,7 +328,6 @@ export default function BusinessRegistration() {
   //     newErrors.pitchingError = false;
   //     newErrors.pitchingErrorMessage = "";
   //   }
-
   //   if (!formData.businessDescription.trim()) {
   //     newErrors.businessDescriptionError = true;
   //     newErrors.businessDescriptionErrorMessage =
@@ -351,7 +337,6 @@ export default function BusinessRegistration() {
   //     newErrors.businessDescriptionError = false;
   //     newErrors.businessDescriptionErrorMessage = "";
   //   }
-
   //   if (!formData.pricePerShare.trim()) {
   //     newErrors.pricePerShareError = true;
   //     newErrors.pricePerShareErrorMessage = "Price per share is required.";
@@ -364,7 +349,6 @@ export default function BusinessRegistration() {
   //     newErrors.pricePerShareError = false;
   //     newErrors.pricePerShareErrorMessage = "";
   //   }
-
   //   setErrors(newErrors);
   //   return isValid;
   // };
@@ -373,14 +357,38 @@ export default function BusinessRegistration() {
     event.preventDefault();
     // if (validateInputs()) {
     // }
+    
+    const formDataToSend = new FormData();
+  
+    // Add all the text fields to the FormData
+    for (const [key, value] of Object.entries(formData)) {
+      // Skip images here, they will be appended separately
+      if (key !== "coverImage" && key !== "describeImages") {
+        formDataToSend.append(key, value);
+      }
+    }
+  
+    // Add the cover image (single file)
+    if (formData.coverImage) {
+      formDataToSend.append("cover_image", formData.coverImage);
+    }
+  
+    // Add the describe images (multiple files)
+    if (formData.describeImages && formData.describeImages.length > 0) {
+      Array.from(formData.describeImages).forEach((file, index) => {
+        formDataToSend.append(`describe_images_${index}`, file);
+      });
+    }
+  
     try {
-      const response = await api.post("/api/business/register/", formData);
+      const response = await api.post("/api/business/register/", formDataToSend);
       console.log("User registered successfully:", response.data);
       navigate("/sin");
     } catch (error) {
       console.error("Registration Failed:", error.response?.data);
     }
   };
+  
 
   return (
     <TemplateFrame
@@ -685,25 +693,42 @@ export default function BusinessRegistration() {
                     />
                   </FormControl>
 
-                  {/* <FormControl sx={{ width: "100%" }}>
-                    <FormLabel htmlFor="businessImage">
-                      Upload Business Cover Pictures
+                  <FormControl sx={{ width: "100%" }}>
+                    <FormLabel htmlFor="coverImage">
+                      Upload Business Cover Image
                     </FormLabel>
-                    <TextField
-                      id="businessImage"
-                      name="businessImage"
+                    <input
+                      id="coverImage"
+                      name="coverImage"
                       type="file"
-                      inputProps={{ accept: "image/*" }}
+                      accept="image/*"
                       onChange={(e) =>
                         setFormData((prevData) => ({
                           ...prevData,
-                          businessImage: e.target.files[0], // Store the file
+                          coverImage: e.target.files[0], // Store the file
                         }))
                       }
-                      // error={errors.businessImageError}
-                      // helperText={errors.businessImageErrorMessage}
                     />
-                  </FormControl> */}
+                  </FormControl>
+
+                  <FormControl sx={{ width: "100%" }}>
+                    <FormLabel htmlFor="describeImages">
+                      Upload Describe Images
+                    </FormLabel>
+                    <input
+                      id="describeImages"
+                      name="describeImages"
+                      type="file"
+                      accept="image/*"
+                      multiple // Allow multiple images to be uploaded
+                      onChange={(e) =>
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          describeImages: e.target.files, // Store the file list (multiple files)
+                        }))
+                      }
+                    />
+                  </FormControl>
                 </Box>
 
                 <Box

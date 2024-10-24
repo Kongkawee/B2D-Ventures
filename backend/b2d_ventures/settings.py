@@ -169,4 +169,3 @@ AWS_S3_REGION_NAME = getenv('S3_REGION_NAME')
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
