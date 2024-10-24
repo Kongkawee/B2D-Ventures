@@ -11,13 +11,13 @@ from ..models import Investor
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_investor(request):
-    username = request.data.get('username')  # Assuming username is email
+    username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
     first_name = request.data.get('firstName')
     last_name = request.data.get('lastName')
     phone_number = request.data.get('phoneNumber')
-    profile_picture = request.FILES.get('profile_picture')  # Handle profile picture
+    profile_picture = request.FILES.get('profile_picture')
 
     if User.objects.filter(username=username).exists():
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
@@ -40,5 +40,5 @@ def register_investor(request):
     return Response({
         'refresh': str(refresh),
         'access': str(refresh.access_token),
-        'role': 'investor'  # Assuming you set a role
+        'role': 'investor'
     }, status=status.HTTP_201_CREATED)

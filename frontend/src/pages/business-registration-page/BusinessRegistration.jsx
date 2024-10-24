@@ -166,8 +166,197 @@ export default function BusinessRegistration() {
     }));
   };
 
+  // Validation function for handling errors
+  // const validateInputs = () => {
+  //   let isValid = true;
+  //   let newErrors = { ...errors }; // Clone the current errors
+  //   // General Information Validation
+  //   // Company Name validation
+  //   if (!formData.companyName.trim()) {
+  //     newErrors.companyNameError = true;
+  //     newErrors.companyNameErrorMessage = "Company name is required.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.companyNameError = false;
+  //     newErrors.companyNameErrorMessage = "";
+  //   }
+  //   // Business Name validation
+  //   if (!formData.businessName.trim()) {
+  //     newErrors.businessNameError = true;
+  //     newErrors.businessNameErrorMessage = "Business name is required.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.businessNameError = false;
+  //     newErrors.businessNameErrorMessage = "";
+  //   }
+  //   // Email validation
+  //   if (!formData.email.trim()) {
+  //     newErrors.emailError = true;
+  //     newErrors.emailErrorMessage = "Email is required.";
+  //     isValid = false;
+  //   } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+  //     newErrors.emailError = true;
+  //     newErrors.emailErrorMessage = "Please enter a valid email address.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.emailError = false;
+  //     newErrors.emailErrorMessage = "";
+  //   }
+  //   // Phone validation
+  //   if (!formData.phone.trim()) {
+  //     newErrors.phoneError = true;
+  //     newErrors.phoneErrorMessage = "Phone number is required.";
+  //     isValid = false;
+  //   } else if (!/^\d{3}\d{3}\d{4}$/.test(formData.phone.replace(/-/g, ""))) {
+  //     newErrors.phoneError = true;
+  //     newErrors.phoneErrorMessage =
+  //       "Please enter a valid phone number (e.g., 1234567890).";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.phoneError = false;
+  //     newErrors.phoneErrorMessage = "";
+  //   }
+  //   // Publish Date validation
+  //   if (!formData.publishDate) {
+  //     newErrors.publishDateError = true;
+  //     newErrors.publishDateErrorMessage = "Publish date is required.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.publishDateError = false;
+  //     newErrors.publishDateErrorMessage = "";
+  //   }
+  //   // Deadline Date validation
+  //   if (!formData.deadlineDate) {
+  //     newErrors.deadlineDateError = true;
+  //     newErrors.deadlineDateErrorMessage = "Deadline date is required.";
+  //     isValid = false;
+  //   } else if (
+  //     formData.publishDate &&
+  //     new Date(formData.deadlineDate) < new Date(formData.publishDate)
+  //   ) {
+  //     newErrors.deadlineDateError = true;
+  //     newErrors.deadlineDateErrorMessage =
+  //       "Deadline date must be after publish date.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.deadlineDateError = false;
+  //     newErrors.deadlineDateErrorMessage = "";
+  //   }
+  //   // Fundraise Goal validation
+  //   if (!formData.goal.trim()) {
+  //     newErrors.goalError = true;
+  //     newErrors.goalErrorMessage = "Fundraise goal is required.";
+  //     isValid = false;
+  //   } else if (isNaN(formData.goal) || Number(formData.goal) <= 0) {
+  //     newErrors.goalError = true;
+  //     newErrors.goalErrorMessage = "Fundraise goal must be a positive number.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.goalError = false;
+  //     newErrors.goalErrorMessage = "";
+  //   }
+  //   // Minimum Investment validation
+  //   if (!formData.minInvestment.trim()) {
+  //     newErrors.minInvestmentError = true;
+  //     newErrors.minInvestmentErrorMessage = "Minimum investment is required.";
+  //     isValid = false;
+  //   } else if (
+  //     isNaN(formData.minInvestment) ||
+  //     Number(formData.minInvestment) <= 0
+  //   ) {
+  //     newErrors.minInvestmentError = true;
+  //     newErrors.minInvestmentErrorMessage =
+  //       "Minimum investment must be a positive number.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.minInvestmentError = false;
+  //     newErrors.minInvestmentErrorMessage = "";
+  //   }
+  //   // Maximum Investment validation
+  //   if (!formData.maxInvestment.trim()) {
+  //     newErrors.maxInvestmentError = true;
+  //     newErrors.maxInvestmentErrorMessage = "Maximum investment is required.";
+  //     isValid = false;
+  //   } else if (
+  //     isNaN(formData.maxInvestment) ||
+  //     Number(formData.maxInvestment) <= 0
+  //   ) {
+  //     newErrors.maxInvestmentError = true;
+  //     newErrors.maxInvestmentErrorMessage =
+  //       "Maximum investment must be a positive number.";
+  //     isValid = false;
+  //   } else if (
+  //     Number(formData.maxInvestment) < Number(formData.minInvestment)
+  //   ) {
+  //     newErrors.maxInvestmentError = true;
+  //     newErrors.maxInvestmentErrorMessage =
+  //       "Maximum investment must be greater than minimum investment.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.maxInvestmentError = false;
+  //     newErrors.maxInvestmentErrorMessage = "";
+  //   }
+  //   // Password validation
+  //   if (!formData.password) {
+  //     newErrors.passwordError = true;
+  //     newErrors.passwordErrorMessage = "Password is required.";
+  //     isValid = false;
+  //   } else if (formData.password.length < 6) {
+  //     newErrors.passwordError = true;
+  //     newErrors.passwordErrorMessage =
+  //       "Password must be at least 6 characters long.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.passwordError = false;
+  //     newErrors.passwordErrorMessage = "";
+  //   }
+  //   // Terms of Service validation
+  //   if (!formData.terms) {
+  //     newErrors.termsError = true;
+  //     newErrors.termsErrorMessage = "You must agree to the Terms of Service.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.termsError = false;
+  //     newErrors.termsErrorMessage = "";
+  //   }
+  //   // Business Pitch validation
+  //   if (!formData.pitching.trim()) {
+  //     newErrors.pitchingError = true;
+  //     newErrors.pitchingErrorMessage = "Pitching is required.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.pitchingError = false;
+  //     newErrors.pitchingErrorMessage = "";
+  //   }
+  //   if (!formData.businessDescription.trim()) {
+  //     newErrors.businessDescriptionError = true;
+  //     newErrors.businessDescriptionErrorMessage =
+  //       "Business description is required.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.businessDescriptionError = false;
+  //     newErrors.businessDescriptionErrorMessage = "";
+  //   }
+  //   if (!formData.pricePerShare.trim()) {
+  //     newErrors.pricePerShareError = true;
+  //     newErrors.pricePerShareErrorMessage = "Price per share is required.";
+  //     isValid = false;
+  //   } else if (isNaN(formData.pricePerShare) || Number(formData.pricePerShare) <= 0) {
+  //     newErrors.pricePerShareError = true;
+  //     newErrors.pricePerShareErrorMessage = "Price per share must be a positive number.";
+  //     isValid = false;
+  //   } else {
+  //     newErrors.pricePerShareError = false;
+  //     newErrors.pricePerShareErrorMessage = "";
+  //   }
+  //   setErrors(newErrors);
+  //   return isValid;
+  // };
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    // if (validateInputs()) {
+    // }
     
     const formDataToSend = new FormData();
   
@@ -192,11 +381,7 @@ export default function BusinessRegistration() {
     }
   
     try {
-      const response = await api.post("http://127.0.0.1:8000/api/business/register/", formDataToSend, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await api.post("/api/business/register/", formDataToSend);
       console.log("User registered successfully:", response.data);
       navigate("/sin");
     } catch (error) {

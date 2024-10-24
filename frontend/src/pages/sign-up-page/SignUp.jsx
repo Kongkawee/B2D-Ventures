@@ -180,21 +180,15 @@ export default function SignUp() {
       }
 
       try {
-        const response = await api.post("http://localhost:8000/api/investor/register/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "X-CSRFToken": csrfToken, // Include CSRF token if required
-          },
-        });
+        const response = await api.post("api/investor/register/", formData);
         console.log("User registered successfully:", response.data);
         localStorage.setItem(ACCESS_TOKEN, response.data.access);
         localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
         localStorage.setItem("role", response.data.role);
-        navigate("/signin"); // Redirect to sign-in page after register
+        navigate("/sin");
       } catch (error) {
         console.error("Error registering user:", error);
         if (error.response) {
-          // Display error message to user
           alert(
             error.response.data.detail ||
               error.response.data.error ||
@@ -339,6 +333,7 @@ export default function SignUp() {
                   type="submit"
                   fullWidth
                   variant="contained"
+                  onClick={validateInputs}
                 >
                   Sign up
                 </Button>
