@@ -140,10 +140,10 @@ export default function SignInCard() {
         sx={{ alignSelf: "center" }}
         aria-label="login type"
       >
-        <ToggleButton value="investor" aria-label="investor login">
+        <ToggleButton id="investor-sign-in-mode" value="investor" aria-label="investor login">
           Investor
         </ToggleButton>
-        <ToggleButton value="business" aria-label="business login">
+        <ToggleButton id="business-sign-in-mode" value="business" aria-label="business login">
           Business
         </ToggleButton>
       </ToggleButtonGroup>
@@ -198,7 +198,7 @@ export default function SignInCard() {
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button type="submit" fullWidth variant="contained">
+        <Button id="sign-in-button" type="submit" fullWidth variant="contained">
           Sign in
         </Button>
         <Typography sx={{ textAlign: "center" }}>

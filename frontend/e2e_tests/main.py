@@ -102,6 +102,10 @@ class BaseTestSetup(unittest.TestCase):
         element = self.driver.find_element(By.LINK_TEXT, text)
         element.click()
 
+    def click_element_by_id(self, element_id: str):
+        element = self.find_element_by_id(element_id)
+        element.click()
+
     # Helper method to input text into an element
     def input_text_by_id(self, element_id: str, text: str):
         element = self.find_element_by_id(element_id)
