@@ -32,8 +32,13 @@ def register_investor(request):
         phone_number=phone_number,
         profile_picture=profile_picture
     )
-    investor.save()
-    user.save()
+    
+    try:
+        investor.save()
+        user.save() 
+    except Exception as e:
+        print("An error occurred while saving investor:", e)
+
 
     # Generate JWT tokens
     refresh = RefreshToken.for_user(user)
