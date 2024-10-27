@@ -23,7 +23,6 @@ def register_investor(request):
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
-    user.save()
 
     investor = Investor.objects.create(
         user=user,
@@ -33,6 +32,7 @@ def register_investor(request):
         phone_number=phone_number,
         profile_picture=profile_picture
     )
+    user.save()
     investor.save()
 
     # Generate JWT tokens

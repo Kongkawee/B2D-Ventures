@@ -19,7 +19,6 @@ def register_business(request):
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(username=username, email=email, password=password)
-    user.save()
 
     # Create the business object
     business = Business.objects.create(
@@ -45,7 +44,8 @@ def register_business(request):
     # Handle cover image
     if 'cover_image' in request.FILES:
         business.cover_image = request.FILES['cover_image']
-
+        
+    user.save()
     business.save()
 
     # Handle multiple describe images
