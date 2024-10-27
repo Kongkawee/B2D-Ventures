@@ -34,10 +34,12 @@ def register_investor(request):
     )
     
     try:
+        user.save()
         investor.save()
-        user.save() 
     except Exception as e:
         print("An error occurred while saving investor:", e)
+        user.delete()
+        print("User instance deleted due to error in saving investor.")
 
 
     # Generate JWT tokens

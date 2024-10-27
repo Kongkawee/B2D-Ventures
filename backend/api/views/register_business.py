@@ -46,10 +46,12 @@ def register_business(request):
         business.cover_image = request.FILES['cover_image']
         
     try:
+        user.save()
         business.save()
-        user.save()      
     except Exception as e:
         print("An error occurred while saving business:", e)
+        user.delete()
+        print("User instance deleted due to error in saving business.")
 
     # Handle multiple describe images
     for key in request.FILES:
