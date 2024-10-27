@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.exceptions import ValidationError
 from ..models import Business, BusinessImage
+
 
 
 @api_view(['POST'])
@@ -45,13 +47,14 @@ def register_business(request):
     if 'cover_image' in request.FILES:
         business.cover_image = request.FILES['cover_image']
         
+    user.save()
     try:
-        user.save()
+        business.full_clean()
         business.save()
-    except Exception as e:
-        print("An error occurred while saving business:", e)
+    except ValidationError as e:
+        print("Investor validation failed:", e)
         user.delete()
-        print("User instance deleted due to error in saving business.")
+        print("User instance deleted due to investor validation failure.")
 
     # Handle multiple describe images
     for key in request.FILES:

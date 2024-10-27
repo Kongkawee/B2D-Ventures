@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.exceptions import ValidationError
 from ..models import Investor
 
 
@@ -33,13 +34,14 @@ def register_investor(request):
         profile_picture=profile_picture
     )
     
+    user.save()
     try:
-        user.save()
+        investor.full_clean()
         investor.save()
-    except Exception as e:
-        print("An error occurred while saving investor:", e)
+    except ValidationError as e:
+        print("Investor validation failed:", e)
         user.delete()
-        print("User instance deleted due to error in saving investor.")
+        print("User instance deleted due to investor validation failure.")
 
 
     # Generate JWT tokens
