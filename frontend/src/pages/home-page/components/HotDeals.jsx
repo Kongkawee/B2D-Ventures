@@ -92,6 +92,7 @@ export default function HotDeals() {
       </Grid>
 
       <Button
+        id="view-more-button"
         type="submit"
         fullWidth
         variant="outlined"
