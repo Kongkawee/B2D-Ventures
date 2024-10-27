@@ -49,7 +49,7 @@ def register_business(request):
         business.save()
         user.save()      
     except Exception as e:
-        print("An error occurred while saving investor:", e)
+        print("An error occurred while saving business:", e)
 
     # Handle multiple describe images
     for key in request.FILES:
