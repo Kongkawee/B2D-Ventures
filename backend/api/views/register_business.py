@@ -45,8 +45,9 @@ def register_business(request):
     if 'cover_image' in request.FILES:
         business.cover_image = request.FILES['cover_image']
         
-    user.save()
     business.save()
+    user.save()
+
 
     # Handle multiple describe images
     for key in request.FILES:

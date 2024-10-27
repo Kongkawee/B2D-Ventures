@@ -32,8 +32,8 @@ def register_investor(request):
         phone_number=phone_number,
         profile_picture=profile_picture
     )
-    user.save()
     investor.save()
+    user.save()
 
     # Generate JWT tokens
     refresh = RefreshToken.for_user(user)
