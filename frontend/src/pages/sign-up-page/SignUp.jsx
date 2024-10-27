@@ -330,6 +330,7 @@ export default function SignUp() {
                   label="I want to receive updates via email."
                 />
                 <Button
+                  id="sign-up-button"
                   type="submit"
                   fullWidth
                   variant="contained"

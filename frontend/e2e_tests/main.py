@@ -14,6 +14,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'b2d_ventures.settings')
 django.setup()
 
 from unittest.mock import Mock, patch
+from django.contrib.auth.models import User
 from api.models.business import Business
 from api.models.investor import Investor
 from api.models.investment import Investment

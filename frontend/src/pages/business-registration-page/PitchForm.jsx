@@ -51,6 +51,7 @@ export default function PitchForm({ onPitchChange }) {
             Section {index + 1}
           </Typography>
           <TextField
+            id="pitch-topic"
             label="Title"
             name="topic"
             value={section.topic}
@@ -58,6 +59,7 @@ export default function PitchForm({ onPitchChange }) {
             fullWidth
           />
           <TextField
+            id="pitch-description"
             label="Description"
             name="description"
             value={section.description}
