@@ -6,6 +6,7 @@ from .models import Investor, Business, Investment
 from datetime import datetime, timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 class UserSetupMixin:
     def setUp(self):
         # Create a business user
@@ -38,6 +39,7 @@ class UserSetupMixin:
             current_investment=98000,
             status="pending"
         )
+
 
 class InvestorRegistrationTests(APITestCase):
     def test_register_investor(self):
@@ -153,6 +155,7 @@ class InvestTests(UserSetupMixin, APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
+    
 class ProfileTests(UserSetupMixin, APITestCase):
     def setUp(self):
         super().setUp()
@@ -172,6 +175,7 @@ class ProfileTests(UserSetupMixin, APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['email'], self.business.email)
+
 
 class InvestmentListTests(UserSetupMixin, APITestCase):
     def setUp(self):

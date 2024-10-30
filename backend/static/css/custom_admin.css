@@ -1,0 +1,11 @@
+/* static/css/custom_admin.css */
+
+/* Change the background color of the Django admin header */
+#header {
+   background-color: #191a1b; /* Customize this color */
+}
+
+/* Customize the text color in the header, if needed */
+#header h1, #header h1 a, #header .breadcrumbs a {
+   color: #fff !important; /* Make text white for contrast */
+}
