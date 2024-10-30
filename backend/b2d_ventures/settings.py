@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-import os
+import sys
 from os import getenv
 from dotenv import load_dotenv
 from pathlib import Path
@@ -81,7 +81,7 @@ ROOT_URLCONF = 'b2d_ventures.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Global templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,6 +93,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'b2d_ventures.wsgi.application'
 
@@ -161,11 +162,22 @@ CORS_ALLOWS_CREDENTIALS = True
 
 # CSRF_COOKIE_NAME = "csrftoken"
 
-# AWS S3 credentials and bucket settings
-AWS_ACCESS_KEY_ID = getenv('AWS_ACCESS_KEY')
-AWS_SECRET_ACCESS_KEY = getenv('SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = getenv('BUCKET_NAME')
-AWS_S3_REGION_NAME = getenv('S3_REGION_NAME')
+TESTING = 'test' in sys.argv
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+if TESTING:
+    # Local storage settings for testing
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    MEDIA_ROOT = BASE_DIR / 'test_media/'
+    STATIC_ROOT = BASE_DIR / 'test_static/' 
+else:
+    # AWS S3 storage settings for production
+    AWS_ACCESS_KEY_ID = getenv('AWS_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = getenv('SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = getenv('BUCKET_NAME')
+    AWS_S3_REGION_NAME = getenv('S3_REGION_NAME')
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
