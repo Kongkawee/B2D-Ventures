@@ -41,7 +41,7 @@ export default function ShowDeals({ searchTerm }) {
   }
 
   const handleViewMore = () => {
-    setVisibleDeals((prev) => prev + 3);
+    setVisibleDeals((prev) => prev + 6);
   };
 
   // Corrected the field used for filtering the deals
@@ -69,10 +69,10 @@ export default function ShowDeals({ searchTerm }) {
               businessTitle={deal.business_name}
               businessId={deal.id}
               categories={
-                deal.business_category.length > 0
+                Array.isArray(deal.business_category) && deal.business_category.length > 0
                   ? deal.business_category.join(", ")
                   : "No categories"
-              }
+              }              
               briefDescription={deal.brief_description}
               picture={defaultImage}
               countryLocated={deal.country_located || "Unknown Country"}

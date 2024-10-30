@@ -358,7 +358,6 @@ export default function BusinessRegistration() {
   // };
 
   const handleFormSubmit = async (event) => {
-    console.log(formData)
     event.preventDefault();
     // if (validateInputs()) {
     // }

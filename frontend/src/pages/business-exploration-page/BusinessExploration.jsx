@@ -26,10 +26,10 @@ export default function BusinessExplorationPage() {
   return (
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
-      <AppAppBar mode={mode} toggleColorMode={toggleColorMode} setSearchTerm={setSearchTerm} /> {/* Pass setSearchTerm */}
+      <AppAppBar mode={mode} toggleColorMode={toggleColorMode} setSearchTerm={setSearchTerm} />
       <Box sx={{ bgcolor: 'background.default' }}>
         <Divider />
-        <ShowDeals searchTerm={searchTerm} /> {/* Pass searchTerm */}
+        <ShowDeals searchTerm={searchTerm} />
         <Divider />
         <Footer mode={mode}/>
         <ScrollToTopButton />

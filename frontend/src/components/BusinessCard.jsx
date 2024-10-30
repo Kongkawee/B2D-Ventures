@@ -26,6 +26,7 @@ export default function BusinessCard({
       style={{ textDecoration: "none", flexGrow: 1 }}
     >
       <Card
+        id="business-card"
         sx={{
           display: "flex",
           flexDirection: "column",

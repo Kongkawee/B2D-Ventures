@@ -70,18 +70,19 @@ class BaseTestSetup(unittest.TestCase):
         print("Run Completed at : " + str(datetime.datetime.now()))
         cls.driver.quit()
 
-    def set_up_mock_business(self):
-        return
+    def set_up_investor_sign_in(self):
+        self.driver.get("http://localhost:5173/logout")
+        self.click_element_by_id("investor-sign-in-mode")
+        self.input_text_by_id("email", "testinvestor@gmail.com")
+        self.input_text_by_id("password", "testinvestor")
+        self.click_element_by_id("sign-in-button")
 
-    
-    def set_up_mock_investor(self):
-        return
-    
-    def sign_in_as_investor(self):
-        return
-    
-    def sign_in_as_business(self):
-        return
+    def set_up_business_sign_in(self):
+        self.driver.get("http://localhost:5173/logout")
+        self.click_element_by_id("business-sign-in-mode")
+        self.input_text_by_id("email", "testbusiness@gmail.com")
+        self.input_text_by_id("password", "testbusiness")
+        self.click_element_by_id("sign-in-button")
     
     # Helper method to find an element by ID
     def find_element_by_id(self, element_id: str) -> WebElement:
