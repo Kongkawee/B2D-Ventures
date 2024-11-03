@@ -28,13 +28,13 @@ export default function InvestInfoBox({ business }) {
         }}
       >
         {/* Funding Amount */}
-        <Typography variant="h3" fontWeight="bold" color="text.primary">
-          $ {Number(business.current_investment).toLocaleString()}
+        <Typography id="current-investment" variant="h3" fontWeight="bold" color="text.primary">
+          $ {Number(business.current_investment).toFixed(2).toLocaleString()}
         </Typography>
 
         {/* Percentage Raised */}
         <Typography variant="body1" color="text.secondary">
-          {percentageRaised.toFixed(2)}% raised of ${Number(business.goal).toLocaleString()} funding goal
+          {percentageRaised.toFixed(2)}% raised of ${Number(business.goal).toFixed(2).toLocaleString()} funding goal
         </Typography>
 
         <Box sx={{ width: "100%", mt: 2 }}>
@@ -65,7 +65,7 @@ export default function InvestInfoBox({ business }) {
             mt: 2,
           }}
         >
-          <Typography variant="body2">
+          <Typography id="fundraise-purpose" variant="body2">
             {business.fundraise_purpose}
           </Typography>
         </Box>

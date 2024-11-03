@@ -15,10 +15,10 @@ export default function MainGrid({ business }) {
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       {/* cards */}
-      <Typography component="h1" variant="h1" sx={{ mb: 0 }}>
+      <Typography id="business-name" component="h1" variant="h1" sx={{ mb: 0 }}>
         {business.business_name}
       </Typography>
-      <Typography component="overline" variant="overline" sx={{ mb: 2 }}>
+      <Typography id="brief-description" component="overline" variant="overline" sx={{ mb: 2 }}>
         {business.brief_description}
       </Typography>
       <Grid

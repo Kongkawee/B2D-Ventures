@@ -9,12 +9,12 @@ export default function PitchBox({ business }) {
       {Object.entries(business.pitch).map(([key, value]) => (
         <Box key={key} sx={{ my: 2 }}>
           {/* Topic */}
-          <Typography component="h2" variant="h4" sx={{ my: 2 }}>
+          <Typography id="pitch-topic" component="h2" variant="h4" sx={{ my: 2 }}>
             {value.topic}
           </Typography>
 
           {/* Description */}
-          <Typography component="p" variant="body1" sx={{ my: 2, fontSize: "h6.fontSize" }}>
+          <Typography id="pitch-description" component="p" variant="body1" sx={{ my: 2, fontSize: "h6.fontSize" }}>
             {value.description}
           </Typography>
         </Box>
