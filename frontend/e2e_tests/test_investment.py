@@ -1,6 +1,6 @@
 import unittest
-from main import BaseTestSetup
-from main import *
+from base_test_set_up import BaseTestSetup
+from base_test_set_up import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -75,5 +75,5 @@ class InvestmentTest(BaseTestSetup):
         self.assertEqual(this_investment.amount, 1000, "Investment amount should be 1000.")
 
 if __name__ == "__main__":
-    from main import CustomTestRunner
+    from frontend.e2e_tests.base_test_set_up import CustomTestRunner
     unittest.main(testRunner=CustomTestRunner())
