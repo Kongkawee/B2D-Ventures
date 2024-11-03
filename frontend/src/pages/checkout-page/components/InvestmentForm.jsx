@@ -76,7 +76,7 @@ export default function InvestmentForm({ business, onDetailsChange, handleOpenTe
       </FormGrid>
       <FormGrid item xs={12}>
         <FormControlLabel
-          control={<Checkbox name="read" value="yes" />}
+          control={<Checkbox id="terms-button" name="read" value="yes" />}
           label={
             <>
               You have read our&nbsp;

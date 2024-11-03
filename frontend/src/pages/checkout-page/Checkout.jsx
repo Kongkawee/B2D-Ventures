@@ -356,6 +356,7 @@ function Checkout() {
                       </Button>
                     )}
                     <Button
+                      id="next-step-button"
                       onClick={
                         activeStep === steps.length - 1
                           ? handlePlaceOrder

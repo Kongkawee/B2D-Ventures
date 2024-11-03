@@ -5,16 +5,13 @@ import { Button, Divider, LinearProgress, Card } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function InvestInfoBox({ business }) {
-  // Calculate percentage raised based on current investment and goal
   const percentageRaised = (business.current_investment / business.goal) * 100;
 
-  // Placeholder for number of investors (you may need to replace it with a dynamic value)
   const investorsCount = 125; 
 
-  // Calculate days left to invest based on publish_date and end_date
   const endDate = new Date(business.end_date);
   const currentDate = new Date();
-  const daysLeft = Math.max(0, Math.ceil((endDate - currentDate) / (1000 * 60 * 60 * 24))); // days left
+  const daysLeft = Math.max(0, Math.ceil((endDate - currentDate) / (1000 * 60 * 60 * 24)));
 
   return (
     <Card sx={{ p: 4 }}>
@@ -27,12 +24,10 @@ export default function InvestInfoBox({ business }) {
           spaceY: 2,
         }}
       >
-        {/* Funding Amount */}
         <Typography id="current-investment" variant="h3" fontWeight="bold" color="text.primary">
           $ {Number(business.current_investment).toFixed(2).toLocaleString()}
         </Typography>
 
-        {/* Percentage Raised */}
         <Typography variant="body1" color="text.secondary">
           {percentageRaised.toFixed(2)}% raised of ${Number(business.goal).toFixed(2).toLocaleString()} funding goal
         </Typography>
@@ -53,7 +48,6 @@ export default function InvestInfoBox({ business }) {
           />
         </Box>
 
-        {/* Fundraise Purpose */}
         <Box
           sx={{
             display: "flex",
@@ -70,7 +64,6 @@ export default function InvestInfoBox({ business }) {
           </Typography>
         </Box>
 
-        {/* Investors */}
         <Typography
           variant="h3"
           fontWeight="bold"
@@ -85,7 +78,6 @@ export default function InvestInfoBox({ business }) {
 
         <Divider sx={{ my: 2, borderColor: "grey.300" }} />
 
-        {/* Days Left to Invest */}
         <Typography variant="h3" fontWeight="bold" color="text.primary">
           {daysLeft} days
         </Typography>
@@ -93,9 +85,9 @@ export default function InvestInfoBox({ business }) {
           Left to invest
         </Typography>
 
-        {/* Invest Button */}
         <Link to={`/checkout/${business.id}`} style={{ textDecoration: "none" }}>
           <Button
+            id="invest-button"
             sx={{
               backgroundColor: "green",
               color: "white",
