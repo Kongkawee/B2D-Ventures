@@ -29,7 +29,6 @@ class BusinessPortfolioTest(BaseTestSetup):
         business.status = "pending"
         business.save()
 
-    @unittest.skip("Still bug")
     def test_fundraise_history(self):
         business = Business.objects.get(email="testbusiness@gmail.com")
         business.status = "available"
@@ -51,7 +50,6 @@ class BusinessPortfolioTest(BaseTestSetup):
         except TimeoutException:
             self.fail("Investment history table not found or could not be verified.")
 
-        # Create a new investment and check if it appears
         Investment.objects.create(
             investor=investor,
             business=business,
@@ -71,7 +69,6 @@ class BusinessPortfolioTest(BaseTestSetup):
         except TimeoutException:
             self.fail("Investment was not displayed in the investment history within the timeout period.")
 
-        # Clean up by deleting the investment
         Investment.objects.filter(business=business).delete()
 
         business.status = "pending"
