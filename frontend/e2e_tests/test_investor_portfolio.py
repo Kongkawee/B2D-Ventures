@@ -1,83 +1,71 @@
 import unittest
-from main import BaseTestSetup
-from main import *
+from base_test_set_up import BaseTestSetup
+from base_test_set_up import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from time import sleep
 
 class InvestorPortfolioTest(BaseTestSetup):
 
+    def setUp(self):
+        super().setUp()
+        self.investor = Investor.objects.get(email="testinvestor@gmail.com")
+        self.business = Business.objects.get(email="testbusiness@gmail.com")
+        self.business.status = "available"
+        self.business.save()
+
+    def tearDown(self):
+        Investment.objects.filter(investor=self.investor).delete()
+        self.business.status = "pending"
+        self.business.save()
+        super().tearDown()
+
+    def wait_for_text_in_element(self, element_id, text, timeout=10):
+        """Reusable method to wait for text to be present in an element."""
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.text_to_be_present_in_element((By.ID, element_id), text)
+            )
+        except TimeoutException:
+            self.fail(f"Text '{text}' not found in element with ID '{element_id}' within the timeout period.")
+
     def test_investor_profile(self):
-        investor = Investor.objects.get(email="testinvestor@gmail.com")
-
+        """Test to check if the investor profile data is displayed correctly."""
         self.set_up_investor_sign_in()
-
-        sleep(2)
-
         self.driver.get("http://localhost:5173/inv-pro")
 
-        investor_name = f"{investor.first_name} {investor.last_name}"
+        investor_name = f"{self.investor.first_name} {self.investor.last_name}"
 
-        sleep(1)
-
-        try:
-            WebDriverWait(self.driver, 10).until(
-                EC.text_to_be_present_in_element((By.ID, "investor-name"), investor_name)
-            )
-            self.assert_element_text_by_id("investor-name", investor_name)
-            self.assert_element_text_by_id("investor-email", investor.email)
-            print("[PASS] Investor profile data matches.")
-        except TimeoutException:
-            self.fail("Investor profile data was not displayed in time.")
-
+        self.wait_for_text_in_element("investor-name", investor_name)
+        self.assert_element_text_by_id("investor-name", investor_name, "Investor name does not match.")
+        self.assert_element_text_by_id("investor-email", self.investor.email, "Investor email does not match.")
+        print("[PASS] Investor profile data matches.")
 
     def test_total_investment(self):
-        business = Business.objects.get(email="testbusiness@gmail.com")
-        business.status = "available"
-        investor = Investor.objects.get(email="testinvestor@gmail.com")
-
+        """Test to check the total investment amount for the investor."""
         self.set_up_investor_sign_in()
-
-        sleep(2)
-
         self.driver.get("http://localhost:5173/inv-pro")
 
-        try:
-            WebDriverWait(self.driver, 10).until(
-                EC.text_to_be_present_in_element((By.ID, "total-investment"), "0.00")
-            )
-            self.assert_element_text_by_id("total-investment", "0.00")
-            print("[PASS] Initial total investment matches.")
-        except TimeoutException:
-            self.fail("Initial total investment not found or incorrect.")
+        # Initial check for total investment
+        self.wait_for_text_in_element("total-investment", "0.00")
+        self.assert_element_text_by_id("total-investment", "0.00", "Initial total investment does not match.")
+        print("[PASS] Initial total investment matches.")
 
-        Investment.objects.filter(investor=investor).delete()
-
+        # Create an investment and verify the updated amount
         Investment.objects.create(
-            investor=investor,
-            business=business,
+            investor=self.investor,
+            business=self.business,
             amount=1000,
             shares=1000,
         )
-
         self.driver.refresh()
 
-        try:
-            WebDriverWait(self.driver, 10).until(
-                EC.text_to_be_present_in_element((By.ID, "total-investment"), "1000.00")
-            )
-            self.assert_element_text_by_id("total-investment", "1000.00")
-            print("[PASS] Total investment after update matches.")
-        except TimeoutException:
-            self.fail("Updated total investment not found or incorrect.")
-
-        Investment.objects.filter(investor=investor).delete()
-        
-        business.status = "pending"
-        business.save()
+        expected_investment_text = "1000.00"
+        self.wait_for_text_in_element("total-investment", expected_investment_text)
+        self.assert_element_text_by_id("total-investment", expected_investment_text, "Updated total investment does not match.")
+        print("[PASS] Total investment after update matches.")
 
 if __name__ == "__main__":
-    from main import CustomTestRunner
+    from frontend.e2e_tests.base_test_set_up import CustomTestRunner
     unittest.main(testRunner=CustomTestRunner())
