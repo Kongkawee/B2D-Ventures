@@ -27,6 +27,7 @@ const xThemeComponents = {
 export default function BusinessProfile(props) {
   const [userData, setUserData] = useState(null);
   const [userInvestment, setUserInvestment] = useState([]);
+  const [currentInvestment, setCurrentInvestment] = useState(0.00);
 
   useEffect(() => {
     getUserData();
@@ -39,6 +40,7 @@ export default function BusinessProfile(props) {
       .then((res) => res.data)
       .then((data) => {
         setUserData(data);
+        setCurrentInvestment(data.current_investment)
       })
       .catch((err) => alert(err));
   };
@@ -90,7 +92,7 @@ export default function BusinessProfile(props) {
             }}
           >
             <Header />
-            <MainGrid userInvestment={userInvestment}/>
+            <MainGrid currentInvestment={currentInvestment} userInvestment={userInvestment}/>
           </Stack>
         </Box>
       </Box>

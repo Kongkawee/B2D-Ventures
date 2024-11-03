@@ -10,7 +10,7 @@ import StatCard from './StatCard';
 import { Alert, CircularProgress } from '@mui/material';
 
 
-export default function MainGrid({userInvestment}) {
+export default function MainGrid({currentInvestment, userInvestment}) {
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       {/* cards */}
@@ -33,7 +33,7 @@ export default function MainGrid({userInvestment}) {
             ) : (
               <MainGrid />  // Pass the profile data to MainGrid
             )} */}
-            <StatCard userInvestment={userInvestment}/>
+            <StatCard currentInvestment={currentInvestment}/>
           </Stack>
         </Grid>
       </Grid>

@@ -6,10 +6,11 @@ export default function FundraiseHistory({userInvestment}) {
 
   return (
     <DataGrid
+      id="fundraise-history-table"
       autoHeight
-      // checkboxSelection
       rows={userInvestment}
       columns={columns}
+      getRowId={(row) => row.id}
       getRowClassName={(params) =>
         params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
       }
@@ -19,6 +20,11 @@ export default function FundraiseHistory({userInvestment}) {
       pageSizeOptions={[10, 20, 50]}
       disableColumnResize
       density="compact"
+      componentsProps={{
+        row: {
+          'data-testid': 'fundraise-row',
+        },
+      }}
       slotProps={{
         filterPanel: {
           filterFormProps: {

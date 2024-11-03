@@ -7,11 +7,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from time import sleep
 
-class BusinessExplorationTest(BaseTestSetup):
+class BusinessInformationTest(BaseTestSetup):
 
-    def test_search_business(self):
-        self.driver.get("http://localhost:5173/explore")
-        
+    def test_business_information(self):
         business = Business.objects.get(email="testbusiness@gmail.com")
         business.status = "available"
         business.save()
