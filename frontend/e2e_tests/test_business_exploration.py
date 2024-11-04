@@ -21,7 +21,7 @@ class BusinessExplorationTest(BaseTestSetup):
             self.fail("Business with email 'testbusiness@gmail.com' does not exist.")
 
         # Input the search term
-        self.input_text_by_id("search", "test")
+        self.input_text_by_id("search", "Testbusinessname")
 
         try:
             # Wait for the business card element to be visible
