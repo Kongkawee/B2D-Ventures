@@ -69,12 +69,12 @@ class BusinessAdmin(admin.ModelAdmin):
     # Define the custom action
     @admin.action(description='Approve selected businesses')
     def approve_businesses(self, request, queryset):
-        updated_count = queryset.update(status='Available')
+        updated_count = queryset.update(status='available')
         self.message_user(request, f'{updated_count} business(es) have been approved as available.', messages.SUCCESS)
         
     @admin.action(description='Pause selected businesses')
     def pause_businesses(self, request, queryset):
-        updated_count = queryset.update(status='Paused')
+        updated_count = queryset.update(status='paused')
         self.message_user(request, f'{updated_count} business(es) have been Paused.', messages.SUCCESS)
 
     # Register the action
