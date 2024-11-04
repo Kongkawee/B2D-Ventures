@@ -1,6 +1,5 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,12 +9,16 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import MenuIcon from "@mui/icons-material/Menu";
 import ToggleColorMode from "./ToggleColorMode";
 import LogoLight from "../../../images/LogoLight.png";
 import LogoDark from "../../../images/LogoDark.png";
 import Search from "./Search";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import Papa from "papaparse";
 
 const logoStyle = {
   width: "100px",
@@ -24,11 +27,54 @@ const logoStyle = {
   cursor: "pointer",
 };
 
-function AppAppBar({ mode, toggleColorMode, setSearchTerm }) {
+function AppAppBar({
+  mode,
+  toggleColorMode,
+  setSearchTerm,
+  setSelectedCategories,
+}) {
+  const [filterDrawerOpen, setFilterDrawerOpen] = React.useState(false);
+  const [availableCategories, setAvailableCategories] = React.useState([]);
+  const [selectedCategories, setLocalSelectedCategories] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch("/business_categories.csv");
+      const csvData = await response.text();
+      Papa.parse(csvData, {
+        header: false,
+        skipEmptyLines: true,
+        complete: (results) => {
+          const categories = results.data.map((row) => row[0]);
+          setAvailableCategories(categories.filter(Boolean));
+        },
+      });
+    };
+
+    fetchCategories();
+  }, []);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
+  };
+
+  const handleCategoryChange = (category) => {
+    const updatedCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter((item) => item !== category)
+      : [...selectedCategories, category];
+
+    setLocalSelectedCategories(updatedCategories);
+    setSelectedCategories(updatedCategories);
+  };
+
+  const toggleFilterDrawer = (newOpen) => () => {
+    setFilterDrawerOpen(newOpen);
+  };
+
+  const resetCategories = () => {
+    setLocalSelectedCategories([]);
+    setSelectedCategories([]);
   };
 
   return (
@@ -94,6 +140,14 @@ function AppAppBar({ mode, toggleColorMode, setSearchTerm }) {
               }}
             >
               <Search setSearchTerm={setSearchTerm} />
+              <Button
+                variant="text"
+                color="inherit"
+                startIcon={<FilterListIcon />}
+                onClick={toggleFilterDrawer(true)}
+              >
+                Filter Categories
+              </Button>
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
             </Box>
             <Box sx={{ display: { sm: "", md: "none" } }}>
@@ -132,12 +186,54 @@ function AppAppBar({ mode, toggleColorMode, setSearchTerm }) {
                   <MenuItem>
                     <Search setSearchTerm={setSearchTerm} />
                   </MenuItem>
+                  <MenuItem>
+                    <Button
+                      fullWidth
+                      variant="text"
+                      color="inherit"
+                      startIcon={<FilterListIcon />}
+                      onClick={toggleFilterDrawer(true)}
+                    >
+                      Filter Categories
+                    </Button>
+                  </MenuItem>
                 </Box>
               </Drawer>
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
+      <Drawer
+        anchor="right"
+        open={filterDrawerOpen}
+        onClose={toggleFilterDrawer(false)}
+      >
+        <Box sx={{ width: 250, p: 2 }}>
+          <Typography variant="h6">Category Filters</Typography>
+          <Box sx={{ maxHeight: 400, overflowY: "auto", mb: 2 }}>
+            {availableCategories.map((category, index) => (
+              <FormControlLabel
+                key={index}
+                control={
+                  <Checkbox
+                    checked={selectedCategories.includes(category)}
+                    onChange={() => handleCategoryChange(category)}
+                  />
+                }
+                label={category}
+              />
+            ))}
+          </Box>
+          <Button
+            variant="contained"
+            color="secondary"
+            fullWidth
+            onClick={resetCategories}
+          >
+            Reset
+          </Button>
+        </Box>
+      </Drawer>
     </div>
   );
 }
@@ -145,6 +241,8 @@ function AppAppBar({ mode, toggleColorMode, setSearchTerm }) {
 AppAppBar.propTypes = {
   mode: PropTypes.oneOf(["dark", "light"]).isRequired,
   toggleColorMode: PropTypes.func.isRequired,
+  setSearchTerm: PropTypes.func.isRequired,
+  setSelectedCategories: PropTypes.func.isRequired,
 };
 
 export default AppAppBar;

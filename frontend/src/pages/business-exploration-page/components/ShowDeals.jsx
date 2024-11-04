@@ -7,7 +7,7 @@ import BusinessCard from "../../../components/BusinessCard";
 import api from "../../../api";
 import { Box } from "@mui/material";
 
-export default function ShowDeals({ searchTerm }) {
+export default function ShowDeals({ searchTerm, selectedCategories }) {
   const [visibleDeals, setVisibleDeals] = useState(3);
   const [businessDeals, setBusinessDeals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,10 +44,23 @@ export default function ShowDeals({ searchTerm }) {
     setVisibleDeals((prev) => prev + 6);
   };
 
-  // Corrected the field used for filtering the deals
-  const filteredDeals = businessDeals.filter((deal) =>
-    deal.business_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredDeals = businessDeals.filter((deal) => {
+    const matchesSearchTerm = deal.business_name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const dealCategories = Array.isArray(deal.business_category)
+      ? deal.business_category.map((cat) => cat.toLowerCase())
+      : [];
+
+    const matchesSelectedCategories =
+      selectedCategories.length === 0 ||
+      selectedCategories.some((category) =>
+        dealCategories.includes(category.toLowerCase())
+      );
+
+    return matchesSearchTerm && matchesSelectedCategories;
+  });
 
   return (
     <Container
@@ -69,10 +82,11 @@ export default function ShowDeals({ searchTerm }) {
               businessTitle={deal.business_name}
               businessId={deal.id}
               categories={
-                Array.isArray(deal.business_category) && deal.business_category.length > 0
+                Array.isArray(deal.business_category) &&
+                deal.business_category.length > 0
                   ? deal.business_category.join(", ")
                   : "No categories"
-              }              
+              }
               briefDescription={deal.brief_description}
               picture={defaultImage}
               countryLocated={deal.country_located || "Unknown Country"}

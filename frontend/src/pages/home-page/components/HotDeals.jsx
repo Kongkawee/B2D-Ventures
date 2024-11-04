@@ -15,7 +15,6 @@ export default function HotDeals() {
   const defaultImage =
     "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png";
 
-  // Fetch the business deals from the API
   useEffect(() => {
     const fetchBusinessDeals = async () => {
       try {
@@ -40,7 +39,6 @@ export default function HotDeals() {
     return <Typography color="error">{error}</Typography>;
   }
 
-  // Limit to 3 business deals
   const limitedBusinessDeals = businessDeals.slice(0, 3);
 
   return (
@@ -77,6 +75,7 @@ export default function HotDeals() {
               businessTitle={deal.business_name}
               businessId={deal.id}
               categories={
+                Array.isArray(deal.business_category) &&
                 deal.business_category.length > 0
                   ? deal.business_category.join(", ")
                   : "No categories"

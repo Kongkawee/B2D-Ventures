@@ -11,7 +11,9 @@ import Footer from '../../components/Footer';
 export default function BusinessExplorationPage() {
   const [mode, setMode] = React.useState('dark');
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-  const [searchTerm, setSearchTerm] = React.useState(""); // Add search term state
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [selectedCategories, setSelectedCategories] = React.useState([]);
+
   const LPtheme = createTheme({ palette: { mode } });
   const defaultTheme = createTheme({ palette: { mode } });
 
@@ -23,13 +25,22 @@ export default function BusinessExplorationPage() {
     setShowCustomTheme((prev) => !prev);
   };
 
+  const handleSetSelectedCategories = (categories) => {
+    setSelectedCategories(categories);
+  };
+
   return (
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
-      <AppAppBar mode={mode} toggleColorMode={toggleColorMode} setSearchTerm={setSearchTerm} />
+      <AppAppBar
+        mode={mode}
+        toggleColorMode={toggleColorMode}
+        setSearchTerm={setSearchTerm}
+        setSelectedCategories={handleSetSelectedCategories}
+      />
       <Box sx={{ bgcolor: 'background.default' }}>
         <Divider />
-        <ShowDeals searchTerm={searchTerm} />
+        <ShowDeals searchTerm={searchTerm} selectedCategories={selectedCategories} />
         <Divider />
         <Footer mode={mode}/>
         <ScrollToTopButton />
