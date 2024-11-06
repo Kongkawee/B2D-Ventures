@@ -75,9 +75,9 @@ export default function ShowDeals({ searchTerm, selectedCategories }) {
         gap: { xs: 3, sm: 6 },
       }}
     >
-      <Grid container spacing={4} justifyContent="center">
+      <Grid container spacing={4} justifyContent="center" sx={{ width: "100%" }}>
         {filteredDeals.slice(0, visibleDeals).map((deal, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index} maxWidth={"30%"}>
+          <Grid item xs={12} sm={6} md={4} key={index}  sx={{ width: "30%" }}>
             <BusinessCard
               businessTitle={deal.business_name}
               businessId={deal.id}
