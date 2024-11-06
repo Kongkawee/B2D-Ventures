@@ -12,6 +12,7 @@ import DealTermsBox from "./DealTermsBox";
 
 export default function MainGrid({ business }) {
   
+  
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       {/* cards */}
@@ -29,7 +30,7 @@ export default function MainGrid({ business }) {
       >
         <Grid size={{ sm: 12, md: 8 }} sx={{ mb: 1 }}>
           <Grid size={{ sm: 12, md: 8 }} sx={{ mb: 1 }}>
-            <MediaDisplayBox />
+          <MediaDisplayBox businessImages={business.describe_images} />
           </Grid>
           <Divider />
           <Typography component="h2" variant="h4" sx={{ my: 2 }}>
@@ -51,7 +52,7 @@ export default function MainGrid({ business }) {
           <Grid>
             <CardMedia
               component="img"
-              image="https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png"
+              image={business.cover_image}
             />
           </Grid>
           <Grid>

@@ -88,7 +88,7 @@ export default function ShowDeals({ searchTerm, selectedCategories }) {
                   : "No categories"
               }
               briefDescription={deal.brief_description}
-              picture={defaultImage}
+              picture={deal.cover_image}
               countryLocated={deal.country_located || "Unknown Country"}
               provinceLocated={deal.province_located || "Unknown Province"}
               companyName={deal.company_name}
