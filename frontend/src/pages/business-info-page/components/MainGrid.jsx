@@ -11,7 +11,8 @@ import InvestInfoBox from "./InvestInfoBox";
 import DealTermsBox from "./DealTermsBox";
 
 export default function MainGrid({ business }) {
-  
+  const defaultImage =
+    "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png";
   
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
@@ -52,7 +53,7 @@ export default function MainGrid({ business }) {
           <Grid>
             <CardMedia
               component="img"
-              image={business.cover_image}
+              image={business.cover_image || defaultImage}
             />
           </Grid>
           <Grid>
