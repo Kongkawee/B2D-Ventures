@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react";
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -9,16 +9,30 @@ import ScrollToTopButton from '../../components/ScrollToTopButton';
 import Footer from '../../components/Footer';
 
 export default function BusinessExplorationPage() {
-  const [mode, setMode] = React.useState('dark');
-  const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [selectedCategories, setSelectedCategories] = React.useState([]);
+  const [mode, setMode] = useState('dark');
+  const [showCustomTheme, setShowCustomTheme] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const LPtheme = createTheme({ palette: { mode } });
   const defaultTheme = createTheme({ palette: { mode } });
 
+  useEffect(() => {
+    const savedMode = localStorage.getItem("themeMode");
+    if (savedMode) {
+      setMode(savedMode);
+    } else {
+      const systemPrefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      setMode(systemPrefersDark ? "dark" : "light");
+    }
+  }, []);
+
   const toggleColorMode = () => {
-    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    const newMode = mode === "dark" ? "light" : "dark";
+    setMode(newMode);
+    localStorage.setItem("themeMode", newMode);
   };
 
   const toggleCustomTheme = () => {
