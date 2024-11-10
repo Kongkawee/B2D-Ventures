@@ -69,7 +69,7 @@ export default function MediaDisplayBox({ businessImages = defaultImages }) {
             image={images[currentIndex].src}
             alt={images[currentIndex].alt}
             onClick={handleMainImageClick}
-            sx={{ borderRadius: "inherit", cursor: "pointer" }}
+            sx={{ borderRadius: "inherit", cursor: "pointer", height: "490px" }}
           />
           <Stack
             direction="row"
@@ -92,6 +92,7 @@ export default function MediaDisplayBox({ businessImages = defaultImages }) {
                 sx={{
                   borderRadius: "inherit",
                   width: 200,
+                  height: 125,
                   flexShrink: 0,
                   cursor: "pointer",
                   border: currentIndex === index ? `2px solid ${theme.palette.primary.main}` : "none",
