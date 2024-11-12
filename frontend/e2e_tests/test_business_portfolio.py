@@ -40,26 +40,6 @@ class BusinessPortfolioTest(BaseTestSetup):
         self.assert_element_text_by_id("business-email", self.business.email, "Business email does not match.")
         print("[PASS] Business profile data matches.")
 
-    @unittest.skip
-    def test_fundraise_history(self):
-        self.set_up_business_sign_in()
-
-        # Verify the investment history is initially empty
-        self.driver.get("http://localhost:5173/bus/18")
-        self.wait_for_element(By.ID, "fundraise-history-table")
-        rows = self.driver.find_elements(By.CSS_SELECTOR, '[data-testid="fundraise-row"]')
-        self.assertEqual(len(rows), 0, "Investment history should initially be empty.")
-        print("[PASS] Investment history is empty as expected.")
-
-        # Create an investment and verify it appears
-        Investment.objects.create(investor=self.investor, business=self.business, amount=1000, shares=1000)
-        self.driver.refresh()
-
-        self.wait_for_element(By.ID, "fundraise-history-table")
-        rows = self.driver.find_elements(By.CSS_SELECTOR, '[data-testid="fundraise-row"]')
-        self.assertGreater(len(rows), 0, "Investment should appear in the investment history.")
-        print("[PASS] Investment added and displayed in the investment history.")
-
     def test_business_current_investment(self):
         self.set_up_business_sign_in()
 
