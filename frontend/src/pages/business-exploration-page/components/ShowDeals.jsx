@@ -7,7 +7,7 @@ import BusinessCard from "../../../components/BusinessCard";
 import api from "../../../api";
 import { Box } from "@mui/material";
 
-export default function ShowDeals({ searchTerm }) {
+export default function ShowDeals({ searchTerm, selectedCategories }) {
   const [visibleDeals, setVisibleDeals] = useState(3);
   const [businessDeals, setBusinessDeals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,13 +41,26 @@ export default function ShowDeals({ searchTerm }) {
   }
 
   const handleViewMore = () => {
-    setVisibleDeals((prev) => prev + 3);
+    setVisibleDeals((prev) => prev + 6);
   };
 
-  // Corrected the field used for filtering the deals
-  const filteredDeals = businessDeals.filter((deal) =>
-    deal.business_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredDeals = businessDeals.filter((deal) => {
+    const matchesSearchTerm = deal.business_name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const dealCategories = Array.isArray(deal.business_category)
+      ? deal.business_category.map((cat) => cat.toLowerCase())
+      : [];
+
+    const matchesSelectedCategories =
+      selectedCategories.length === 0 ||
+      selectedCategories.some((category) =>
+        dealCategories.includes(category.toLowerCase())
+      );
+
+    return matchesSearchTerm && matchesSelectedCategories;
+  });
 
   return (
     <Container
@@ -62,19 +75,20 @@ export default function ShowDeals({ searchTerm }) {
         gap: { xs: 3, sm: 6 },
       }}
     >
-      <Grid container spacing={4} justifyContent="center">
+      <Grid container spacing={4} justifyContent="center" sx={{ width: "100%" }}>
         {filteredDeals.slice(0, visibleDeals).map((deal, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index} maxWidth={"30%"}>
+          <Grid item xs={12} sm={6} md={4} key={index}  sx={{ width: "30%" }}>
             <BusinessCard
               businessTitle={deal.business_name}
               businessId={deal.id}
               categories={
+                Array.isArray(deal.business_category) &&
                 deal.business_category.length > 0
                   ? deal.business_category.join(", ")
                   : "No categories"
               }
               briefDescription={deal.brief_description}
-              picture={defaultImage}
+              picture={deal.cover_image || defaultImage}
               countryLocated={deal.country_located || "Unknown Country"}
               provinceLocated={deal.province_located || "Unknown Province"}
               companyName={deal.company_name}

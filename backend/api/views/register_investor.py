@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.exceptions import ValidationError
 from ..models import Investor
 
 
@@ -23,7 +24,6 @@ def register_investor(request):
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
-    user.save()
 
     investor = Investor.objects.create(
         user=user,
@@ -33,7 +33,16 @@ def register_investor(request):
         phone_number=phone_number,
         profile_picture=profile_picture
     )
-    investor.save()
+    
+    user.save()
+    try:
+        investor.full_clean()
+        investor.save()
+    except ValidationError as e:
+        print("Investor validation failed:", e)
+        user.delete()
+        print("User instance deleted due to investor validation failure.")
+
 
     # Generate JWT tokens
     refresh = RefreshToken.for_user(user)

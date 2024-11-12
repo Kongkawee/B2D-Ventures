@@ -11,7 +11,7 @@ import api from '../../api';
 
 
 export default function BusinessInfo() {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState("dark");
   const [showCustomTheme, setShowCustomTheme] = useState(true);
   const dashboardTheme = createTheme(getDashboardTheme(mode));
   const defaultTheme = createTheme({ palette: { mode } });

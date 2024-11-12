@@ -52,10 +52,10 @@ export default function SideMenu({ userData }) {
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>
-          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
+          <Typography id="business-name" variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
             {userData ? `${userData.business_name}` : 'Loading...'}
           </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+          <Typography id="business-email" variant="caption" sx={{ color: 'text.secondary' }}>
             {userData ? userData.email : 'example@email.com'}
           </Typography>
         </Box>

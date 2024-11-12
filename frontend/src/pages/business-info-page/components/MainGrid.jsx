@@ -11,14 +11,20 @@ import InvestInfoBox from "./InvestInfoBox";
 import DealTermsBox from "./DealTermsBox";
 
 export default function MainGrid({ business }) {
-  
+  const defaultImage =
+    "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png";
+
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
-      {/* cards */}
-      <Typography component="h1" variant="h1" sx={{ mb: 0 }}>
+      <Typography id="business-name" component="h1" variant="h1" sx={{ mb: 0 }}>
         {business.business_name}
       </Typography>
-      <Typography component="overline" variant="overline" sx={{ mb: 2 }}>
+      <Typography
+        id="brief-description"
+        component="overline"
+        variant="overline"
+        sx={{ mb: 2 }}
+      >
         {business.brief_description}
       </Typography>
       <Grid
@@ -28,16 +34,16 @@ export default function MainGrid({ business }) {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         <Grid size={{ sm: 12, md: 8 }} sx={{ mb: 1 }}>
-          <Grid size={{ sm: 12, md: 8 }} sx={{ mb: 1 }}>
-            <MediaDisplayBox />
-          </Grid>
+          <Box sx={{ marginBottom: "16px" }}>
+            <MediaDisplayBox businessImages={business.describe_images} />
+          </Box>
           <Divider />
           <Typography component="h2" variant="h4" sx={{ my: 2 }}>
             Pitch
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ md: 12, lg: 8 }}>
-              <PitchBox business={business}/>
+              <PitchBox business={business} />
             </Grid>
           </Grid>
         </Grid>
@@ -51,14 +57,19 @@ export default function MainGrid({ business }) {
           <Grid>
             <CardMedia
               component="img"
-              image="https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png"
+              image={business.cover_image || defaultImage}
+              sx={{
+                height: "200px",
+                borderRadius: "8px",
+                border: "1px solid hsla(220, 20%, 25%, 0.6);",
+              }}
             />
           </Grid>
           <Grid>
-            <InvestInfoBox business={business}/>
+            <InvestInfoBox business={business} />
           </Grid>
           <Grid>
-            <DealTermsBox business={business}/>
+            <DealTermsBox business={business} />
           </Grid>
         </Grid>
       </Grid>

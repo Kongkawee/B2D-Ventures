@@ -27,9 +27,8 @@ function StatCard({ userInvestment }) {
           sx={{ justifyContent: 'space-between', flexGrow: '1', gap: 1 }}
         >
           <Stack sx={{ justifyContent: 'space-between' }}>
-            {/* Displaying the dynamically calculated total investment */}
-            <Typography variant="h4" component="p" alignSelf="center">
-              {totalInvestment.toLocaleString()} {/* Format to include commas */}
+            <Typography id="total-investment" variant="h4" component="p" alignSelf="center">
+              {totalInvestment.toFixed(2).toLocaleString()}
             </Typography>
           </Stack>
         </Stack>

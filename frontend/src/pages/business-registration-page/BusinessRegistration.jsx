@@ -19,6 +19,7 @@ import PitchForm from "./PitchForm";
 import CategorySelectForm from "./CategorySelectForm";
 import api from "../../api";
 import { useNavigate } from "react-router-dom";
+import { addDays, addMonths, format } from 'date-fns';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -58,11 +59,14 @@ const logoStyle = {
 };
 
 export default function BusinessRegistration() {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState("dark");
   const [showCustomTheme, setShowCustomTheme] = useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
   const SignUpTheme = createTheme(getSignUpTheme(mode));
   const navigate = useNavigate();
+  const today = new Date();
+  const defaultPublishDate = format(addDays(today, 7), 'yyyy-MM-dd');
+  const defaultEndDate = format(addMonths(today, 1), 'yyyy-MM-dd');
 
   const [formData, setFormData] = useState({
     companyName: "",
@@ -70,8 +74,8 @@ export default function BusinessRegistration() {
     email: "",
     password: "",
     phoneNumber: "",
-    publishDate: "",
-    endDate: "",
+    publishDate: defaultPublishDate,
+    endDate: defaultEndDate,
     fundraisePurpose: "",
     briefDescription: "",
     pitch: {},
@@ -382,6 +386,7 @@ export default function BusinessRegistration() {
   
     try {
       const response = await api.post("/api/business/register/", formDataToSend);
+      console.log(formDataToSend)
       console.log("User registered successfully:", response.data);
       navigate("/sin");
     } catch (error) {
@@ -463,7 +468,7 @@ export default function BusinessRegistration() {
                       name="companyName"
                       required
                       fullWidth
-                      id="companyName"
+                      id="company-name"
                       placeholder="Company Name"
                       value={formData.companyName}
                       onChange={handleChange}
@@ -480,7 +485,7 @@ export default function BusinessRegistration() {
                       name="businessName"
                       required
                       fullWidth
-                      id="businessName"
+                      id="business-name"
                       placeholder="Business Name"
                       value={formData.businessName}
                       onChange={handleChange}
@@ -532,7 +537,7 @@ export default function BusinessRegistration() {
                     <TextField
                       required
                       fullWidth
-                      id="phoneNumber"
+                      id="phone-number"
                       placeholder="1234567890"
                       name="phoneNumber"
                       autoComplete="tel"
@@ -551,7 +556,7 @@ export default function BusinessRegistration() {
                     <TextField
                       required
                       fullWidth
-                      id="countryLocated"
+                      id="country-located"
                       placeholder="Bangkok"
                       name="countryLocated"
                       variant="outlined"
@@ -569,7 +574,7 @@ export default function BusinessRegistration() {
                     <TextField
                       required
                       fullWidth
-                      id="provinceLocated"
+                      id="province-located"
                       placeholder="Bangken"
                       name="provinceLocated"
                       variant="outlined"
@@ -587,7 +592,7 @@ export default function BusinessRegistration() {
                     <TextField
                       required
                       fullWidth
-                      id="publishDate"
+                      id="publish-date"
                       type="date"
                       name="publishDate"
                       variant="outlined"
@@ -606,7 +611,7 @@ export default function BusinessRegistration() {
                     <TextField
                       required
                       fullWidth
-                      id="endDate"
+                      id="end-date"
                       type="date"
                       name="endDate"
                       variant="outlined"
@@ -644,7 +649,7 @@ export default function BusinessRegistration() {
                     <TextField
                       required
                       fullWidth
-                      id="minInvestment"
+                      id="min-investment"
                       placeholder="1,000"
                       name="minInvestment"
                       autoComplete="off"
@@ -663,7 +668,7 @@ export default function BusinessRegistration() {
                     <TextField
                       required
                       fullWidth
-                      id="maxInvestment"
+                      id="max-investment"
                       placeholder="10,000"
                       name="maxInvestment"
                       autoComplete="off"
@@ -680,7 +685,7 @@ export default function BusinessRegistration() {
                       Price Per Share
                     </FormLabel>
                     <TextField
-                      id="pricePerShare"
+                      id="price-per-share"
                       name="pricePerShare"
                       type="number"
                       placeholder="e.g. 50"
@@ -698,7 +703,7 @@ export default function BusinessRegistration() {
                       Upload Business Cover Image
                     </FormLabel>
                     <input
-                      id="coverImage"
+                      id="cover-image"
                       name="coverImage"
                       type="file"
                       accept="image/*"
@@ -749,7 +754,7 @@ export default function BusinessRegistration() {
                       Fundraise Purpose
                     </FormLabel>
                     <TextField
-                      id="fundraisePurpose"
+                      id="fundraise-purpose"
                       name="fundraisePurpose"
                       placeholder="Purpose of fundraise"
                       multiline
@@ -772,7 +777,7 @@ export default function BusinessRegistration() {
                       Brief Description
                     </FormLabel>
                     <TextField
-                      id="briefDescription"
+                      id="brief-description"
                       name="briefDescription"
                       placeholder="Describe your business"
                       multiline
@@ -795,6 +800,7 @@ export default function BusinessRegistration() {
                   sx={{ width: "100%" }}
                   control={
                     <Checkbox
+                      id="terms"
                       onChange={handleChange}
                       name="terms"
                       color="primary"
@@ -803,7 +809,6 @@ export default function BusinessRegistration() {
                   label="I have read and agreed to the Terms of Service."
                 />
 
-                {/* Submit Button */}
                 <Box
                   sx={{
                     display: "flex",
@@ -812,12 +817,13 @@ export default function BusinessRegistration() {
                   }}
                 >
                   <Button
+                    id="register-button"
                     type="submit"
                     variant="contained"
                     color="primary"
                     fullWidth
                   >
-                    Submit
+                    Register
                   </Button>
                 </Box>
               </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Checkbox,
@@ -13,17 +13,38 @@ import {
   Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
-const availableCategories = Array.from(
-  { length: 1000 },
-  (_, i) => `Category ${i + 1}`
-);
+import Papa from "papaparse";
 
 export default function CategorySelectForm({ onCategoryChange }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [error, setError] = useState("");
+  const [availableCategories, setAvailableCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/business_categories.csv");
+        if (!response.ok) {
+          throw new Error("Failed to fetch CSV file");
+        }
+        const csvData = await response.text();
+        Papa.parse(csvData, {
+          header: false,
+          skipEmptyLines: true,
+          complete: (results) => {
+            const categories = results.data.map((row) => row[0]);
+            setAvailableCategories(categories.filter(Boolean));
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching and parsing the CSV file:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleCategoryChange = (category) => {
     let newSelectedCategories = [];

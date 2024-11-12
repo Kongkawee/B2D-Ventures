@@ -26,13 +26,14 @@ export default function BusinessCard({
       style={{ textDecoration: "none", flexGrow: 1 }}
     >
       <Card
+        id="business-card"
         sx={{
           display: "flex",
           flexDirection: "column",
           height: "100%",
           borderRadius: 3,
           overflow: "hidden",
-          maxWidth: "100%", // Ensure card stays within its grid bounds
+          maxWidth: "100%",
           boxShadow: 3,
         }}
       >
@@ -43,7 +44,7 @@ export default function BusinessCard({
           image={picture}
           sx={{
             objectFit: "cover",
-            width: "100%", // Ensure image fits the card width
+            width: "100%",
           }}
         />
         <CardContent
@@ -51,8 +52,9 @@ export default function BusinessCard({
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            height: "100%",
+            height: "248px",
             overflow: "hidden",
+            position: "relative",
           }}
         >
           <Box>
@@ -61,9 +63,9 @@ export default function BusinessCard({
               variant="h5"
               component="div"
               sx={{
-                whiteSpace: "nowrap", // Prevent wrapping
+                whiteSpace: "nowrap",
                 overflow: "hidden",
-                textOverflow: "ellipsis", // Add ellipsis for overflow
+                textOverflow: "ellipsis",
               }}
             >
               {businessTitle}
@@ -94,7 +96,7 @@ export default function BusinessCard({
               {briefDescription}
             </Typography>
           </Box>
-          <Box>
+          <Box sx={{ bottom: 0, position: "absolute", right: 0, left: 0, padding: "16px" }}>
             <Box className="location">
               <Typography
                 variant="body2"

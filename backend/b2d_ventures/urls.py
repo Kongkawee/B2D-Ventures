@@ -6,6 +6,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+admin.site.site_header = "B2D-Ventures"
+admin.site.site_title = "B2D-Ventures"
+admin.site.index_title = "B2D-Ventures Administration"
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 

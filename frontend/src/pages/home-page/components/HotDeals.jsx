@@ -15,7 +15,6 @@ export default function HotDeals() {
   const defaultImage =
     "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png";
 
-  // Fetch the business deals from the API
   useEffect(() => {
     const fetchBusinessDeals = async () => {
       try {
@@ -40,7 +39,6 @@ export default function HotDeals() {
     return <Typography color="error">{error}</Typography>;
   }
 
-  // Limit to 3 business deals
   const limitedBusinessDeals = businessDeals.slice(0, 3);
 
   return (
@@ -70,19 +68,20 @@ export default function HotDeals() {
         </Typography>
       </Box>
 
-      <Grid container spacing={4} justifyContent="center" columns={9}>
+      <Grid container spacing={4} justifyContent="center" sx={{ width: "100%" }}>
         {limitedBusinessDeals.map((deal, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index} maxWidth={"30%"}>
+          <Grid item xs={12} sm={6} md={4} key={index} sx={{ width: "30%" }}>
             <BusinessCard
               businessTitle={deal.business_name}
               businessId={deal.id}
               categories={
+                Array.isArray(deal.business_category) &&
                 deal.business_category.length > 0
                   ? deal.business_category.join(", ")
                   : "No categories"
               }
               briefDescription={deal.brief_description}
-              picture={defaultImage}
+              picture={deal.cover_image || defaultImage}
               countryLocated={deal.country_located || "Unknown Country"}
               provinceLocated={deal.province_located || "Unknown Province"}
               companyName={deal.company_name}
@@ -92,6 +91,7 @@ export default function HotDeals() {
       </Grid>
 
       <Button
+        id="view-more-button"
         type="submit"
         fullWidth
         variant="outlined"

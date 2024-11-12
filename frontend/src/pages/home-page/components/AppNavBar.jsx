@@ -170,6 +170,7 @@ function AppNavBar({ mode, toggleColorMode }) {
               {!isAuthenticated ? (
                 <>
                   <Button
+                    id="business-menu-dropdown"
                     color="primary"
                     variant="text"
                     size="small"
@@ -182,11 +183,12 @@ function AppNavBar({ mode, toggleColorMode }) {
                     open={Boolean(anchorElBusiness)}
                     onClose={handleCloseBusinessMenu}
                   >
-                    <MenuItem onClick={() => navigate("/bus-reg")}>
+                    <MenuItem id="business-register-button" onClick={() => navigate("/bus-reg")}>
                       <ListItemText primary="Business Registration" />
                     </MenuItem>
                   </Menu>
                   <Button
+                    id="investor-menu-dropdown"
                     color="primary"
                     variant="text"
                     size="small"
@@ -199,11 +201,12 @@ function AppNavBar({ mode, toggleColorMode }) {
                     open={Boolean(anchorElInvestor)}
                     onClose={handleCloseInvestorMenu}
                   >
-                    <MenuItem onClick={() => navigate("/sup")}>
+                    <MenuItem id="investor-sign-up-button" onClick={() => navigate("/sup")}>
                       <ListItemText primary="Investor Registration" />
                     </MenuItem>
                   </Menu>
                   <Button
+                    id="sign-in-button"
                     color="primary"
                     variant="contained"
                     size="small"

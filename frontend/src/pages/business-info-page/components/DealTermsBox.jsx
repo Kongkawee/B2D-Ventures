@@ -30,11 +30,12 @@ export default function DealTermsBox({ business }) {
           Minimum Investment
         </Typography>
         <Typography
+          id="min-investment"
           variant="h4"
           color="text.primary"
           sx={{ mb: 2 }}
         >
-          $ {Number(business.min_investment).toLocaleString()}
+          $ {Number(business.min_investment).toFixed(2).toLocaleString()}
         </Typography>
 
         <Divider sx={{ my: 2, borderColor: "grey.700" }} />
@@ -44,12 +45,13 @@ export default function DealTermsBox({ business }) {
           Maximum Investment
         </Typography>
         <Typography
+          id="max-investment"
           variant="h4"
           color="text.primary"
           sx={{ mb: 2 }}
         >
           {business.max_investment
-            ? `$ ${Number(business.max_investment).toLocaleString()}`
+            ? `$ ${Number(business.max_investment).toFixed(2).toLocaleString()}`
             : "-"}
         </Typography>
 
@@ -60,11 +62,12 @@ export default function DealTermsBox({ business }) {
           Funding Goal
         </Typography>
         <Typography
+          id="goal"
           variant="h4"
           color="text.primary"
           sx={{ mb: 2 }}
         >
-          $ {Number(business.goal).toLocaleString()}
+          $ {Number(business.goal).toFixed(2).toLocaleString()}
         </Typography>
 
         <Divider sx={{ my: 2, borderColor: "grey.700" }} />
@@ -88,10 +91,11 @@ export default function DealTermsBox({ business }) {
           Price Per Share
         </Typography>
         <Typography
+          id="price-per-share"
           variant="h4"
           color="text.primary"
         >
-          $ {Number(business.price_per_share).toLocaleString()}
+          $ {Number(business.price_per_share).toFixed(2).toLocaleString()}
         </Typography>
       </Box>
     </Card>
