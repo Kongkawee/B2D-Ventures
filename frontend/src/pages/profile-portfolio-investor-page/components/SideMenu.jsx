@@ -11,6 +11,8 @@ import OptionsMenu from './OptionsMenu';
 
 const drawerWidth = 240;
 
+const placeholderImage = "/static/images/avatar/placeholder.jpg";
+
 const Drawer = styled(MuiDrawer)({
   width: drawerWidth,
   flexShrink: 0,
@@ -23,6 +25,8 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu({ userData }) {
+  if (!userData) return null;
+
   return (
     <Drawer
       variant="permanent"
@@ -48,7 +52,7 @@ export default function SideMenu({ userData }) {
         <Avatar
           sizes="small"
           alt=""
-          src="/static/images/avatar/7.jpg"
+          src={userData?.profile_picture || placeholderImage}
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>
@@ -59,7 +63,7 @@ export default function SideMenu({ userData }) {
             {userData ? userData.email : 'example@email.com'}
           </Typography>
         </Box>
-        <OptionsMenu />
+        <OptionsMenu userData={userData}/>
       </Stack>
     </Drawer>
   );

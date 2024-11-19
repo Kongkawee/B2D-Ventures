@@ -1,34 +1,69 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Divider, { dividerClasses } from "@mui/material/Divider";
 import Menu from "@mui/material/Menu";
 import MuiMenuItem from "@mui/material/MenuItem";
-import { paperClasses } from "@mui/material/Paper";
-import { listClasses } from "@mui/material/List";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon, { listItemIconClasses } from "@mui/material/ListItemIcon";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import MenuButton from "./MenuButton";
+import ProfileDialog from "./ProfileDialog"; 
 import { useNavigate } from "react-router-dom";
+import api from "../../../api";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
 });
 
-export default function OptionsMenu() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+export default function OptionsMenu({ userData }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const navigate = useNavigate();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleLogout = () => {
     navigate("/logout");
   };
+
+  const openProfileDialog = () => {
+    setProfileDialogOpen(true);
+    handleClose();
+  };
+
+  const closeProfileDialog = () => {
+    setProfileDialogOpen(false);
+  };
+
+  const handleSaveProfile = async (updatedProfile) => {
+    try {
+      const formData = new FormData();
+      formData.append("first_name", updatedProfile.firstName);
+      formData.append("last_name", updatedProfile.lastName);
+      formData.append("phone_number", updatedProfile.phoneNumber);
+      
+      if (updatedProfile.profilePicture) {
+        formData.append("profile_picture", updatedProfile.profilePicture);
+      }
+  
+      const response = await api.patch("/api/investor/update/", formData);
+
+      closeProfileDialog();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      if (error.response) {
+        alert(error.response.data.detail || "Profile update failed. Please try again.");
+      } else {
+        alert("Profile update failed. Please check your network connection.");
+      }
+    }
+  };
+
   return (
     <React.Fragment>
       <MenuButton
@@ -41,44 +76,31 @@ export default function OptionsMenu() {
       <Menu
         anchorEl={anchorEl}
         id="menu"
-        open={open}
+        open={Boolean(anchorEl)}
         onClose={handleClose}
         onClick={handleClose}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         sx={{
-          [`& .${listClasses.root}`]: {
-            padding: "4px",
-          },
-          [`& .${paperClasses.root}`]: {
-            padding: 0,
-          },
           [`& .${dividerClasses.root}`]: {
             margin: "4px -4px",
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        {/* <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={openProfileDialog}>Profile</MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Add another account</MenuItem>
-        <MenuItem onClick={handleClose}>Settings</MenuItem> */}
-        <Divider />
-        <MenuItem
-          onClick={handleLogout}
-          sx={{
-            [`& .${listItemIconClasses.root}`]: {
-              ml: "auto",
-              minWidth: 0,
-            },
-          }}
-        >
-          <ListItemText>Logout</ListItemText>
-          <ListItemIcon>
-            <LogoutRoundedIcon fontSize="small" />
-          </ListItemIcon>
+        <MenuItem onClick={handleLogout}>
+          Logout
+          <LogoutRoundedIcon fontSize="small" style={{ marginLeft: "auto" }} />
         </MenuItem>
       </Menu>
+
+      <ProfileDialog
+        open={profileDialogOpen}
+        onClose={closeProfileDialog}
+        userData={userData}
+        onSaveProfile={handleSaveProfile}
+      />
     </React.Fragment>
   );
 }
