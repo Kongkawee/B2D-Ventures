@@ -7,9 +7,9 @@ from ..serializers import InvestorSerializer
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-def update_investor(request, pk):
+def update_investor(request):
     try:
-        investor = Investor.objects.get(pk=pk, user=request.user)
+        investor = Investor.objects.get(user=request.user)
 
         data = request.data
         if 'first_name' in data:
