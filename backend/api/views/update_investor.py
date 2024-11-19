@@ -7,9 +7,9 @@ from ..serializers import InvestorSerializer
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-def update_investor(request):
+def update_investor(request, pk):
     try:
-        investor = Investor.objects.get(user=request.user)
+        investor = Investor.objects.get(pk=pk, user=request.user)
 
         data = request.data
         if 'first_name' in data:
@@ -27,4 +27,4 @@ def update_investor(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     except Investor.DoesNotExist:
-        return Response({'error': 'Investor not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Investor not found or unauthorized.'}, status=status.HTTP_404_NOT_FOUND)
