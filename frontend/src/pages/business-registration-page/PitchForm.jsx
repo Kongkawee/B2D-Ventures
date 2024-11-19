@@ -8,7 +8,7 @@ export default function PitchForm({ onPitchChange }) {
   const addSection = () => {
     const newSections = [...sections, { topic: "", description: "" }];
     setSections(newSections);
-    onPitchChange(newSections); // Update parent component with the new sections
+    onPitchChange(newSections);
   };
 
   const handleInputChange = (index, event) => {
@@ -16,13 +16,13 @@ export default function PitchForm({ onPitchChange }) {
     const newSections = [...sections];
     newSections[index][name] = value;
     setSections(newSections);
-    onPitchChange(newSections); // Update parent component
+    onPitchChange(newSections);
   };
 
   const removeSection = (index) => {
     const newSections = sections.filter((_, i) => i !== index);
     setSections(newSections);
-    onPitchChange(newSections); // Update parent component
+    onPitchChange(newSections);
   };
 
   return (
