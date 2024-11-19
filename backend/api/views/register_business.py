@@ -42,9 +42,6 @@ def register_business(request):
         max_investment=request.data.get('maxInvestment'),
         price_per_share=request.data.get('pricePerShare'),
     )
-    print(request.data)
-    print(request.data.get('pitch'))
-    print(request.data.get('businessCategory'))
 
     # Handle cover image
     if 'cover_image' in request.FILES:
