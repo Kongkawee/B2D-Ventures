@@ -35,8 +35,8 @@ export const columns = [
     minWidth: 100,
   },
   {
-    field: 'sharePercentage',
-    headerName: 'Share Percentage (%)',
+    field: 'investmentDate',
+    headerName: 'Invest Date (UTC+7)',
     headerAlign: 'right',
     align: 'right',
     flex: 1,

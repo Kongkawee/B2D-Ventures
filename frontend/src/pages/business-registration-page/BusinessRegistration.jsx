@@ -391,7 +391,7 @@ export default function BusinessRegistration() {
                       type="date"
                       name="publishDate"
                       variant="outlined"
-                      InputLabelProps={{
+                      InputLabel={{
                         shrink: true,
                       }}
                       value={formData.publishDate}
@@ -410,7 +410,7 @@ export default function BusinessRegistration() {
                       type="date"
                       name="endDate"
                       variant="outlined"
-                      InputLabelProps={{
+                      InputLabel={{
                         shrink: true,
                       }}
                       value={formData.endDate}
