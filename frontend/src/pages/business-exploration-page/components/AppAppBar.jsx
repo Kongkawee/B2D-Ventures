@@ -142,7 +142,7 @@ function AppAppBar({
               <Search setSearchTerm={setSearchTerm} />
               <Button
                 variant="text"
-                color="inherit"
+                color="primary"
                 startIcon={<FilterListIcon />}
                 onClick={toggleFilterDrawer(true)}
               >

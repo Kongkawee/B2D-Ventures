@@ -8,7 +8,7 @@ import api from "../../../api";
 import { Box } from "@mui/material";
 
 export default function ShowDeals({ searchTerm, selectedCategories }) {
-  const [visibleDeals, setVisibleDeals] = useState(3);
+  const [visibleDeals, setVisibleDeals] = useState(6);
   const [businessDeals, setBusinessDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
