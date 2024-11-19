@@ -66,8 +66,6 @@ function App() {
         />
         {" Investor Profile Page "}
 
-        {/* <Route path="/inv-por" element={<ProtectedRoute><BusinessExplorationPage /></ProtectedRoute>} /> Investor Portfolio Page */}
-
         <Route
           path="/bus-pro"
           element={
@@ -80,7 +78,6 @@ function App() {
         />
         {" Business Profile Page "}
 
-        {/* <Route path="/bus-por" element={<ProtectedRoute><BusinessExplorationPage /></ProtectedRoute>} /> Business Portfolio Page */}
         <Route path="/not-authorized" element={<NotAuthorized />}></Route>
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
