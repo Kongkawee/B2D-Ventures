@@ -8,7 +8,7 @@ urlpatterns = [
     path('investor/<int:pk>/', DetailInvestor.as_view(), name='specific_investor'),
     path('investor/profile/', CurrentInvestorProfile.as_view(), name='current_investor_profile'),
     path('investor/investment/', CurrentInvestorInvestment.as_view(), name='current_investor_investment'),
-    path('investor/<int:pk>/update/', update_investor, name='update_investor'),
+    path('investor/update/', update_investor, name='update_investor'),
 
 
     path('business/', ListBusiness.as_view(), name='all_business'),

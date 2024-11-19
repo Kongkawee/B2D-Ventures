@@ -94,7 +94,7 @@ export default function SignInCard() {
     if (validateInputs()) {
       const data = new FormData(event.currentTarget);
       const formData = {
-        username: data.get("email"), // Ensure 'username' corresponds to the backend's expected field
+        username: data.get("email"),
         password: data.get("password"),
         type: loginType,
       };
@@ -171,14 +171,14 @@ export default function SignInCard() {
         <FormControl>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormLabel htmlFor="password">Password</FormLabel>
-            <Link
+            {/* <Link
               component="button"
               onClick={handleClickOpen}
               variant="body2"
               sx={{ alignSelf: "baseline" }}
             >
               Forgot your password?
-            </Link>
+            </Link> */}
           </Box>
           <TextField
             error={passwordError}
@@ -193,10 +193,10 @@ export default function SignInCard() {
             color={passwordError ? "error" : "primary"}
           />
         </FormControl>
-        <FormControlLabel
+        {/* <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}
           label="Remember me"
-        />
+        /> */}
         <ForgotPassword open={open} handleClose={handleClose} />
         <Button id="sign-in-button" type="submit" fullWidth variant="contained">
           Sign in
@@ -206,6 +206,12 @@ export default function SignInCard() {
           <span>
             <Link href="/sup" variant="body2">
               Sign up
+            </Link>
+          </span>
+          {" "}or{" "}
+          <span>
+            <Link href="/bus-reg" variant="body2">
+              Create fundraise
             </Link>
           </span>
         </Typography>

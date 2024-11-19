@@ -9,14 +9,17 @@ import FAQ from './components/FAQ';
 import HotDeals from './components/HotDeals';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
 import Footer from '../../components/Footer';
+import api from "../../api";
 
 
 export default function HomePage() {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState("dark");
   const defaultTheme = createTheme({ palette: { mode } });
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const savedMode = localStorage.getItem("themeMode");
+    getUserData();
     if (savedMode) {
       setMode(savedMode);
     } else {
@@ -27,6 +30,18 @@ export default function HomePage() {
     }
   }, []);
 
+  const getUserData = () => {
+    api
+      .get("/api/investor/profile/")
+      .then((res) => res.data)
+      .then((data) => {
+        setUserData(data);
+      })
+      .catch((err) => {
+        alert("Failed to fetch user data.");
+      });
+  };
+
   const toggleColorMode = () => {
     const newMode = mode === "dark" ? "light" : "dark";
     setMode(newMode);
@@ -36,7 +51,7 @@ export default function HomePage() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <AppNavBar mode={mode} toggleColorMode={toggleColorMode} />
+      <AppNavBar mode={mode} userData={userData} toggleColorMode={toggleColorMode} />
       <HeroSection />
       <Box sx={{ bgcolor: 'background.default' }}>
         <Divider />

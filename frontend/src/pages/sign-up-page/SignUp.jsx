@@ -71,7 +71,7 @@ export default function SignUp() {
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState(false);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
-  const [profilePicture, setProfilePicture] = useState(null); // New state for profile picture
+  const [profilePicture, setProfilePicture] = useState(null);
 
   useEffect(() => {
     const savedMode = localStorage.getItem("themeMode");
@@ -168,7 +168,7 @@ export default function SignUp() {
     event.preventDefault();
     if (validateInputs()) {
       const formData = new FormData();
-      formData.append("username", document.getElementById("email").value); // Assuming username is email
+      formData.append("username", document.getElementById("email").value); 
       formData.append("firstName", document.getElementById("firstname").value);
       formData.append("lastName", document.getElementById("lastname").value);
       formData.append("phoneNumber", document.getElementById("phonenumber").value);
