@@ -8,7 +8,7 @@ import Content from './Content';
 import TemplateFrame from './TemplateFrame';
 
 export default function SignIn() {
-  const [mode, setMode] = useState('light');
+  const [mode, setMode] = useState('dark');
   const [showCustomTheme, setShowCustomTheme] = useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
   const SignInSideTheme = createTheme(getSignInSideTheme(mode));

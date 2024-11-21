@@ -40,7 +40,9 @@ export default function InvestorProfile(props) {
       .then((data) => {
         setUserData(data);
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        alert("Failed to fetch user data.");
+      });
   };
 
   const getUserInvestment = () => {
@@ -59,8 +61,8 @@ export default function InvestorProfile(props) {
         setUserInvestment(mappedData);
       })
       .catch((err) => {
-        console.error('Error fetching investments:', err);
-        alert('Failed to fetch investment data');
+        console.error("Error fetching investments:", err);
+        alert("Failed to fetch investment data");
       });
   };
 
@@ -70,7 +72,6 @@ export default function InvestorProfile(props) {
       <Box sx={{ display: "flex" }}>
         <SideMenu userData={userData} />
         <AppNavbar />
-        {/* Main content */}
         <Box
           component="main"
           sx={(theme) => ({
@@ -91,7 +92,7 @@ export default function InvestorProfile(props) {
             }}
           >
             <Header />
-            <MainGrid userInvestment={userInvestment}/>
+            <MainGrid userInvestment={userInvestment} />
           </Stack>
         </Box>
       </Box>

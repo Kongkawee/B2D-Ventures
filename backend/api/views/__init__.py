@@ -7,6 +7,7 @@ from .detail_investment import DetailInvestment
 from .detail_investor import DetailInvestor
 from .invest import invest
 from .investment_by_investor_view import InvestmentByInvestorView
+from .investment_by_business_view import InvestmentByBusinessView
 from .is_business import IsBusiness
 from .is_investor import IsInvestor
 from .list_available_business_for_card import ListAvailableBusinessForCard
@@ -17,3 +18,6 @@ from .login import login_user
 from .register_business import register_business
 from .register_investor import register_investor
 from .upload_business_image import upload_business_images
+from .update_investor import update_investor
+from .request_password_reset_view import RequestPasswordReset
+from .reset_password_view import ResetPassword

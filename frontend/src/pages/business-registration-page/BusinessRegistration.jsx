@@ -19,7 +19,8 @@ import PitchForm from "./PitchForm";
 import CategorySelectForm from "./CategorySelectForm";
 import api from "../../api";
 import { useNavigate } from "react-router-dom";
-import { addDays, addMonths, format } from 'date-fns';
+import { addDays, addMonths, format } from "date-fns";
+import { validateInputs } from "./formValidation";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -65,8 +66,8 @@ export default function BusinessRegistration() {
   const SignUpTheme = createTheme(getSignUpTheme(mode));
   const navigate = useNavigate();
   const today = new Date();
-  const defaultPublishDate = format(addDays(today, 7), 'yyyy-MM-dd');
-  const defaultEndDate = format(addMonths(today, 1), 'yyyy-MM-dd');
+  const defaultPublishDate = format(addDays(today, 7), "yyyy-MM-dd");
+  const defaultEndDate = format(addMonths(today, 1), "yyyy-MM-dd");
 
   const [formData, setFormData] = useState({
     companyName: "",
@@ -88,7 +89,6 @@ export default function BusinessRegistration() {
     provinceLocated: "",
   });
 
-  // State for managing errors
   const [errors, setErrors] = useState({
     companyNameError: false,
     businessNameError: false,
@@ -170,230 +170,25 @@ export default function BusinessRegistration() {
     }));
   };
 
-  // Validation function for handling errors
-  // const validateInputs = () => {
-  //   let isValid = true;
-  //   let newErrors = { ...errors }; // Clone the current errors
-  //   // General Information Validation
-  //   // Company Name validation
-  //   if (!formData.companyName.trim()) {
-  //     newErrors.companyNameError = true;
-  //     newErrors.companyNameErrorMessage = "Company name is required.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.companyNameError = false;
-  //     newErrors.companyNameErrorMessage = "";
-  //   }
-  //   // Business Name validation
-  //   if (!formData.businessName.trim()) {
-  //     newErrors.businessNameError = true;
-  //     newErrors.businessNameErrorMessage = "Business name is required.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.businessNameError = false;
-  //     newErrors.businessNameErrorMessage = "";
-  //   }
-  //   // Email validation
-  //   if (!formData.email.trim()) {
-  //     newErrors.emailError = true;
-  //     newErrors.emailErrorMessage = "Email is required.";
-  //     isValid = false;
-  //   } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-  //     newErrors.emailError = true;
-  //     newErrors.emailErrorMessage = "Please enter a valid email address.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.emailError = false;
-  //     newErrors.emailErrorMessage = "";
-  //   }
-  //   // Phone validation
-  //   if (!formData.phone.trim()) {
-  //     newErrors.phoneError = true;
-  //     newErrors.phoneErrorMessage = "Phone number is required.";
-  //     isValid = false;
-  //   } else if (!/^\d{3}\d{3}\d{4}$/.test(formData.phone.replace(/-/g, ""))) {
-  //     newErrors.phoneError = true;
-  //     newErrors.phoneErrorMessage =
-  //       "Please enter a valid phone number (e.g., 1234567890).";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.phoneError = false;
-  //     newErrors.phoneErrorMessage = "";
-  //   }
-  //   // Publish Date validation
-  //   if (!formData.publishDate) {
-  //     newErrors.publishDateError = true;
-  //     newErrors.publishDateErrorMessage = "Publish date is required.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.publishDateError = false;
-  //     newErrors.publishDateErrorMessage = "";
-  //   }
-  //   // Deadline Date validation
-  //   if (!formData.deadlineDate) {
-  //     newErrors.deadlineDateError = true;
-  //     newErrors.deadlineDateErrorMessage = "Deadline date is required.";
-  //     isValid = false;
-  //   } else if (
-  //     formData.publishDate &&
-  //     new Date(formData.deadlineDate) < new Date(formData.publishDate)
-  //   ) {
-  //     newErrors.deadlineDateError = true;
-  //     newErrors.deadlineDateErrorMessage =
-  //       "Deadline date must be after publish date.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.deadlineDateError = false;
-  //     newErrors.deadlineDateErrorMessage = "";
-  //   }
-  //   // Fundraise Goal validation
-  //   if (!formData.goal.trim()) {
-  //     newErrors.goalError = true;
-  //     newErrors.goalErrorMessage = "Fundraise goal is required.";
-  //     isValid = false;
-  //   } else if (isNaN(formData.goal) || Number(formData.goal) <= 0) {
-  //     newErrors.goalError = true;
-  //     newErrors.goalErrorMessage = "Fundraise goal must be a positive number.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.goalError = false;
-  //     newErrors.goalErrorMessage = "";
-  //   }
-  //   // Minimum Investment validation
-  //   if (!formData.minInvestment.trim()) {
-  //     newErrors.minInvestmentError = true;
-  //     newErrors.minInvestmentErrorMessage = "Minimum investment is required.";
-  //     isValid = false;
-  //   } else if (
-  //     isNaN(formData.minInvestment) ||
-  //     Number(formData.minInvestment) <= 0
-  //   ) {
-  //     newErrors.minInvestmentError = true;
-  //     newErrors.minInvestmentErrorMessage =
-  //       "Minimum investment must be a positive number.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.minInvestmentError = false;
-  //     newErrors.minInvestmentErrorMessage = "";
-  //   }
-  //   // Maximum Investment validation
-  //   if (!formData.maxInvestment.trim()) {
-  //     newErrors.maxInvestmentError = true;
-  //     newErrors.maxInvestmentErrorMessage = "Maximum investment is required.";
-  //     isValid = false;
-  //   } else if (
-  //     isNaN(formData.maxInvestment) ||
-  //     Number(formData.maxInvestment) <= 0
-  //   ) {
-  //     newErrors.maxInvestmentError = true;
-  //     newErrors.maxInvestmentErrorMessage =
-  //       "Maximum investment must be a positive number.";
-  //     isValid = false;
-  //   } else if (
-  //     Number(formData.maxInvestment) < Number(formData.minInvestment)
-  //   ) {
-  //     newErrors.maxInvestmentError = true;
-  //     newErrors.maxInvestmentErrorMessage =
-  //       "Maximum investment must be greater than minimum investment.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.maxInvestmentError = false;
-  //     newErrors.maxInvestmentErrorMessage = "";
-  //   }
-  //   // Password validation
-  //   if (!formData.password) {
-  //     newErrors.passwordError = true;
-  //     newErrors.passwordErrorMessage = "Password is required.";
-  //     isValid = false;
-  //   } else if (formData.password.length < 6) {
-  //     newErrors.passwordError = true;
-  //     newErrors.passwordErrorMessage =
-  //       "Password must be at least 6 characters long.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.passwordError = false;
-  //     newErrors.passwordErrorMessage = "";
-  //   }
-  //   // Terms of Service validation
-  //   if (!formData.terms) {
-  //     newErrors.termsError = true;
-  //     newErrors.termsErrorMessage = "You must agree to the Terms of Service.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.termsError = false;
-  //     newErrors.termsErrorMessage = "";
-  //   }
-  //   // Business Pitch validation
-  //   if (!formData.pitching.trim()) {
-  //     newErrors.pitchingError = true;
-  //     newErrors.pitchingErrorMessage = "Pitching is required.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.pitchingError = false;
-  //     newErrors.pitchingErrorMessage = "";
-  //   }
-  //   if (!formData.businessDescription.trim()) {
-  //     newErrors.businessDescriptionError = true;
-  //     newErrors.businessDescriptionErrorMessage =
-  //       "Business description is required.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.businessDescriptionError = false;
-  //     newErrors.businessDescriptionErrorMessage = "";
-  //   }
-  //   if (!formData.pricePerShare.trim()) {
-  //     newErrors.pricePerShareError = true;
-  //     newErrors.pricePerShareErrorMessage = "Price per share is required.";
-  //     isValid = false;
-  //   } else if (isNaN(formData.pricePerShare) || Number(formData.pricePerShare) <= 0) {
-  //     newErrors.pricePerShareError = true;
-  //     newErrors.pricePerShareErrorMessage = "Price per share must be a positive number.";
-  //     isValid = false;
-  //   } else {
-  //     newErrors.pricePerShareError = false;
-  //     newErrors.pricePerShareErrorMessage = "";
-  //   }
-  //   setErrors(newErrors);
-  //   return isValid;
-  // };
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    // if (validateInputs()) {
-    // }
-    
-    const formDataToSend = new FormData();
-  
-    // Add all the text fields to the FormData
-    for (const [key, value] of Object.entries(formData)) {
-      // Skip images here, they will be appended separately
-      if (key !== "coverImage" && key !== "describeImages") {
-        formDataToSend.append(key, value);
+    const { isValid, newErrors } = validateInputs(formData, errors);
+    setErrors(newErrors);
+
+    if (isValid) {
+
+      try {
+        const response = await api.post(
+          "/api/business/register/",
+          formData
+        );
+        console.log("User registered successfully:", response.data);
+        navigate("/sin");
+      } catch (error) {
+        console.error("Registration Failed:", error.response?.data);
       }
     }
-  
-    // Add the cover image (single file)
-    if (formData.coverImage) {
-      formDataToSend.append("cover_image", formData.coverImage);
-    }
-  
-    // Add the describe images (multiple files)
-    if (formData.describeImages && formData.describeImages.length > 0) {
-      Array.from(formData.describeImages).forEach((file, index) => {
-        formDataToSend.append(`describe_images_${index}`, file);
-      });
-    }
-  
-    try {
-      const response = await api.post("/api/business/register/", formDataToSend);
-      console.log(formDataToSend)
-      console.log("User registered successfully:", response.data);
-      navigate("/sin");
-    } catch (error) {
-      console.error("Registration Failed:", error.response?.data);
-    }
   };
-  
 
   return (
     <TemplateFrame
@@ -472,9 +267,9 @@ export default function BusinessRegistration() {
                       placeholder="Company Name"
                       value={formData.companyName}
                       onChange={handleChange}
-                      // error={errors.companyNameError}
-                      // helperText={errors.companyNameErrorMessage}
-                      // color={errors.companyNameError ? "error" : "primary"}
+                      error={errors.companyNameError}
+                      helperText={errors.companyNameErrorMessage}
+                      color={errors.companyNameError ? "error" : "primary"}
                     />
                   </FormControl>
 
@@ -489,9 +284,9 @@ export default function BusinessRegistration() {
                       placeholder="Business Name"
                       value={formData.businessName}
                       onChange={handleChange}
-                      // error={errors.businessNameError}
-                      // helperText={errors.businessNameErrorMessage}
-                      // color={errors.businessNameError ? "error" : "primary"}
+                      error={errors.businessNameError}
+                      helperText={errors.businessNameErrorMessage}
+                      color={errors.businessNameError ? "error" : "primary"}
                     />
                   </FormControl>
 
@@ -507,8 +302,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.email}
                       onChange={handleChange}
-                      // error={errors.emailError}
-                      // helperText={errors.emailErrorMessage}
+                      error={errors.emailError}
+                      helperText={errors.emailErrorMessage}
                     />
                   </FormControl>
 
@@ -525,8 +320,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.password}
                       onChange={handleChange}
-                      // error={errors.passwordError}
-                      // helperText={errors.passwordErrorMessage}
+                      error={errors.passwordError}
+                      helperText={errors.passwordErrorMessage}
                     />
                   </FormControl>
 
@@ -544,8 +339,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.phoneNumber}
                       onChange={handleChange}
-                      // error={errors.phoneError}
-                      // helperText={errors.phoneErrorMessage}
+                      error={errors.phoneError}
+                      helperText={errors.phoneErrorMessage}
                     />
                   </FormControl>
 
@@ -562,8 +357,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.countryLocated}
                       onChange={handleChange}
-                      // error={errors.countryLocatedError}
-                      // helperText={errors.countryLocatedErrorMessage}
+                      error={errors.countryLocatedError}
+                      helperText={errors.countryLocatedErrorMessage}
                     />
                   </FormControl>
 
@@ -580,8 +375,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.provinceLocated}
                       onChange={handleChange}
-                      // error={errors.provinceLocatedError}
-                      // helperText={errors.provinceLocatedErrorMessage}
+                      error={errors.provinceLocatedError}
+                      helperText={errors.provinceLocatedErrorMessage}
                     />
                   </FormControl>
 
@@ -596,13 +391,13 @@ export default function BusinessRegistration() {
                       type="date"
                       name="publishDate"
                       variant="outlined"
-                      InputLabelProps={{
+                      InputLabel={{
                         shrink: true,
                       }}
                       value={formData.publishDate}
                       onChange={handleChange}
-                      // error={errors.publishDateError}
-                      // helperText={errors.publishDateErrorMessage}
+                      error={errors.publishDateError}
+                      helperText={errors.publishDateErrorMessage}
                     />
                   </FormControl>
 
@@ -615,13 +410,13 @@ export default function BusinessRegistration() {
                       type="date"
                       name="endDate"
                       variant="outlined"
-                      InputLabelProps={{
+                      InputLabel={{
                         shrink: true,
                       }}
                       value={formData.endDate}
                       onChange={handleChange}
-                      // error={errors.deadlineDateError}
-                      // helperText={errors.deadlineDateErrorMessage}
+                      error={errors.deadlineDateError}
+                      helperText={errors.deadlineDateErrorMessage}
                     />
                   </FormControl>
 
@@ -637,8 +432,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.goal}
                       onChange={handleChange}
-                      // error={errors.goalError}
-                      // helperText={errors.goalErrorMessage}
+                      error={errors.goalError}
+                      helperText={errors.goalErrorMessage}
                     />
                   </FormControl>
 
@@ -656,8 +451,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.minInvestment}
                       onChange={handleChange}
-                      // error={errors.minInvestmentError}
-                      // helperText={errors.minInvestmentErrorMessage}
+                      error={errors.minInvestmentError}
+                      helperText={errors.minInvestmentErrorMessage}
                     />
                   </FormControl>
 
@@ -675,8 +470,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.maxInvestment}
                       onChange={handleChange}
-                      // error={errors.maxInvestmentError}
-                      // helperText={errors.maxInvestmentErrorMessage}
+                      error={errors.maxInvestmentError}
+                      helperText={errors.maxInvestmentErrorMessage}
                     />
                   </FormControl>
 
@@ -693,8 +488,8 @@ export default function BusinessRegistration() {
                       variant="outlined"
                       value={formData.pricePerShare}
                       onChange={handleChange}
-                      // error={errors.pricePerShareError}
-                      // helperText={errors.pricePerShareErrorMessage}
+                      error={errors.pricePerShareError}
+                      helperText={errors.pricePerShareErrorMessage}
                     />
                   </FormControl>
 
@@ -710,7 +505,7 @@ export default function BusinessRegistration() {
                       onChange={(e) =>
                         setFormData((prevData) => ({
                           ...prevData,
-                          coverImage: e.target.files[0], // Store the file
+                          coverImage: e.target.files[0],
                         }))
                       }
                     />
@@ -725,11 +520,11 @@ export default function BusinessRegistration() {
                       name="describeImages"
                       type="file"
                       accept="image/*"
-                      multiple // Allow multiple images to be uploaded
+                      multiple
                       onChange={(e) =>
                         setFormData((prevData) => ({
                           ...prevData,
-                          describeImages: e.target.files, // Store the file list (multiple files)
+                          describeImages: e.target.files,
                         }))
                       }
                     />
@@ -764,8 +559,8 @@ export default function BusinessRegistration() {
                       maxRows={10}
                       value={formData.fundraisePurpose}
                       onChange={handleChange}
-                      // error={errors.fundraisePurposeError}
-                      // helperText={errors.fundraisePurposeErrorMessage}
+                      error={errors.fundraisePurposeError}
+                      helperText={errors.fundraisePurposeErrorMessage}
                       sx={{ resize: "vertical" }}
                     />
                   </FormControl>
@@ -787,8 +582,8 @@ export default function BusinessRegistration() {
                       maxRows={10}
                       value={formData.briefDescription}
                       onChange={handleChange}
-                      // error={errors.briefDescriptionError}
-                      // helperText={errors.briefDescriptionErrorMessage}
+                      error={errors.briefDescriptionError}
+                      helperText={errors.briefDescriptionErrorMessage}
                     />
                   </FormControl>
                 </Box>

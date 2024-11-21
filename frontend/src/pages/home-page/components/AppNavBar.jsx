@@ -25,15 +25,15 @@ const logoStyle = {
   cursor: "pointer",
 };
 
-function AppNavBar({ mode, toggleColorMode }) {
+function AppNavBar({ mode, toggleColorMode, userData }) {
   const [open, setOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [anchorElBusiness, setAnchorElBusiness] = useState(null); // Business Menu Anchor
-  const [anchorElInvestor, setAnchorElInvestor] = useState(null); // Investor Menu Anchor
-  const [anchorElAvatar, setAnchorElAvatar] = useState(null); // Avatar Menu Anchor
+  const [anchorElBusiness, setAnchorElBusiness] = useState(null);
+  const [anchorElInvestor, setAnchorElInvestor] = useState(null);
+  const [anchorElAvatar, setAnchorElAvatar] = useState(null);
   const navigate = useNavigate();
+  const placeholderImage = "/static/images/avatar/placeholder.jpg";
 
-  // Check authentication status (could be from localStorage or context)
   useEffect(() => {
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
@@ -41,7 +41,7 @@ function AppNavBar({ mode, toggleColorMode }) {
     } else {
       setIsAuthenticated(false);
     }
-  }, []); // Run once on mount
+  }, []);
 
   const handleLogout = () => {
     navigate("/logout");
@@ -49,10 +49,9 @@ function AppNavBar({ mode, toggleColorMode }) {
 
   const handleProfile = () => {
     navigate("/inv-pro");
-    handleCloseAvatarMenu(); // Close the Avatar menu
+    handleCloseAvatarMenu();
   };
 
-  // Handlers for Business Dropdown
   const handleOpenBusinessMenu = (event) => {
     setAnchorElBusiness(event.currentTarget);
   };
@@ -61,7 +60,6 @@ function AppNavBar({ mode, toggleColorMode }) {
     setAnchorElBusiness(null);
   };
 
-  // Handlers for Investor Dropdown
   const handleOpenInvestorMenu = (event) => {
     setAnchorElInvestor(event.currentTarget);
   };
@@ -70,7 +68,6 @@ function AppNavBar({ mode, toggleColorMode }) {
     setAnchorElInvestor(null);
   };
 
-  // Handlers for Avatar Menu
   const handleOpenAvatarMenu = (event) => {
     setAnchorElAvatar(event.currentTarget);
   };
@@ -183,7 +180,10 @@ function AppNavBar({ mode, toggleColorMode }) {
                     open={Boolean(anchorElBusiness)}
                     onClose={handleCloseBusinessMenu}
                   >
-                    <MenuItem id="business-register-button" onClick={() => navigate("/bus-reg")}>
+                    <MenuItem
+                      id="business-register-button"
+                      onClick={() => navigate("/bus-reg")}
+                    >
                       <ListItemText primary="Business Registration" />
                     </MenuItem>
                   </Menu>
@@ -201,7 +201,10 @@ function AppNavBar({ mode, toggleColorMode }) {
                     open={Boolean(anchorElInvestor)}
                     onClose={handleCloseInvestorMenu}
                   >
-                    <MenuItem id="investor-sign-up-button" onClick={() => navigate("/sup")}>
+                    <MenuItem
+                      id="investor-sign-up-button"
+                      onClick={() => navigate("/sup")}
+                    >
                       <ListItemText primary="Investor Registration" />
                     </MenuItem>
                   </Menu>
@@ -222,7 +225,7 @@ function AppNavBar({ mode, toggleColorMode }) {
                     <Avatar
                       sizes="small"
                       alt=""
-                      src="/static/images/avatar/7.jpg"
+                      src={userData?.profile_picture || placeholderImage}
                       sx={{ width: 36, height: 36 }}
                     />
                   </IconButton>
