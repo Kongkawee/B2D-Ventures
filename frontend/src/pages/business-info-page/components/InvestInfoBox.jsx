@@ -14,7 +14,7 @@ export default function InvestInfoBox({ business }) {
     const fetchInvestmentByBusiness = async () => {
       try {
         const response = await api.get(`api/investment/business/${business.id}/`);
-        const uniqueInvestorIds = new Set(response.data.map(investment => investment.investor));
+        const uniqueInvestorIds = new Set(response.data.map(investment => investment.investor.id));
         setInvestorsCount(uniqueInvestorIds.size);
 
       } catch (error) {
