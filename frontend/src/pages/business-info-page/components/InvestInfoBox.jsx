@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Button, Divider, LinearProgress, Card } from "@mui/material";
 import { Link } from "react-router-dom";
+import api from "../../../api";
+
 
 export default function InvestInfoBox({ business }) {
   const percentageRaised = (business.current_investment / business.goal) * 100;
+  const [investorsCount, setInvestorsCount] = useState(0);
 
-  const investorsCount = 125; 
+  useEffect(() => {
+    const fetchInvestmentByBusiness = async () => {
+      try {
+        const response = await api.get(`api/investment/business/${business.id}/`);
+        const uniqueInvestorIds = new Set(response.data.map(investment => investment.investor));
+        setInvestorsCount(uniqueInvestorIds.size);
+
+      } catch (error) {
+        console.error("Error fetching investment deals:", error);
+      }
+    };
+
+    fetchInvestmentByBusiness();
+  }, [business.id]);
 
   const endDate = new Date(business.end_date);
   const currentDate = new Date();
