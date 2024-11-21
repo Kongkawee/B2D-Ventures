@@ -24,8 +24,9 @@ import api from "../../api";
 import { useParams } from "react-router-dom";
 import { Divider } from "@mui/material";
 import PopUpTerms from "../../components/PopUp/PopUpTerms";
+import PaymentForm from "./components/PaymentForm";
 
-const steps = ["Invest detail", "Risks acceptance", "Review your investment"];
+const steps = ["Invest detail", "Payment Detail", "Risks acceptance", "Review your investment"];
 
 function Checkout() {
   const [mode, setMode] = useState("light");
@@ -160,8 +161,10 @@ function Checkout() {
         </div>
         );
       case 1:
-        return <RisksAcceptance />;
+        return <PaymentForm />;
       case 2:
+        return <RisksAcceptance />;
+      case 3:
         return (
           <Review investmentDetails={investmentDetails} business={business} />
         );

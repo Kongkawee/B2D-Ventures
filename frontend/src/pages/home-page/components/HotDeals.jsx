@@ -15,21 +15,55 @@ export default function HotDeals() {
   const defaultImage =
     "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png";
 
-  useEffect(() => {
-    const fetchBusinessDeals = async () => {
-      try {
-        const response = await api.get("api/business/card/");
-        setBusinessDeals(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching business deals:", error);
-        setError("Failed to load business deals.");
-        setLoading(false);
-      }
-    };
-
-    fetchBusinessDeals();
-  }, []);
+    useEffect(() => {
+      const fetchBusinessDeals = async () => {
+        try {
+          const response = await api.get("api/business/card/");
+          const businesses = response.data;
+  
+          const businessesWithInvestorCounts = await Promise.all(
+            businesses.map(async (business) => {
+              try {
+                const investmentResponse = await api.get(
+                  `api/investment/business/${business.id}/`
+                );
+                const uniqueInvestorIds = new Set(
+                  investmentResponse.data.map(
+                    (investment) => investment.investor.id
+                  )
+                );
+                return {
+                  ...business,
+                  uniqueInvestorCount: uniqueInvestorIds.size,
+                };
+              } catch (investmentError) {
+                console.error(
+                  `Error fetching investments for business ${business.id}:`,
+                  investmentError
+                );
+                return {
+                  ...business,
+                  uniqueInvestorCount: 0, 
+                };
+              }
+            })
+          );
+  
+          const sortedDeals = businessesWithInvestorCounts.sort(
+            (a, b) => b.uniqueInvestorCount - a.uniqueInvestorCount
+          );
+  
+          setBusinessDeals(sortedDeals);
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching business deals:", error);
+          setError("Failed to load business deals.");
+          setLoading(false);
+        }
+      };
+  
+      fetchBusinessDeals();
+    }, []);
 
   if (loading) {
     return <Typography>Loading...</Typography>;
@@ -64,11 +98,16 @@ export default function HotDeals() {
           Interesting Deals
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Deals you might be interested in.
+          Attracting the most investors.
         </Typography>
       </Box>
 
-      <Grid container spacing={4} justifyContent="center" sx={{ width: "100%" }}>
+      <Grid
+        container
+        spacing={4}
+        justifyContent="center"
+        sx={{ width: "100%" }}
+      >
         {limitedBusinessDeals.map((deal, index) => (
           <Grid item xs={12} sm={6} md={4} key={index} sx={{ width: "30%" }}>
             <BusinessCard

@@ -3,7 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import AppAppBar from './components/AppAppBar';
+import AppNavBar from './components/AppNavBar';
 import ShowDeals from './components/ShowDeals';
 import ScrollToTopButton from '../../components/ScrollToTopButton';
 import Footer from '../../components/Footer';
@@ -46,7 +46,7 @@ export default function BusinessExplorationPage() {
   return (
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
-      <AppAppBar
+      <AppNavBar
         mode={mode}
         toggleColorMode={toggleColorMode}
         setSearchTerm={setSearchTerm}
