@@ -19,3 +19,5 @@ from .register_business import register_business
 from .register_investor import register_investor
 from .upload_business_image import upload_business_images
 from .update_investor import update_investor
+from .request_password_reset_view import RequestPasswordReset
+from .reset_password_view import ResetPassword
