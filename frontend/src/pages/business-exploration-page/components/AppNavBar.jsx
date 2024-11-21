@@ -27,7 +27,7 @@ const logoStyle = {
   cursor: "pointer",
 };
 
-function AppAppBar({
+function AppNavBar({
   mode,
   toggleColorMode,
   setSearchTerm,
@@ -238,11 +238,11 @@ function AppAppBar({
   );
 }
 
-AppAppBar.propTypes = {
+AppNavBar.propTypes = {
   mode: PropTypes.oneOf(["dark", "light"]).isRequired,
   toggleColorMode: PropTypes.func.isRequired,
   setSearchTerm: PropTypes.func.isRequired,
   setSelectedCategories: PropTypes.func.isRequired,
 };
 
-export default AppAppBar;
+export default AppNavBar;
