@@ -46,24 +46,34 @@ export default function BusinessProfile(props) {
   };
 
   const getUserInvestment = () => {
-    api
-      .get("/api/business/fundraise/")
-      .then((res) => res.data)
-      .then((data) => {
-        const mappedData = data.map((investment) => ({
+  api
+    .get("/api/business/fundraise/")
+    .then((res) => res.data)
+    .then((data) => {
+      const mappedData = data.map((investment) => {
+        const investmentDate = new Date(investment.investment_date);
+        
+        const formattedDate = investmentDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+
+        return {
           id: investment.id,
           investorName: `${investment.investor.first_name} ${investment.investor.last_name}`,
           amount: parseFloat(investment.amount),
           shares: parseFloat(investment.shares),
-          sharePercentage: 50, //Mocking, Still progress
-        }));
-        setUserInvestment(mappedData);
-      })
-      .catch((err) => {
-        console.error('Error fetching investments:', err);
-        alert('Failed to fetch investment data');
+          investmentDate: formattedDate,
+        };
       });
-  };
+      setUserInvestment(mappedData);
+    })
+    .catch((err) => {
+      console.error('Error fetching investments:', err);
+      alert('Failed to fetch investment data');
+    });
+};
 
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
