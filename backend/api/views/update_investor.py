@@ -5,6 +5,7 @@ from rest_framework import status
 from ..models import Investor
 from ..serializers import InvestorSerializer
 
+
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_investor(request):
