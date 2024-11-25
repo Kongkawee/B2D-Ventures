@@ -14,6 +14,8 @@ import BusinessProfile from "./pages/profile-portfolio-business-page/BusinessPro
 import NotAuthorized from "./pages/NotAuthorizedPage";
 import InvestorOnlyRoute from "./components/InvestorOnlyRoute";
 import BusinessOnlyRoute from "./components/BusinessOnlyRoute";
+import RequestResetPasswordPage from "./pages/reset-password-page/RequestResetPassword";
+import ResetPasswordPage from "./pages/reset-password-page/ResetPassword";
 
 function Logout() {
   localStorage.clear();
@@ -77,6 +79,9 @@ function App() {
           }
         />
         {" Business Profile Page "}
+
+        <Route path="/request" element={<RequestResetPasswordPage />} />
+        <Route path="/resetpass" element={<ResetPasswordPage />} />
 
         <Route path="/not-authorized" element={<NotAuthorized />}></Route>
         <Route path="*" element={<NotFound />}></Route>
