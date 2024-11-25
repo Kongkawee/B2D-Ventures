@@ -22,7 +22,7 @@ export default function Review({ investmentDetails, business }) {
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Price Per Share" />
           <Typography variant="body2">
-            $ {parseFloat(business.price_per_share).toFixed(2)}
+            $ {parseFloat(business.stock_amount).toFixed(2)}
           </Typography>
         </ListItem>
 

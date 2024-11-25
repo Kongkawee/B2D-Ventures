@@ -77,16 +77,16 @@ export default function BusinessRegistration() {
     phoneNumber: "",
     publishDate: defaultPublishDate,
     endDate: defaultEndDate,
-    fundraisePurpose: "",
+    fundraisingPurpose: "",
     briefDescription: "",
     pitch: {},
     businessCategory: [],
     goal: "",
     minInvestment: "",
     maxInvestment: "",
-    pricePerShare: "",
+    stockAmount: "",
     countryLocated: "",
-    provinceLocated: "",
+    cityLocated: "",
   });
 
   const [errors, setErrors] = useState({
@@ -97,14 +97,14 @@ export default function BusinessRegistration() {
     phoneNumberError: false,
     publishDateError: false,
     endDateError: false,
-    fundraisePurposeError: false,
+    fundraisingPurposeError: false,
     briefDescriptionError: false,
     pitchError: false,
     businessCategoryError: false,
     goalError: false,
     minInvestmentError: false,
     maxInvestmentError: false,
-    PricePerShareError: false,
+    stockAmountError: false,
 
     companyNameErrorMessage: "",
     businessNameErrorMessage: "",
@@ -113,14 +113,14 @@ export default function BusinessRegistration() {
     phoneNumberErrorMessage: "",
     publishDateErrorMessage: "",
     endDateErrorMessage: "",
-    fundraisePurposeErrorMessage: "",
+    fundraisingPurposeErrorMessage: "",
     briefDescriptionErrorMessage: "",
     pitchErrorMessage: "",
     businessCategoryErrorMessage: "",
     goalErrorMessage: "",
     minInvestmentErrorMessage: "",
     maxInvestmentErrorMessage: "",
-    PricePerShareErrorMessage: "",
+    stockAmountErrorMessage: "",
   });
 
   useEffect(() => {
@@ -363,15 +363,15 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="provinceLocated">
-                      Province Located
+                    <FormLabel htmlFor="cityLocated">
+                      City Located
                     </FormLabel>
                     <TextField
                       required
                       fullWidth
-                      id="province-located"
-                      placeholder="Bangken"
-                      name="provinceLocated"
+                      id="city-located"
+                      placeholder="Bangkok"
+                      name="cityLocated"
                       variant="outlined"
                       value={formData.provinceLocated}
                       onChange={handleChange}
@@ -382,7 +382,7 @@ export default function BusinessRegistration() {
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
                     <FormLabel htmlFor="publishDate">
-                      Fundraise Publish Date
+                      Fundraising Publish Date
                     </FormLabel>
                     <TextField
                       required
@@ -402,7 +402,7 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="endDate">Fundraise End Date</FormLabel>
+                    <FormLabel htmlFor="endDate">Fundraising End Date</FormLabel>
                     <TextField
                       required
                       fullWidth
@@ -421,7 +421,7 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="goal">Fundraise Goal</FormLabel>
+                    <FormLabel htmlFor="goal">Fundraising Goal</FormLabel>
                     <TextField
                       required
                       fullWidth
@@ -476,20 +476,20 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="pricePerShare">
-                      Price Per Share
+                    <FormLabel htmlFor="stockAmount">
+                      Stock Amount
                     </FormLabel>
                     <TextField
-                      id="price-per-share"
-                      name="pricePerShare"
+                      id="stock-amount"
+                      name="stockAmount"
                       type="number"
                       placeholder="e.g. 50"
                       fullWidth
                       variant="outlined"
-                      value={formData.pricePerShare}
+                      value={formData.stockAmount}
                       onChange={handleChange}
-                      error={errors.pricePerShareError}
-                      helperText={errors.pricePerShareErrorMessage}
+                      error={errors.stockAmountError}
+                      helperText={errors.stockAmountErrorMessage}
                     />
                   </FormControl>
 
@@ -545,22 +545,22 @@ export default function BusinessRegistration() {
                   <FormControl
                     sx={{ flex: "1 1 calc(50% - 16px)", minWidth: 300 }}
                   >
-                    <FormLabel htmlFor="fundraisePurpose">
-                      Fundraise Purpose
+                    <FormLabel htmlFor="fundraisingPurpose">
+                      Fundraising Purpose
                     </FormLabel>
                     <TextField
-                      id="fundraise-purpose"
-                      name="fundraisePurpose"
-                      placeholder="Purpose of fundraise"
+                      id="fundraising-purpose"
+                      name="fundraisingPurpose"
+                      placeholder="Purpose of fundraising"
                       multiline
                       fullWidth
                       variant="outlined"
                       minRows={3}
                       maxRows={10}
-                      value={formData.fundraisePurpose}
+                      value={formData.fundraisingPurpose}
                       onChange={handleChange}
-                      error={errors.fundraisePurposeError}
-                      helperText={errors.fundraisePurposeErrorMessage}
+                      error={errors.fundraisingPurposeError}
+                      helperText={errors.fundraisingPurposeErrorMessage}
                       sx={{ resize: "vertical" }}
                     />
                   </FormControl>

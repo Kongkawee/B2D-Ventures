@@ -88,14 +88,14 @@ export default function DealTermsBox({ business }) {
 
         {/* Price per Share */}
         <Typography variant="body1" color="text.secondary">
-          Price Per Share
+          Stock Amount
         </Typography>
         <Typography
           id="price-per-share"
           variant="h4"
           color="text.primary"
         >
-          $ {Number(business.price_per_share).toFixed(2).toLocaleString()}
+          $ {Number(business.stock_amount).toFixed(2).toLocaleString()}
         </Typography>
       </Box>
     </Card>
