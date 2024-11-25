@@ -11,10 +11,14 @@ import datetime
 
 import os
 import django
+from pathlib import Path
+import sys
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.append(str(BASE_DIR / "backend"))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'b2d_ventures.settings')
 django.setup()
 
-from unittest.mock import Mock, patch
 from django.contrib.auth.models import User
 from api.models.business import Business
 from api.models.investor import Investor
