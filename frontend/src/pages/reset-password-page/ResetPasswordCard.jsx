@@ -9,9 +9,6 @@ import {
 } from "@mui/material";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
-import ForgotPassword from "./ForgotPassword";
-import LogoLight from "../../images/LogoLight.png";
-import LogoDark from "../../images/LogoDark.png";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -28,13 +25,6 @@ const Card = styled(MuiCard)(({ theme }) => ({
   },
 }));
 
-const logoStyle = {
-  width: "100px",
-  margin: "10px",
-  height: "auto",
-  cursor: "pointer",
-};
-
 const SubmitButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: "#fff",
@@ -45,30 +35,34 @@ const SubmitButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export default function ResetPasswordCard({ mode }) {
-  const [emailError, setEmailError] = useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+export default function ResetPasswordCard() {
+  const [newPasswordError, setNewPasswordError] = useState(false);
+  const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState("");
 
   const validateInputs = () => {
-    const email = document.getElementById("email").value;
+    const newPassword = document.getElementById("new-password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+
     let isValid = true;
 
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
+    if (!newPassword || newPassword.length < 6) {
+      setNewPasswordError(true);
+      setNewPasswordErrorMessage("Password must be at least 6 characters long.");
       isValid = false;
     } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
+      setNewPasswordError(false);
+      setNewPasswordErrorMessage("");
+    }
+
+    if (newPassword !== confirmPassword) {
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage("Passwords do not match.");
+      isValid = false;
+    } else {
+      setConfirmPasswordError(false);
+      setConfirmPasswordErrorMessage("");
     }
 
     return isValid;
@@ -77,25 +71,18 @@ export default function ResetPasswordCard({ mode }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateInputs()) {
-      // Handle the password reset logic
+      // Handle the password change logic
     }
   };
 
   return (
     <Card variant="outlined">
-      <Box sx={{ display: { xs: "none", md: "flex" } }}>
-        <img
-          src={mode === "light" ? LogoLight : LogoDark}
-          style={logoStyle}
-          alt="logo of b2d"
-        />
-      </Box>
       <Typography
         component="h1"
         variant="h4"
         sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)", textAlign: "center", fontWeight: 'bold' }}
       >
-        Reset Password
+        Change Password
       </Typography>
       <Box
         component="form"
@@ -103,19 +90,18 @@ export default function ResetPasswordCard({ mode }) {
         sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2 }}
       >
         <FormControl>
-          <FormLabel htmlFor="email">Email for password reset</FormLabel>
+          <FormLabel htmlFor="new-password">New Password</FormLabel>
           <TextField
-            error={emailError}
-            helperText={emailErrorMessage}
-            id="email"
-            name="email"
-            placeholder="your@email.com"
-            autoComplete="email"
-            autoFocus
+            error={newPasswordError}
+            helperText={newPasswordErrorMessage}
+            id="new-password"
+            name="new-password"
+            type="password"
+            placeholder="Enter new password"
             required
             fullWidth
             variant="outlined"
-            color={emailError ? "error" : "primary"}
+            color={newPasswordError ? "error" : "primary"}
             sx={{
               borderRadius: "8px",
               "& .MuiOutlinedInput-root": {
@@ -126,9 +112,31 @@ export default function ResetPasswordCard({ mode }) {
             }}
           />
         </FormControl>
-        <ForgotPassword open={open} handleClose={handleClose} />
-        <SubmitButton id="sign-in-button" type="submit" fullWidth>
-          Submit Email
+        <FormControl>
+          <FormLabel htmlFor="confirm-password">Confirm Password</FormLabel>
+          <TextField
+            error={confirmPasswordError}
+            helperText={confirmPasswordErrorMessage}
+            id="confirm-password"
+            name="confirm-password"
+            type="password"
+            placeholder="Confirm new password"
+            required
+            fullWidth
+            variant="outlined"
+            color={confirmPasswordError ? "error" : "primary"}
+            sx={{
+              borderRadius: "8px",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderRadius: "8px",
+                },
+              },
+            }}
+          />
+        </FormControl>
+        <SubmitButton id ="change-password-button" type="submit" fullWidth>
+          Change Password
         </SubmitButton>
       </Box>
     </Card>

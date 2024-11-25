@@ -3,10 +3,10 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import getSignInSideTheme from './theme/getSignInSideTheme';
+import RequestResetPasswordCard from './RequestResetPasswordCard';
 import TemplateFrame from './TemplateFrame';
-import ResetPasswordCard from "./ResetPasswordCard";
 
-export default function ResetPasswordPage() {
+export default function RequestResetPasswordPage() {
   const [mode, setMode] = useState('dark');
   const [showCustomTheme, setShowCustomTheme] = useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
@@ -71,7 +71,7 @@ export default function ResetPasswordPage() {
               m: 'auto',
             }}
           >
-            <ResetPasswordCard mode={mode}/>
+            <RequestResetPasswordCard mode={mode}/>
           </Stack>
         </Stack>
       </ThemeProvider>
