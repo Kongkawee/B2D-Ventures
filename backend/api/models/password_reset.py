@@ -8,4 +8,3 @@ class PasswordReset(models.Model):
     token = models.CharField(max_length=100)
     used = models.BooleanField(default=False)
     expire_date = models.DateTimeField(null=True)
-    
