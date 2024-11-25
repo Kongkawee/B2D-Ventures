@@ -31,16 +31,16 @@ def register_business(request):
         phone_number=request.data.get('phoneNumber'),
         publish_date=request.data.get('publishDate'),
         end_date=request.data.get('endDate'),
-        fundraise_purpose=request.data.get('fundraisePurpose'),
+        fundraising_purpose=request.data.get('fundraisingPurpose'),
         brief_description=request.data.get('briefDescription'),
         pitch=request.data.get('pitch'),
         business_category=request.data.get('businessCategory'),
         country_located=request.data.get('countryLocated'),
-        province_located=request.data.get('provinceLocated'),
+        city_located=request.data.get('cityLocated'),
         goal=request.data.get('goal'),
         min_investment=request.data.get('minInvestment'),
         max_investment=request.data.get('maxInvestment'),
-        price_per_share=request.data.get('pricePerShare'),
+        stock_amount=request.data.get('stockAmount'),
     )
 
     # Handle cover image
