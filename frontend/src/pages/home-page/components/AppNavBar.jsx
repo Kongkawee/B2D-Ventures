@@ -15,7 +15,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN } from "../../../constants";
+import { ACCESS_TOKEN, BUSINESS_REGISTER_PATH, INVESTOR_PROFILE_PATH, INVESTOR_SIGN_UP_PATH, LOG_OUT_PATH } from "../../../constants";
 import { Button, ListItemText, Drawer } from "@mui/material";
 
 const logoStyle = {
@@ -44,11 +44,11 @@ function AppNavBar({ mode, toggleColorMode, userData }) {
   }, []);
 
   const handleLogout = () => {
-    navigate("/logout");
+    navigate(LOG_OUT_PATH);
   };
 
   const handleProfile = () => {
-    navigate("/inv-pro");
+    navigate(INVESTOR_PROFILE_PATH);
     handleCloseAvatarMenu();
   };
 
@@ -182,7 +182,7 @@ function AppNavBar({ mode, toggleColorMode, userData }) {
                   >
                     <MenuItem
                       id="business-register-button"
-                      onClick={() => navigate("/bus-reg")}
+                      onClick={() => navigate(BUSINESS_REGISTER_PATH)}
                     >
                       <ListItemText primary="Business Registration" />
                     </MenuItem>
@@ -203,7 +203,7 @@ function AppNavBar({ mode, toggleColorMode, userData }) {
                   >
                     <MenuItem
                       id="investor-sign-up-button"
-                      onClick={() => navigate("/sup")}
+                      onClick={() => navigate(INVESTOR_SIGN_UP_PATH)}
                     >
                       <ListItemText primary="Investor Registration" />
                     </MenuItem>
@@ -304,7 +304,7 @@ function AppNavBar({ mode, toggleColorMode, userData }) {
                         open={Boolean(anchorElBusiness)}
                         onClose={handleCloseBusinessMenu}
                       >
-                        <MenuItem onClick={() => navigate("/bus-reg")}>
+                        <MenuItem onClick={() => navigate(BUSINESS_REGISTER_PATH)}>
                           <ListItemText primary="Business Registration" />
                         </MenuItem>
                       </Menu>
@@ -321,7 +321,7 @@ function AppNavBar({ mode, toggleColorMode, userData }) {
                         open={Boolean(anchorElInvestor)}
                         onClose={handleCloseInvestorMenu}
                       >
-                        <MenuItem onClick={() => navigate("/sup")}>
+                        <MenuItem onClick={() => navigate(INVESTOR_SIGN_UP_PATH)}>
                           <ListItemText primary="Investor Registration" />
                         </MenuItem>
                       </Menu>

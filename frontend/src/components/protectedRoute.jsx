@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
-import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
+import { REFRESH_TOKEN, ACCESS_TOKEN, SIGN_IN_PATH } from "../constants";
 import { useState, useEffect } from "react";
 
 
@@ -51,7 +51,7 @@ function ProtectedRoute({ children }) {
         return <div>Loading...</div>;
     }
 
-    return isAuthorized ? children : <Navigate to="/sin" />;
+    return isAuthorized ? children : <Navigate to={SIGN_IN_PATH} />;
 }
 
 export default ProtectedRoute;

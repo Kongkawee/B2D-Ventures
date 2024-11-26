@@ -11,6 +11,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import MenuButton from "./MenuButton";
 import { useNavigate } from "react-router-dom";
+import { LOG_OUT_PATH } from "../../../constants";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
@@ -27,7 +28,7 @@ export default function OptionsMenu() {
     setAnchorEl(null);
   };
   const handleLogout = () => {
-    navigate("/logout");
+    navigate(LOG_OUT_PATH);
   };
   return (
     <React.Fragment>

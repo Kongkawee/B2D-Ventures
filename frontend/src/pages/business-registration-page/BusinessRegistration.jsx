@@ -21,6 +21,7 @@ import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import { addDays, addMonths, format } from "date-fns";
 import { validateInputs } from "./formValidation";
+import { SIGN_IN_PATH } from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -183,7 +184,7 @@ export default function BusinessRegistration() {
           formData
         );
         console.log("User registered successfully:", response.data);
-        navigate("/sin");
+        navigate(SIGN_IN_PATH);
       } catch (error) {
         console.error("Registration Failed:", error.response?.data);
       }
