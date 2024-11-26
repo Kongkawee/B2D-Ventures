@@ -9,7 +9,7 @@ import MenuButton from "./MenuButton";
 import ProfileDialog from "./ProfileDialog"; 
 import { useNavigate } from "react-router-dom";
 import api from "../../../api";
-import { LOG_OUT_PATH } from "../../../constants";
+import { INVESTOR_PROFILE_UPDATE_API, LOG_OUT_PATH } from "../../../constants";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
@@ -52,7 +52,7 @@ export default function OptionsMenu({ userData }) {
         formData.append("profile_picture", updatedProfile.profilePicture);
       }
   
-      const response = await api.patch("/api/investor/update/", formData);
+      const response = await api.patch(INVESTOR_PROFILE_UPDATE_API, formData);
 
       closeProfileDialog();
     } catch (error) {

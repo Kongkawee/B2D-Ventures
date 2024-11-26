@@ -18,7 +18,7 @@ import TemplateFrame from "./TemplateFrame";
 import LogoLight from "../../images/LogoLight.png";
 import LogoDark from "../../images/LogoDark.png";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN, SIGN_IN_PATH } from "../../constants";
+import { ACCESS_TOKEN, INVESTOR_REGISTER_API, REFRESH_TOKEN, SIGN_IN_PATH } from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -179,7 +179,7 @@ export default function SignUp() {
       }
 
       try {
-        const response = await api.post("api/investor/register/", formData);
+        const response = await api.post(INVESTOR_REGISTER_API, formData);
         console.log("User registered successfully:", response.data);
         localStorage.setItem(ACCESS_TOKEN, response.data.access);
         localStorage.setItem(REFRESH_TOKEN, response.data.refresh);

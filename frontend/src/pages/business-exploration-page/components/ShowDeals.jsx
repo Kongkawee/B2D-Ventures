@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import BusinessCard from "../../../components/BusinessCard";
 import api from "../../../api";
 import { Box, ButtonGroup } from "@mui/material";
+import { BUSINESS_CARD_API } from "../../../constants";
 
 export default function ShowDeals({ searchTerm, selectedCategories }) {
   const [visibleDeals, setVisibleDeals] = useState(6);
@@ -20,7 +21,7 @@ export default function ShowDeals({ searchTerm, selectedCategories }) {
   useEffect(() => {
     const fetchBusinessDeals = async () => {
       try {
-        const response = await api.get("api/business/card/");
+        const response = await api.get(BUSINESS_CARD_API);
         const businesses = response.data;
 
         const businessesWithInvestorCounts = await Promise.all(

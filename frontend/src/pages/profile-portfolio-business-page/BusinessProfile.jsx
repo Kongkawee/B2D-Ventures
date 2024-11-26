@@ -16,6 +16,7 @@ import {
   treeViewCustomizations,
 } from "./theme/customizations";
 import api from "../../api";
+import { BUSINESS_INVESTMENT_API, BUSINESS_PROFILE_API } from "../../constants";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -36,7 +37,7 @@ export default function BusinessProfile(props) {
 
   const getUserData = () => {
     api
-      .get("/api/business/profile/")
+      .get(BUSINESS_PROFILE_API)
       .then((res) => res.data)
       .then((data) => {
         setUserData(data);
@@ -47,7 +48,7 @@ export default function BusinessProfile(props) {
 
   const getUserInvestment = () => {
   api
-    .get("/api/business/fundraise/")
+    .get(BUSINESS_INVESTMENT_API)
     .then((res) => res.data)
     .then((data) => {
       const mappedData = data.map((investment) => {

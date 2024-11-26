@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import BusinessCard from "../../../components/BusinessCard";
 import { Button } from "@mui/material";
 import api from "../../../api";
+import { BUSINESS_CARD_API } from "../../../constants";
 
 export default function HotDeals() {
   const [businessDeals, setBusinessDeals] = useState([]);
@@ -18,7 +19,7 @@ export default function HotDeals() {
     useEffect(() => {
       const fetchBusinessDeals = async () => {
         try {
-          const response = await api.get("api/business/card/");
+          const response = await api.get(BUSINESS_CARD_API);
           const businesses = response.data;
   
           const businessesWithInvestorCounts = await Promise.all(

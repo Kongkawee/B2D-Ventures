@@ -16,6 +16,7 @@ import {
   treeViewCustomizations,
 } from "./theme/customizations";
 import api from "../../api";
+import { INVESTOR_INVESTMENT_API, INVESTOR_PROFILE_API } from "../../constants";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -35,7 +36,7 @@ export default function InvestorProfile(props) {
 
   const getUserData = () => {
     api
-      .get("/api/investor/profile/")
+      .get(INVESTOR_PROFILE_API)
       .then((res) => res.data)
       .then((data) => {
         setUserData(data);
@@ -47,7 +48,7 @@ export default function InvestorProfile(props) {
 
   const getUserInvestment = () => {
     api
-      .get("/api/investor/investment/")
+      .get(INVESTOR_INVESTMENT_API)
       .then((res) => res.data)
       .then((data) => {
         const mappedData = data.map((investment) => ({

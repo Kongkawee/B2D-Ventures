@@ -10,7 +10,7 @@ import HotDeals from "./components/HotDeals";
 import ScrollToTopButton from "../../components/ScrollToTopButton";
 import Footer from "../../components/Footer";
 import api from "../../api";
-import { ACCESS_TOKEN } from "../../constants";
+import { ACCESS_TOKEN, INVESTOR_PROFILE_API } from "../../constants";
 
 export default function HomePage() {
   const [mode, setMode] = useState("dark");
@@ -33,7 +33,7 @@ export default function HomePage() {
   const getUserData = () => {
     if (localStorage.getItem(ACCESS_TOKEN)) {
       api
-        .get("/api/investor/profile/", {
+        .get(INVESTOR_PROFILE_API, {
           headers: {
             Authorization: `Bearer ${ACCESS_TOKEN}`,
           },

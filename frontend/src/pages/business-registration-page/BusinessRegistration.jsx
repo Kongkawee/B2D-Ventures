@@ -21,7 +21,7 @@ import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import { addDays, addMonths, format } from "date-fns";
 import { validateInputs } from "./formValidation";
-import { SIGN_IN_PATH } from "../../constants";
+import { BUSINESS_REGISTER_API, SIGN_IN_PATH } from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -180,7 +180,7 @@ export default function BusinessRegistration() {
 
       try {
         const response = await api.post(
-          "/api/business/register/",
+          BUSINESS_REGISTER_API,
           formData
         );
         console.log("User registered successfully:", response.data);
