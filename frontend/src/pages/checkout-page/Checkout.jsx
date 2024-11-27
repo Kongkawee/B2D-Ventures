@@ -25,7 +25,7 @@ import { useParams } from "react-router-dom";
 import { Divider } from "@mui/material";
 import PopUpTerms from "../../components/PopUp/PopUpTerms";
 import PaymentForm from "./components/PaymentForm";
-import { INVEST_API } from "../../constants";
+import { INVEST_API, INVESTOR_PROFILE_PATH } from "../../constants";
 
 const steps = ["Invest detail", "Payment Detail", "Risks acceptance", "Review your investment"];
 
@@ -334,7 +334,7 @@ function Checkout() {
                       alignSelf: "start",
                       width: { xs: "100%", sm: "auto" },
                     }}
-                    href="/inv-pro"
+                    href={INVESTOR_PROFILE_PATH}
                   >
                     Go to my orders
                   </Button>

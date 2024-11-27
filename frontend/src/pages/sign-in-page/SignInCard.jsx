@@ -19,7 +19,16 @@ import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import ForgotPassword from "./ForgotPassword";
 import { SitemarkIcon } from "./CustomIcons";
-import { ACCESS_TOKEN, BUSINESS_PROFILE_PATH, BUSINESS_REGISTER_PATH, HOME_PATH, PASSWORD_REQUEST, REFRESH_TOKEN, SIGN_IN_API } from "../../constants";
+import {
+  ACCESS_TOKEN,
+  BUSINESS_PROFILE_PATH,
+  BUSINESS_REGISTER_PATH,
+  HOME_PATH,
+  PASSWORD_REQUEST,
+  REFRESH_TOKEN,
+  SIGN_IN_API,
+  INVESTOR_SIGN_UP_PATH,
+} from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -113,7 +122,9 @@ export default function SignInCard() {
       } catch (error) {
         console.error("Error logging in user:", error);
         if (error.response) {
-          alert(error.response.data.detail || "Login failed. Please try again.");
+          alert(
+            error.response.data.detail || "Login failed. Please try again."
+          );
         } else {
           alert("Login failed. Please check your network connection.");
         }
@@ -140,10 +151,18 @@ export default function SignInCard() {
         sx={{ alignSelf: "center" }}
         aria-label="login type"
       >
-        <ToggleButton id="investor-sign-in-mode" value="investor" aria-label="investor login">
+        <ToggleButton
+          id="investor-sign-in-mode"
+          value="investor"
+          aria-label="investor login"
+        >
           Investor
         </ToggleButton>
-        <ToggleButton id="business-sign-in-mode" value="business" aria-label="business login">
+        <ToggleButton
+          id="business-sign-in-mode"
+          value="business"
+          aria-label="business login"
+        >
           Business
         </ToggleButton>
       </ToggleButtonGroup>
@@ -171,7 +190,7 @@ export default function SignInCard() {
         <FormControl>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <FormLabel htmlFor="password">Password</FormLabel>
-            <Link  href={PASSWORD_REQUEST} variant="body2">
+            <Link href={PASSWORD_REQUEST} variant="body2">
               Forgot your password?
             </Link>
           </Box>
@@ -199,11 +218,11 @@ export default function SignInCard() {
         <Typography sx={{ textAlign: "center" }}>
           Don&apos;t have an account?{" "}
           <span>
-            <Link href="/sup" variant="body2">
+            <Link href={INVESTOR_SIGN_UP_PATH} variant="body2">
               Sign up
             </Link>
-          </span>
-          {" "}or{" "}
+          </span>{" "}
+          or{" "}
           <span>
             <Link href={BUSINESS_REGISTER_PATH} variant="body2">
               Create fundraise
