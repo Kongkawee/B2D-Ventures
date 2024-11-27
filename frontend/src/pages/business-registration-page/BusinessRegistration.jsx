@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Select from "@mui/joy/Select";
 import MuiCard from "@mui/material/Card";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import getSignUpTheme from "./theme/getBusinessRegistrationTheme";
@@ -171,6 +172,32 @@ export default function BusinessRegistration() {
     }));
   };
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
+  
+  const processPitchImages = async (pitch) => {
+    const processedPitch = {};
+  
+    const entries = Object.entries(pitch);
+    for (const [key, section] of entries) {
+      if (section.image instanceof File || section.image instanceof Blob) {
+        const base64Image = await convertToBase64(section.image);
+        processedPitch[key] = { ...section, image: base64Image };
+      } else {
+        processedPitch[key] = section; 
+      }
+    }
+  
+    return processedPitch;
+  };
+  
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const { isValid, newErrors } = validateInputs(formData, errors);
@@ -179,9 +206,14 @@ export default function BusinessRegistration() {
     if (isValid) {
 
       try {
+        const processedPitch = await processPitchImages(formData.pitch);
+        const payload = {
+          ...formData,
+          pitch: processedPitch,
+        };
         const response = await api.post(
           BUSINESS_REGISTER_API,
-          formData
+          payload
         );
         console.log("User registered successfully:", response.data);
         navigate(SIGN_IN_PATH);
