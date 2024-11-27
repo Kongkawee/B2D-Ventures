@@ -7,6 +7,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import PopUpTerms from "../../../../components/PopUp/PopUpTerms";
+import { BUSINESS_REGISTER_PATH } from "../../../../constants";
 
 export default function HeroBusiness() {
   const [openTermsDialog, setOpenTermsDialog] = useState(false);
@@ -84,7 +85,7 @@ export default function HeroBusiness() {
             useFlexGap
             sx={{ pt: 2, width: { xs: "100%", sm: "auto" } }}
           >
-            <Button variant="contained" color="primary" href="/bus-reg">
+            <Button variant="contained" color="primary" href={BUSINESS_REGISTER_PATH}>
               Fundraise now
             </Button>
           </Stack>

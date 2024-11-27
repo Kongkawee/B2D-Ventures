@@ -19,7 +19,7 @@ import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import ForgotPassword from "./ForgotPassword";
 import { SitemarkIcon } from "./CustomIcons";
-import { ACCESS_TOKEN, BUSINESS_PROFILE_PATH, HOME_PATH, PASSWORD_REQUEST, REFRESH_TOKEN, SIGN_IN_API } from "../../constants";
+import { ACCESS_TOKEN, BUSINESS_PROFILE_PATH, BUSINESS_REGISTER_PATH, HOME_PATH, PASSWORD_REQUEST, REFRESH_TOKEN, SIGN_IN_API } from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -205,7 +205,7 @@ export default function SignInCard() {
           </span>
           {" "}or{" "}
           <span>
-            <Link href="/bus-reg" variant="body2">
+            <Link href={BUSINESS_REGISTER_PATH} variant="body2">
               Create fundraise
             </Link>
           </span>
