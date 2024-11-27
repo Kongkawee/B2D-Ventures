@@ -92,6 +92,9 @@ export default function BusinessRegistration() {
     stockAmount: "",
     countryLocated: "",
     cityLocated: "",
+    coverImage: "",
+    describeImages: "",
+    terms: "",
   });
 
   const [errors, setErrors] = useState({
@@ -112,6 +115,8 @@ export default function BusinessRegistration() {
     stockAmountError: false,
     countryLocatedError: false,
     cityLocatedError: false,
+    phoneError: false,
+    termsError: false,
 
     companyNameErrorMessage: "",
     businessNameErrorMessage: "",
@@ -130,6 +135,8 @@ export default function BusinessRegistration() {
     stockAmountErrorMessage: "",
     countryLocatedErrorMessage: "",
     cityLocatedErrorMessage: "",
+    phoneErrorMessage: "",
+    termsErrorMessage: "",
   });
 
   useEffect(() => {
@@ -180,6 +187,7 @@ export default function BusinessRegistration() {
   };
 
   const handleFormSubmit = async (event) => {
+    console.log("Attemp to Send");
     event.preventDefault();
     const { isValid, newErrors } = validateInputs(formData, errors);
     setErrors(newErrors);
@@ -192,6 +200,8 @@ export default function BusinessRegistration() {
       } catch (error) {
         console.error("Registration Failed:", error.response?.data);
       }
+    } else {
+      console.log("Error to Register business");
     }
   };
 
@@ -507,9 +517,6 @@ export default function BusinessRegistration() {
                       type="date"
                       name="publishDate"
                       variant="outlined"
-                      InputLabel={{
-                        shrink: true,
-                      }}
                       value={formData.publishDate}
                       onChange={handleChange}
                       error={errors.publishDateError}
@@ -540,9 +547,6 @@ export default function BusinessRegistration() {
                       type="date"
                       name="endDate"
                       variant="outlined"
-                      InputLabel={{
-                        shrink: true,
-                      }}
                       value={formData.endDate}
                       onChange={handleChange}
                       error={errors.endDateError}
@@ -662,7 +666,6 @@ export default function BusinessRegistration() {
                     <TextField
                       id="stock-amount"
                       name="stockAmount"
-                      type="number"
                       placeholder="e.g. 50"
                       fullWidth
                       variant="outlined"
@@ -829,7 +832,19 @@ export default function BusinessRegistration() {
 
                 <FormControlLabel
                   sx={{ width: "100%" }}
-                  control={<Checkbox id="terms" name="terms" color="primary" />}
+                  control={
+                    <Checkbox
+                      id="terms"
+                      name="terms"
+                      color="primary"
+                      onChange={(event) => {
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          terms: event.target.checked,
+                        }));
+                      }}
+                    />
+                  }
                   label={
                     <Typography variant="body2">
                       I have read and agreed to the{" "}
