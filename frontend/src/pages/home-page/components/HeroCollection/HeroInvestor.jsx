@@ -84,7 +84,7 @@ export default function HeroBusiness() {
             useFlexGap
             sx={{ pt: 2, width: { xs: "100%", sm: "auto" } }}
           >
-            <Button variant="contained" color="primary" href="/sup">
+            <Button variant="contained" color="primary" href="/sign-up">
               Invest now
             </Button>
           </Stack>

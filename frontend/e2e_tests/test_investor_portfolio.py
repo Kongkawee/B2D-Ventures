@@ -33,7 +33,7 @@ class InvestorPortfolioTest(BaseTestSetup):
     def test_investor_profile(self):
         """Test to check if the investor profile data is displayed correctly."""
         self.set_up_investor_sign_in()
-        self.driver.get("http://localhost:5173/inv-pro")
+        self.driver.get("http://localhost:5173/investor-profile")
 
         investor_name = f"{self.investor.first_name} {self.investor.last_name}"
 
@@ -45,7 +45,7 @@ class InvestorPortfolioTest(BaseTestSetup):
     def test_total_investment(self):
         """Test to check the total investment amount for the investor."""
         self.set_up_investor_sign_in()
-        self.driver.get("http://localhost:5173/inv-pro")
+        self.driver.get("http://localhost:5173/investor-profile")
 
         # Initial check for total investment
         self.wait_for_text_in_element("total-investment", "0.00")
