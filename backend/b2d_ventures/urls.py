@@ -5,13 +5,18 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from django.http import HttpResponse
 
 admin.site.site_header = "B2D-Ventures"
 admin.site.site_title = "B2D-Ventures"
 admin.site.index_title = "B2D-Ventures Administration"
 
+def home_view(request):
+    return HttpResponse("Welcome to the homepage!")
 
 urlpatterns = [
+    path('', home_view, name='home'),
+
     path('admin/', admin.site.urls),
 
     path('api/login/', views.login_user, name='investor_login'),
