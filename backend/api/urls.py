@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 
+
 urlpatterns = [
     path('invest/', invest, name='invest'),
     
@@ -16,6 +17,7 @@ urlpatterns = [
     path('business/<int:pk>/', DetailBusiness.as_view(), name='specific_business'),
     path('business/profile/', CurrentBusinessProfile.as_view(), name='current_business_profile'),
     path('business/fundraise/', CurrentBusinessFundraise.as_view(), name='current_business_fundraise'),
+    path('business/<int:business_id>/upload-documents/', upload_business_documents, name='upload-business-documents'),
     path('business/<int:business_id>/upload_images/', upload_business_images, name='upload_business_images'),
 
 
@@ -26,5 +28,5 @@ urlpatterns = [
     
     path('password/request/', RequestPasswordReset.as_view(), name='reqeust-password-reset'),
     path('password/reset/<str:token>/', ResetPassword.as_view(), name='reset-password'),
-
+    
 ]

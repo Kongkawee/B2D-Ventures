@@ -21,3 +21,4 @@ from .upload_business_image import upload_business_images
 from .update_investor import update_investor
 from .request_password_reset_view import RequestPasswordReset
 from .reset_password_view import ResetPassword
+from .upload_business_document import upload_business_documents
