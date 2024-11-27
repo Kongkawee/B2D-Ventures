@@ -18,6 +18,14 @@ export const columns = [
     flex: 1, 
     minWidth: 80 
   },
+  { 
+    field: 'investorEmail', 
+    headerName: 'Investor Email', 
+    headerAlign: 'right',
+    align: 'right',
+    flex: 1, 
+    minWidth: 40 
+  },
   {
     field: 'amount',
     headerName: 'Invest Amount ($)',
