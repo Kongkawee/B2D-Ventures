@@ -271,6 +271,7 @@ export default function BusinessRegistration() {
       console.log("Error to Register business");
     }
   };
+}
 
   const handleOpen = () => {
     setOpen(true);
