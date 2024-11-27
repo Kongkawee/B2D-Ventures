@@ -13,7 +13,7 @@ export default function BusinessCard({
   briefDescription,
   picture,
   countryLocated,
-  provinceLocated,
+  cityLocated,
   companyName,
 }) {
   const categoryArray = categories
@@ -108,7 +108,7 @@ export default function BusinessCard({
                   textOverflow: "ellipsis",
                 }}
               >
-                {provinceLocated}, {countryLocated}
+                {countryLocated}, {cityLocated}
               </Typography>
             </Box>
             <Box className="categories" sx={{ display: "flex", gap: 1, my: 1 }}>

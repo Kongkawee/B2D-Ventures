@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.exceptions import ValidationError
 from ..models import Business, BusinessImage
+import json
 
 
 
@@ -22,6 +23,10 @@ def register_business(request):
 
     user = User.objects.create_user(username=username, email=email, password=password)
 
+    pitch_json = request.POST.getlist('pitch')[0]
+    pitch_data = json.loads(pitch_json)
+    pitch_list = list(pitch_data.values())
+
     # Create the business object
     business = Business.objects.create(
         user=user,
@@ -33,8 +38,8 @@ def register_business(request):
         end_date=request.data.get('endDate'),
         fundraising_purpose=request.data.get('fundraisingPurpose'),
         brief_description=request.data.get('briefDescription'),
-        pitch=request.data.get('pitch'),
-        business_category=request.data.get('businessCategory'),
+        pitch=pitch_list,
+        business_category = request.POST.getlist('businessCategory'),
         country_located=request.data.get('countryLocated'),
         city_located=request.data.get('cityLocated'),
         goal=request.data.get('goal'),
@@ -43,9 +48,12 @@ def register_business(request):
         stock_amount=request.data.get('stockAmount'),
     )
 
-    # Handle cover image
-    if 'cover_image' in request.FILES:
-        business.cover_image = request.FILES['cover_image']
+    if 'coverImage' in request.FILES:
+        business.cover_image = request.FILES['coverImage']
+
+    if 'describeImages' in request.FILES:
+        for image in request.FILES.getlist('describeImages'):
+            BusinessImage.objects.create(business=business, image=image)
         
     user.save()
     try:
@@ -55,12 +63,6 @@ def register_business(request):
         print("Investor validation failed:", e)
         user.delete()
         print("User instance deleted due to investor validation failure.")
-
-    # Handle multiple describe images
-    for key in request.FILES:
-        if key.startswith('describe_images_'):
-            image = request.FILES[key]
-            BusinessImage.objects.create(business=business, image=image)
 
     # Generate and return JWT tokens
     refresh = RefreshToken.for_user(user)

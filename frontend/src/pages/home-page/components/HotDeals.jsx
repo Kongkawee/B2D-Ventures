@@ -123,7 +123,7 @@ export default function HotDeals() {
               briefDescription={deal.brief_description}
               picture={deal.cover_image || defaultImage}
               countryLocated={deal.country_located || "Unknown Country"}
-              provinceLocated={deal.province_located || "Unknown Province"}
+              cityLocated={deal.city_located || "Unknown City"}
               companyName={deal.company_name}
             />
           </Grid>
