@@ -95,7 +95,7 @@ export default function DealTermsBox({ business }) {
           variant="h4"
           color="text.primary"
         >
-          $ {Number(business.stock_amount).toFixed(2).toLocaleString()}
+        {Number(business.stock_amount).toFixed(2).toLocaleString() } Units
         </Typography>
       </Box>
     </Card>
