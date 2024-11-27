@@ -25,6 +25,7 @@ import { useParams } from "react-router-dom";
 import { Divider } from "@mui/material";
 import PopUpTerms from "../../components/PopUp/PopUpTerms";
 import PaymentForm from "./components/PaymentForm";
+import { INVEST_API } from "../../constants";
 
 const steps = ["Invest detail", "Payment Detail", "Risks acceptance", "Review your investment"];
 
@@ -125,7 +126,7 @@ function Checkout() {
     }
 
     try {
-      const response = await api.post("/api/invest/", {
+      const response = await api.post(INVEST_API, {
         business_id: business.id,
         amount: investmentDetails.amount,
         shares: investmentDetails.capitalGain,

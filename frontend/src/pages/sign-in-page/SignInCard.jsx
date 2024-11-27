@@ -19,7 +19,7 @@ import api from "../../api";
 import { useNavigate } from "react-router-dom";
 import ForgotPassword from "./ForgotPassword";
 import { SitemarkIcon } from "./CustomIcons";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
+import { ACCESS_TOKEN, BUSINESS_PROFILE_PATH, HOME_PATH, REFRESH_TOKEN, SIGN_IN_API } from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -100,15 +100,15 @@ export default function SignInCard() {
       };
 
       try {
-        const response = await api.post("/api/login/", formData);
+        const response = await api.post(SIGN_IN_API, formData);
         console.log("User logged in successfully:", response.data);
         localStorage.setItem(ACCESS_TOKEN, response.data.access);
         localStorage.setItem(REFRESH_TOKEN, response.data.refresh);
         localStorage.setItem("role", response.data.role);
         if (response.data.role === "investor") {
-          navigate("/");
+          navigate(HOME_PATH);
         } else {
-          navigate("/bus-pro");
+          navigate(BUSINESS_PROFILE_PATH);
         }
       } catch (error) {
         console.error("Error logging in user:", error);

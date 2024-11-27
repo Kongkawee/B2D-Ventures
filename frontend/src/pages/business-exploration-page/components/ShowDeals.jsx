@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import BusinessCard from "../../../components/BusinessCard";
 import api from "../../../api";
 import { Box, ButtonGroup } from "@mui/material";
+import { BUSINESS_CARD_API } from "../../../constants";
 
 export default function ShowDeals({ searchTerm, selectedCategories }) {
   const [visibleDeals, setVisibleDeals] = useState(6);
@@ -15,12 +16,12 @@ export default function ShowDeals({ searchTerm, selectedCategories }) {
   const [sortCriteria, setSortCriteria] = useState("hottest");
 
   const defaultImage =
-    "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png";
+    "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
 
   useEffect(() => {
     const fetchBusinessDeals = async () => {
       try {
-        const response = await api.get("api/business/card/");
+        const response = await api.get(BUSINESS_CARD_API);
         const businesses = response.data;
 
         const businessesWithInvestorCounts = await Promise.all(

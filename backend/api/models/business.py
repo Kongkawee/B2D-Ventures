@@ -247,6 +247,14 @@ COUNTRY_CHOICES = [
     ('ZM', 'Zambia'),
     ('ZW', 'Zimbabwe'),
 ]
+
+STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('available', 'Available'),
+    ('complete', 'Complete'),
+]
+
+
 class Business(models.Model):
     """Business Model represents the business, containing their company and business details"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -256,18 +264,18 @@ class Business(models.Model):
     phone_number = models.CharField(max_length=10, blank=False, null=False)
     publish_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    fundraise_purpose = models.TextField(max_length=200)
+    fundraising_purpose = models.TextField(max_length=200)
     brief_description = models.TextField(max_length=200)
     pitch = models.JSONField(default=dict, null=True, blank=True)
     business_category = models.JSONField(default=list, null=True, blank=True)
     country_located = models.CharField(max_length=50, choices=COUNTRY_CHOICES, null=True, blank=True)
-    province_located = models.CharField(max_length=50, null=True, blank=True)
-    goal = models.DecimalField(max_digits=12, decimal_places=2)
+    city_located = models.CharField(max_length=50, null=True, blank=True)
+    goal = models.DecimalField(max_digits=14, decimal_places=2)
     min_investment = models.DecimalField(max_digits=12, decimal_places=2)
     max_investment = models.DecimalField(max_digits=12, decimal_places=2)
     current_investment = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
-    price_per_share = models.DecimalField(max_digits=12, decimal_places=2)
-    status = models.CharField(max_length=50, default="pending")
+    stock_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
+    status = models.CharField(max_length=50, default="pending", choices=STATUS_CHOICES)
     cover_image = models.ImageField(upload_to='business/cover_image', null=True, blank=True)
 
     def __str__(self):
@@ -281,3 +289,13 @@ class BusinessImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.business.company_name}"
+
+
+class BusinessDocument(models.Model):
+    """Model for storing multiple PDF documents for each Business"""
+    business = models.ForeignKey(Business, related_name='documents', on_delete=models.CASCADE)
+    document = models.FileField(upload_to='business/documents', null=False, blank=False)
+    name = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"Document for {self.business.company_name}: {self.name or 'Unnamed Document'}"

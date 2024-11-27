@@ -36,9 +36,9 @@ function Info({ business }) {
           </Typography>
         </ListItem>
         <ListItem sx={{ py: 1, px: 0 }}>
-          <ListItemText sx={{ mr: 2 }} primary={"Price Per Share"} />
+          <ListItemText sx={{ mr: 2 }} primary={"Stock Amount"} />
           <Typography variant="body1" sx={{ fontWeight: "medium" }}>
-            $ {business.price_per_share}
+            $ {business.stock_amount}
           </Typography>
         </ListItem>
       </List>

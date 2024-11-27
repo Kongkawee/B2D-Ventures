@@ -14,10 +14,13 @@ import BusinessProfile from "./pages/profile-portfolio-business-page/BusinessPro
 import NotAuthorized from "./pages/NotAuthorizedPage";
 import InvestorOnlyRoute from "./components/InvestorOnlyRoute";
 import BusinessOnlyRoute from "./components/BusinessOnlyRoute";
+import RequestResetPasswordPage from "./pages/reset-password-page/RequestResetPassword";
+import ResetPasswordPage from "./pages/reset-password-page/ResetPassword";
+import { BUSINESS_PROFILE_PATH, BUSINESS_REGISTER_PATH, EXPLORATION_PAGE_PATH, HOME_PATH, INVESTOR_PROFILE_PATH, SIGN_IN_PATH, INVESTOR_SIGN_UP_PATH, LOG_OUT_PATH, NOT_AUTH_PATH, NOT_FOUND_PATH, PASSWORD_REQUEST, PASSWORD_RESET } from "./constants";
 
 function Logout() {
   localStorage.clear();
-  return <Navigate to="/sin" />;
+  return <Navigate to={SIGN_IN_PATH} />;
 }
 
 function RegisterAndLogout() {
@@ -29,12 +32,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path={HOME_PATH} element={<HomePage />} />
         {" Home Page "}
-        <Route path="/sin" element={<SignIn />} />
+        <Route path={SIGN_IN_PATH} element={<SignIn />} />
         {" Investor and Business Sign in page "}
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/sup" element={<RegisterAndLogout />} />
+        <Route path={LOG_OUT_PATH} element={<Logout />} />
+        <Route path={INVESTOR_SIGN_UP_PATH} element={<RegisterAndLogout />} />
         {" Investor Sign up Page "}
         <Route
           path="/checkout/:id"
@@ -50,12 +53,12 @@ function App() {
 
         <Route path="/bus/:id" element={<BusinessInfo />} />
         {" Business information Page "}
-        <Route path="/bus-reg" element={<BusinessRegistration />} />
+        <Route path={BUSINESS_REGISTER_PATH} element={<BusinessRegistration />} />
         {" Business Registration Page "}
-        <Route path="/explore" element={<BusinessExplorationPage />} />
+        <Route path={EXPLORATION_PAGE_PATH} element={<BusinessExplorationPage />} />
         {" Business Exploration Page "}
         <Route
-          path="/inv-pro"
+          path={INVESTOR_PROFILE_PATH}
           element={
             <ProtectedRoute>
               <InvestorOnlyRoute>
@@ -67,7 +70,7 @@ function App() {
         {" Investor Profile Page "}
 
         <Route
-          path="/bus-pro"
+          path={BUSINESS_PROFILE_PATH}
           element={
             <ProtectedRoute>
               <BusinessOnlyRoute>
@@ -78,8 +81,11 @@ function App() {
         />
         {" Business Profile Page "}
 
-        <Route path="/not-authorized" element={<NotAuthorized />}></Route>
-        <Route path="*" element={<NotFound />}></Route>
+        <Route path={PASSWORD_REQUEST} element={<RequestResetPasswordPage />} />
+        <Route path={PASSWORD_RESET} element={<ResetPasswordPage />} />
+
+        <Route path={NOT_AUTH_PATH} element={<NotAuthorized />}></Route>
+        <Route path={NOT_FOUND_PATH} element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
   );

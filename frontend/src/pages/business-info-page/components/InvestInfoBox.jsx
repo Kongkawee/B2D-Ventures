@@ -76,7 +76,7 @@ export default function InvestInfoBox({ business }) {
           }}
         >
           <Typography id="fundraise-purpose" variant="body2">
-            {business.fundraise_purpose}
+            {business.fundraising_purpose}
           </Typography>
         </Box>
 

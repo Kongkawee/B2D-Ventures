@@ -18,9 +18,23 @@ import TextField from "@mui/material/TextField";
 import PitchForm from "./PitchForm";
 import CategorySelectForm from "./CategorySelectForm";
 import api from "../../api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { addDays, addMonths, format } from "date-fns";
 import { validateInputs } from "./formValidation";
+import {
+  BUSINESS_REGISTER_API,
+  COUNTRY_CHOICES,
+  SIGN_IN_PATH,
+} from "../../constants";
+import PopUpTerms from "../../components/PopUp/PopUpTerms";
+import {
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tooltip,
+} from "@mui/material";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -68,6 +82,7 @@ export default function BusinessRegistration() {
   const today = new Date();
   const defaultPublishDate = format(addDays(today, 7), "yyyy-MM-dd");
   const defaultEndDate = format(addMonths(today, 1), "yyyy-MM-dd");
+  const [open, setOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     companyName: "",
@@ -77,16 +92,17 @@ export default function BusinessRegistration() {
     phoneNumber: "",
     publishDate: defaultPublishDate,
     endDate: defaultEndDate,
-    fundraisePurpose: "",
+    fundraisingPurpose: "",
     briefDescription: "",
     pitch: {},
     businessCategory: [],
     goal: "",
     minInvestment: "",
     maxInvestment: "",
-    pricePerShare: "",
+    stockAmount: "",
     countryLocated: "",
-    provinceLocated: "",
+    cityLocated: "",
+    terms: "",
   });
 
   const [errors, setErrors] = useState({
@@ -97,14 +113,18 @@ export default function BusinessRegistration() {
     phoneNumberError: false,
     publishDateError: false,
     endDateError: false,
-    fundraisePurposeError: false,
+    fundraisingPurposeError: false,
     briefDescriptionError: false,
     pitchError: false,
     businessCategoryError: false,
     goalError: false,
     minInvestmentError: false,
     maxInvestmentError: false,
-    PricePerShareError: false,
+    stockAmountError: false,
+    countryLocatedError: false,
+    cityLocatedError: false,
+    phoneError: false,
+    termsError: false,
 
     companyNameErrorMessage: "",
     businessNameErrorMessage: "",
@@ -113,14 +133,18 @@ export default function BusinessRegistration() {
     phoneNumberErrorMessage: "",
     publishDateErrorMessage: "",
     endDateErrorMessage: "",
-    fundraisePurposeErrorMessage: "",
+    fundraisingPurposeErrorMessage: "",
     briefDescriptionErrorMessage: "",
     pitchErrorMessage: "",
     businessCategoryErrorMessage: "",
     goalErrorMessage: "",
     minInvestmentErrorMessage: "",
     maxInvestmentErrorMessage: "",
-    PricePerShareErrorMessage: "",
+    stockAmountErrorMessage: "",
+    countryLocatedErrorMessage: "",
+    cityLocatedErrorMessage: "",
+    phoneErrorMessage: "",
+    termsErrorMessage: "",
   });
 
   useEffect(() => {
@@ -170,25 +194,116 @@ export default function BusinessRegistration() {
     }));
   };
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const processPitchImages = async (pitch) => {
+    const processedPitch = {};
+
+    const entries = Object.entries(pitch);
+    for (const [key, section] of entries) {
+      if (section.image instanceof File || section.image instanceof Blob) {
+        const base64Image = await convertToBase64(section.image);
+        processedPitch[key] = { ...section, image: base64Image };
+      } else {
+        processedPitch[key] = section;
+      }
+    }
+
+    return processedPitch;
+  };
+
   const handleFormSubmit = async (event) => {
+    console.log("Attempt to Send");
     event.preventDefault();
+    console.log(formData);
     const { isValid, newErrors } = validateInputs(formData, errors);
     setErrors(newErrors);
 
     if (isValid) {
+      const formDataToSend = new FormData();
+
+      // Append primitive data to FormData
+      for (const key in formData) {
+        const value = formData[key];
+        if (key === "pitch") {
+          continue; // Skip pitch, handle it separately
+        }
+        if (value instanceof File || value instanceof FileList) {
+          // Skip files here, we'll handle them separately
+          continue;
+        } else if (Array.isArray(value)) {
+          // If it's an array, append each item
+          value.forEach((item) => {
+            formDataToSend.append(key, item);
+          });
+        } else if (typeof value === "object") {
+          // If it's an object, convert it to JSON and append
+          formDataToSend.append(key, JSON.stringify(value));
+        } else {
+          // For primitive types, append directly
+          formDataToSend.append(key, value);
+        }
+      }
+
+      // Append cover image if it exists
+      if (formData.coverImage) {
+        formDataToSend.append("coverImage", formData.coverImage);
+      }
+
+      // Append describe images if they exist
+      if (formData.describeImages) {
+        for (let i = 0; i < formData.describeImages.length; i++) {
+          formDataToSend.append("describeImages", formData.describeImages[i]);
+        }
+      }
+
+      // Append business documents if they exist
+      if (formData.businessDocuments) {
+        formData.businessDocuments.forEach((doc) => {
+        formDataToSend.append("businessDocuments", doc.file);
+        formDataToSend.append("documentNames", doc.name);
+        });
+      }
 
       try {
-        const response = await api.post(
-          "/api/business/register/",
-          formData
-        );
+        // Convert pitch to Base64 and append as JSON
+        const processedPitch = await processPitchImages(formData.pitch);
+        formDataToSend.append("pitch", JSON.stringify(processedPitch));
+
+        // Submit to the backend
+        const response = await api.post(BUSINESS_REGISTER_API, formDataToSend, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         console.log("User registered successfully:", response.data);
-        navigate("/sin");
+        navigate(SIGN_IN_PATH);
       } catch (error) {
-        console.error("Registration Failed:", error.response?.data);
+        console.error(
+          "Error registering business:",
+          error.response?.data || error
+        );
       }
     }
   };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const countryOptions = COUNTRY_CHOICES.map(([code, name]) => ({
+    value: code,
+    label: name,
+  }));
 
   return (
     <TemplateFrame
@@ -257,24 +372,21 @@ export default function BusinessRegistration() {
                   }}
                 >
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="companyName">Company Name</FormLabel>
-                    <TextField
-                      autoComplete="organization"
-                      name="companyName"
-                      required
-                      fullWidth
-                      id="company-name"
-                      placeholder="Company Name"
-                      value={formData.companyName}
-                      onChange={handleChange}
-                      error={errors.companyNameError}
-                      helperText={errors.companyNameErrorMessage}
-                      color={errors.companyNameError ? "error" : "primary"}
-                    />
-                  </FormControl>
-
-                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="businessName">Business Name</FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="businessName" sx={{ flexGrow: 1 }}>
+                        Business Name
+                      </FormLabel>
+                      <Tooltip
+                        title="Enter the registered name of your business."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       autoComplete="organization"
                       name="businessName"
@@ -291,7 +403,52 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="email">Business Email</FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="companyName" sx={{ flexGrow: 1 }}>
+                        Company Name
+                      </FormLabel>
+                      <Tooltip
+                        title="Enter the official legal name of your company."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
+                    <TextField
+                      autoComplete="organization"
+                      name="companyName"
+                      required
+                      fullWidth
+                      id="company-name"
+                      placeholder="Company Name"
+                      value={formData.companyName}
+                      onChange={handleChange}
+                      error={errors.companyNameError}
+                      helperText={errors.companyNameErrorMessage}
+                      color={errors.companyNameError ? "error" : "primary"}
+                    />
+                  </FormControl>
+
+                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="email" sx={{ flexGrow: 1 }}>
+                        Business Email
+                      </FormLabel>
+                      <Tooltip
+                        title="Provide a valid email address for business communications."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
@@ -308,13 +465,26 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="password" sx={{ flexGrow: 1 }}>
+                        Password
+                      </FormLabel>
+                      <Tooltip
+                        title="Set a secure password for your account."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
                       name="password"
                       placeholder="••••••••"
-                      type="password"
                       id="password"
                       autoComplete="new-password"
                       variant="outlined"
@@ -326,9 +496,21 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="phoneNumber">
-                      Business Phone Number
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="phoneNumber" sx={{ flexGrow: 1 }}>
+                        Business Phone Number
+                      </FormLabel>
+                      <Tooltip
+                        title="Enter the contact phone number for your business."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
@@ -344,46 +526,95 @@ export default function BusinessRegistration() {
                     />
                   </FormControl>
 
-                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="countryLocated">
-                      Country Located
-                    </FormLabel>
-                    <TextField
-                      required
-                      fullWidth
+                  <FormControl
+                    sx={{ width: "calc(50% - 16px)" }}
+                    error={errors.countryLocatedError}
+                  >
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="countryLocated" sx={{ flexGrow: 1 }}>
+                        Country Located
+                      </FormLabel>
+                      <Tooltip
+                        title="Specify the country where the business is located."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
+                    <Select
+                      labelId="country-located-label"
                       id="country-located"
-                      placeholder="Bangkok"
                       name="countryLocated"
-                      variant="outlined"
                       value={formData.countryLocated}
                       onChange={handleChange}
-                      error={errors.countryLocatedError}
-                      helperText={errors.countryLocatedErrorMessage}
-                    />
+                      displayEmpty
+                    >
+                      <MenuItem value="" disabled>
+                        Select a country
+                      </MenuItem>
+                      {countryOptions.map((country) => (
+                        <MenuItem key={country.value} value={country.value}>
+                          {country.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.countryLocatedError && (
+                      <FormHelperText>
+                        {errors.countryLocatedErrorMessage}
+                      </FormHelperText>
+                    )}
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="provinceLocated">
-                      Province Located
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="cityLocated" sx={{ flexGrow: 1 }}>
+                        City Located
+                      </FormLabel>
+                      <Tooltip
+                        title="Specify the city where the business is located."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
-                      id="province-located"
-                      placeholder="Bangken"
-                      name="provinceLocated"
+                      id="city-located"
+                      placeholder="Bangkok"
+                      name="cityLocated"
                       variant="outlined"
-                      value={formData.provinceLocated}
+                      value={formData.cityLocated}
                       onChange={handleChange}
-                      error={errors.provinceLocatedError}
-                      helperText={errors.provinceLocatedErrorMessage}
+                      error={errors.cityLocatedError}
+                      helperText={errors.cityLocatedErrorMessage}
                     />
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="publishDate">
-                      Fundraise Publish Date
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="publishDate" sx={{ flexGrow: 1 }}>
+                        Fundraising Publish Date
+                      </FormLabel>
+                      <Tooltip
+                        title="Specify the date when the fundraising campaign will start."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
@@ -391,9 +622,6 @@ export default function BusinessRegistration() {
                       type="date"
                       name="publishDate"
                       variant="outlined"
-                      InputLabel={{
-                        shrink: true,
-                      }}
                       value={formData.publishDate}
                       onChange={handleChange}
                       error={errors.publishDateError}
@@ -402,7 +630,21 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="endDate">Fundraise End Date</FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="endDate" sx={{ flexGrow: 1 }}>
+                        Fundraising End Date
+                      </FormLabel>
+                      <Tooltip
+                        title="Specify the date when the fundraising campaign will end."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
@@ -410,23 +652,34 @@ export default function BusinessRegistration() {
                       type="date"
                       name="endDate"
                       variant="outlined"
-                      InputLabel={{
-                        shrink: true,
-                      }}
                       value={formData.endDate}
                       onChange={handleChange}
-                      error={errors.deadlineDateError}
-                      helperText={errors.deadlineDateErrorMessage}
+                      error={errors.endDateError}
+                      helperText={errors.endDateErrorMessage}
                     />
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="goal">Fundraise Goal</FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="goal" sx={{ flexGrow: 1 }}>
+                        Fundraising Goal ($)
+                      </FormLabel>
+                      <Tooltip
+                        title="Specify the total amount of money you aim to raise during the fundraising campaign."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
                       id="goal"
-                      placeholder="100,000"
+                      placeholder="100,000.00"
                       name="goal"
                       autoComplete="off"
                       variant="outlined"
@@ -438,14 +691,26 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="minInvestment">
-                      Minimum Investment
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="minInvestment" sx={{ flexGrow: 1 }}>
+                        Minimum Investment ($)
+                      </FormLabel>
+                      <Tooltip
+                        title="Specify the smallest amount of money that an investor can contribute."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
                       id="min-investment"
-                      placeholder="1,000"
+                      placeholder="100.00"
                       name="minInvestment"
                       autoComplete="off"
                       variant="outlined"
@@ -457,14 +722,26 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="maxInvestment">
-                      Maximum Investment
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="maxInvestment" sx={{ flexGrow: 1 }}>
+                        Maximum Investment ($)
+                      </FormLabel>
+                      <Tooltip
+                        title="This is the maximum amount of money an investor can invest in this business."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
                       required
                       fullWidth
                       id="max-investment"
-                      placeholder="10,000"
+                      placeholder="100,000.00"
                       name="maxInvestment"
                       autoComplete="off"
                       variant="outlined"
@@ -476,27 +753,50 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
-                    <FormLabel htmlFor="pricePerShare">
-                      Price Per Share
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="stockAmount" sx={{ flexGrow: 1 }}>
+                        Stock Amount (units)
+                      </FormLabel>
+                      <Tooltip
+                        title="Specify the total number of stock units available for investors."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
-                      id="price-per-share"
-                      name="pricePerShare"
-                      type="number"
+                      id="stock-amount"
+                      name="stockAmount"
                       placeholder="e.g. 50"
                       fullWidth
                       variant="outlined"
-                      value={formData.pricePerShare}
+                      value={formData.stockAmount}
                       onChange={handleChange}
-                      error={errors.pricePerShareError}
-                      helperText={errors.pricePerShareErrorMessage}
+                      error={errors.stockAmountError}
+                      helperText={errors.stockAmountErrorMessage}
                     />
                   </FormControl>
 
                   <FormControl sx={{ width: "100%" }}>
-                    <FormLabel htmlFor="coverImage">
-                      Upload Business Cover Image
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="coverImage" sx={{ flexGrow: 1 }}>
+                        Upload Business Cover Image
+                      </FormLabel>
+                      <Tooltip
+                        title="Upload a cover image that represents your business. Accepted formats: JPG, PNG."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <input
                       id="cover-image"
                       name="coverImage"
@@ -512,9 +812,21 @@ export default function BusinessRegistration() {
                   </FormControl>
 
                   <FormControl sx={{ width: "100%" }}>
-                    <FormLabel htmlFor="describeImages">
-                      Upload Describe Images
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel htmlFor="describeImages" sx={{ flexGrow: 1 }}>
+                        Upload Describe Images
+                      </FormLabel>
+                      <Tooltip
+                        title="Upload additional images that describe your business. Accepted formats: JPG, PNG. You can upload multiple files."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <input
                       id="describeImages"
                       name="describeImages"
@@ -528,6 +840,86 @@ export default function BusinessRegistration() {
                         }))
                       }
                     />
+                  </FormControl>
+                  <FormControl sx={{ width: "100%" }}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel
+                        htmlFor="businessDocuments"
+                        sx={{ flexGrow: 1 }}
+                      >
+                        Upload Business Documents
+                      </FormLabel>
+                      <Tooltip
+                        title="Upload documents related to your business. Accepted formats: PDF, DOCX. You can upload multiple files."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
+                    <input
+                      id="businessDocuments"
+                      name="businessDocuments"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      multiple
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files).map(
+                          (file) => ({
+                            file,
+                            name: file.name.split(".")[0], // Default name derived from the file
+                          })
+                        );
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          businessDocuments: files,
+                        }));
+                      }}
+                    />
+                    <Box>
+                      {formData.businessDocuments &&
+                        formData.businessDocuments.map((doc, index) => (
+                          <Box
+                            key={index}
+                            display="flex"
+                            alignItems="center"
+                            mt={2}
+                            gap={2}
+                            sx={{ flexWrap: "wrap" }}
+                          >
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                flexBasis: "30%",
+                                textAlign: "left",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {doc.file.name}
+                            </Typography>
+                            <TextField
+                              label="Document Name"
+                              value={doc.name}
+                              onChange={(e) => {
+                                const updatedDocuments = [
+                                  ...formData.businessDocuments,
+                                ];
+                                updatedDocuments[index].name = e.target.value;
+                                setFormData((prevData) => ({
+                                  ...prevData,
+                                  businessDocuments: updatedDocuments,
+                                }));
+                              }}
+                              sx={{ flexBasis: "70%" }}
+                            />
+                          </Box>
+                        ))}
+                    </Box>
                   </FormControl>
                 </Box>
 
@@ -545,22 +937,37 @@ export default function BusinessRegistration() {
                   <FormControl
                     sx={{ flex: "1 1 calc(50% - 16px)", minWidth: 300 }}
                   >
-                    <FormLabel htmlFor="fundraisePurpose">
-                      Fundraise Purpose
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel
+                        htmlFor="fundraisingPurpose"
+                        sx={{ flexGrow: 1 }}
+                      >
+                        Fundraising Purpose
+                      </FormLabel>
+                      <Tooltip
+                        title="Provide a clear and concise explanation of the purpose of the fundraising campaign."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
                     <TextField
-                      id="fundraise-purpose"
-                      name="fundraisePurpose"
-                      placeholder="Purpose of fundraise"
+                      id="fundraising-purpose"
+                      name="fundraisingPurpose"
+                      placeholder="Purpose of fundraising"
                       multiline
                       fullWidth
                       variant="outlined"
                       minRows={3}
                       maxRows={10}
-                      value={formData.fundraisePurpose}
+                      value={formData.fundraisingPurpose}
                       onChange={handleChange}
-                      error={errors.fundraisePurposeError}
-                      helperText={errors.fundraisePurposeErrorMessage}
+                      error={errors.fundraisingPurposeError}
+                      helperText={errors.fundraisingPurposeErrorMessage}
                       sx={{ resize: "vertical" }}
                     />
                   </FormControl>
@@ -568,9 +975,25 @@ export default function BusinessRegistration() {
                   <FormControl
                     sx={{ flex: "1 1 calc(50% - 16px)", minWidth: 300 }}
                   >
-                    <FormLabel htmlFor="briefDescription">
-                      Brief Description
-                    </FormLabel>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel
+                        htmlFor="briefDescription"
+                        sx={{ flexGrow: 1 }}
+                      >
+                        Brief Description
+                      </FormLabel>
+                      <Tooltip
+                        title="Provide a short description of your business, highlighting its core offerings and purpose."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
+
                     <TextField
                       id="brief-description"
                       name="briefDescription"
@@ -589,6 +1012,7 @@ export default function BusinessRegistration() {
                 </Box>
 
                 <PitchForm onPitchChange={handlePitchChange} />
+
                 <CategorySelectForm onCategoryChange={handleCategoryChange} />
 
                 <FormControlLabel
@@ -596,13 +1020,33 @@ export default function BusinessRegistration() {
                   control={
                     <Checkbox
                       id="terms"
-                      onChange={handleChange}
                       name="terms"
                       color="primary"
+                      onChange={(event) => {
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          terms: event.target.checked,
+                        }));
+                      }}
                     />
                   }
-                  label="I have read and agreed to the Terms of Service."
+                  label={
+                    <Typography variant="body2">
+                      I have read and agreed to the{" "}
+                      <Link
+                        component="button"
+                        variant="body2"
+                        onClick={handleOpen}
+                        sx={{ textDecoration: "underline", cursor: "pointer" }}
+                      >
+                        Terms of Service
+                      </Link>
+                      .
+                    </Typography>
+                  }
                 />
+
+                <PopUpTerms open={open} handleClose={handleClose} />
 
                 <Box
                   sx={{

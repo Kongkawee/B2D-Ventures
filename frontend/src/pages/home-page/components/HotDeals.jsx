@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import BusinessCard from "../../../components/BusinessCard";
 import { Button } from "@mui/material";
 import api from "../../../api";
+import { BUSINESS_CARD_API } from "../../../constants";
 
 export default function HotDeals() {
   const [businessDeals, setBusinessDeals] = useState([]);
@@ -13,12 +14,12 @@ export default function HotDeals() {
   const [error, setError] = useState(null);
 
   const defaultImage =
-    "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png";
+    "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
 
     useEffect(() => {
       const fetchBusinessDeals = async () => {
         try {
-          const response = await api.get("api/business/card/");
+          const response = await api.get(BUSINESS_CARD_API);
           const businesses = response.data;
   
           const businessesWithInvestorCounts = await Promise.all(
@@ -122,7 +123,7 @@ export default function HotDeals() {
               briefDescription={deal.brief_description}
               picture={deal.cover_image || defaultImage}
               countryLocated={deal.country_located || "Unknown Country"}
-              provinceLocated={deal.province_located || "Unknown Province"}
+              cityLocated={deal.city_located || "Unknown City"}
               companyName={deal.company_name}
             />
           </Grid>

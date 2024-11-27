@@ -6,7 +6,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.exceptions import ValidationError
-from ..models import Business, BusinessImage
+from ..models import Business, BusinessImage, BusinessDocument
+import json
 
 
 
@@ -22,6 +23,10 @@ def register_business(request):
 
     user = User.objects.create_user(username=username, email=email, password=password)
 
+    pitch_json = request.POST.getlist('pitch')[0]
+    pitch_data = json.loads(pitch_json)
+    pitch_list = list(pitch_data.values())
+
     # Create the business object
     business = Business.objects.create(
         user=user,
@@ -31,36 +36,42 @@ def register_business(request):
         phone_number=request.data.get('phoneNumber'),
         publish_date=request.data.get('publishDate'),
         end_date=request.data.get('endDate'),
-        fundraise_purpose=request.data.get('fundraisePurpose'),
+        fundraising_purpose=request.data.get('fundraisingPurpose'),
         brief_description=request.data.get('briefDescription'),
-        pitch=request.data.get('pitch'),
-        business_category=request.data.get('businessCategory'),
+        pitch=pitch_list,
+        business_category = request.POST.getlist('businessCategory'),
         country_located=request.data.get('countryLocated'),
-        province_located=request.data.get('provinceLocated'),
+        city_located=request.data.get('cityLocated'),
         goal=request.data.get('goal'),
         min_investment=request.data.get('minInvestment'),
         max_investment=request.data.get('maxInvestment'),
-        price_per_share=request.data.get('pricePerShare'),
+        stock_amount=request.data.get('stockAmount'),
     )
 
-    # Handle cover image
-    if 'cover_image' in request.FILES:
-        business.cover_image = request.FILES['cover_image']
+    if 'coverImage' in request.FILES:
+        business.cover_image = request.FILES['coverImage']
+
+    if 'describeImages' in request.FILES:
+        for image in request.FILES.getlist('describeImages'):
+            BusinessImage.objects.create(business=business, image=image)
+            
+    if 'businessDocuments' in request.FILES:
+        document_names = request.POST.getlist('documentNames')
+
+        for index, file in enumerate(request.FILES.getlist('businessDocuments')):
+            name = document_names[index] if index < len(document_names) else file.name
+            BusinessDocument.objects.create(business=business, document=file, name=name)
+
         
-    user.save()
+    
     try:
+        user.save()
         business.full_clean()
         business.save()
     except ValidationError as e:
         print("Investor validation failed:", e)
         user.delete()
         print("User instance deleted due to investor validation failure.")
-
-    # Handle multiple describe images
-    for key in request.FILES:
-        if key.startswith('describe_images_'):
-            image = request.FILES[key]
-            BusinessImage.objects.create(business=business, image=image)
 
     # Generate and return JWT tokens
     refresh = RefreshToken.for_user(user)
