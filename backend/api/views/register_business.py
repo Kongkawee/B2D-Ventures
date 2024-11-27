@@ -22,7 +22,7 @@ def register_business(request):
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(username=username, email=email, password=password)
-
+    
     pitch_json = request.POST.getlist('pitch')[0]
     pitch_data = json.loads(pitch_json)
     pitch_list = list(pitch_data.values())
