@@ -35,7 +35,7 @@ class AuthenticationTest(BaseTestSetup):
     def test_investor_sign_in(self):
         # Start with a clean session by navigating to logout
         self.driver.get("http://localhost:5173/logout")
-        self.assert_url_equals("http://localhost:5173/sin")
+        self.assert_url_equals("http://localhost:5173/sign-in")
 
         # Sign-in actions
         self.click_element_by_id("investor-sign-in-mode")
@@ -61,12 +61,12 @@ class AuthenticationTest(BaseTestSetup):
     def test_business_sign_in(self):
         # Start with a clean session by navigating to logout
         self.driver.get("http://localhost:5173/logout")
-        self.assert_url_equals("http://localhost:5173/sin")
+        self.assert_url_equals("http://localhost:5173/sign-in")
 
         # Sign-in actions
         self.click_element_by_id("business-sign-in-mode")
-        self.fill_input_field("email", "promise@gmail.com")
-        self.fill_input_field("password", "admin1")
+        self.fill_input_field("email", "pressman@gmail.com")
+        self.fill_input_field("password", "admin123")
         self.click_element_by_id("sign-in-button")
 
         # Wait for localStorage to have the expected 'access' key
@@ -84,9 +84,10 @@ class AuthenticationTest(BaseTestSetup):
         self.assertEqual(role, "business", "Role in localStorage is incorrect or missing.")
         print("[PASS] Role is correctly set as 'business'.")
 
+
     def test_investor_sign_up(self):
         self.driver.get("http://localhost:5173/logout")
-        self.driver.get("http://localhost:5173/sup")
+        self.driver.get("http://localhost:5173/sign-up")
 
         # Sign-up actions
         self.fill_input_field("firstname", "example")
@@ -100,7 +101,7 @@ class AuthenticationTest(BaseTestSetup):
 
     def test_business_register(self):
         self.driver.get("http://localhost:5173/logout")
-        self.driver.get("http://localhost:5173/bus-reg")
+        self.driver.get("http://localhost:5173/business-register")
 
         # Fill in registration form fields
         registration_data = {
@@ -109,12 +110,11 @@ class AuthenticationTest(BaseTestSetup):
             "email": "examplebusiness@gmail.com",
             "password": "admin1",
             "phone-number": "1234567890",
-            "country-located": "Example",
-            "province-located": "Example",
+            "city-located": "Example",
             "goal": "1000000",
             "min-investment": "1",
             "max-investment": "1000000",
-            "price-per-share": "1",
+            "stock-amount": "1000",
             "fundraise-purpose": "example purpose",
             "brief-description": "example description",
             "pitch-description": "example pitch description",

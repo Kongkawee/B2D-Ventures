@@ -20,18 +20,18 @@ class NavigationTest(BaseTestSetup):
         self.assert_url_equals(expected_url)
 
     def test_navigate_to_sign_in(self):
-        self.click_element_and_wait_for_url("sign-in-button", f"{self.BASE_URL}/sin")
+        self.click_element_and_wait_for_url("sign-in-button", f"{self.BASE_URL}/sign-in")
         print("[PASS] Navigation to sign-in page verified.")
 
     def test_navigate_to_investor_sign_up(self):
         self.click_element_by_id("investor-menu-dropdown")
-        self.click_element_and_wait_for_url("investor-sign-up-button", f"{self.BASE_URL}/sup")
-        self.assert_url_equals(f"{self.BASE_URL}/sup")
+        self.click_element_and_wait_for_url("investor-sign-up-button", f"{self.BASE_URL}/sign-up")
+        self.assert_url_equals(f"{self.BASE_URL}/sign-up")
         print("[PASS] Navigation to investor sign-up page verified.")
 
     def test_navigate_to_business_register(self):
         self.click_element_by_id("business-menu-dropdown")
-        self.click_element_and_wait_for_url("business-register-button", f"{self.BASE_URL}/bus-reg")
+        self.click_element_and_wait_for_url("business-register-button", f"{self.BASE_URL}/business-register")
         print("[PASS] Navigation to business register page verified.")
 
     def test_navigate_to_business_exploration(self):

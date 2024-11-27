@@ -33,7 +33,7 @@ export default function MenuContent() {
         {mainListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
             {/* To Be Fix */}
-            <ListItemButton selected={index === 0} href='/bus-pro'>
+            <ListItemButton selected={index === 0} href='/business-profile'>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>
