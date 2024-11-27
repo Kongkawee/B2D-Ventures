@@ -16,7 +16,7 @@ import InvestorOnlyRoute from "./components/InvestorOnlyRoute";
 import BusinessOnlyRoute from "./components/BusinessOnlyRoute";
 import RequestResetPasswordPage from "./pages/reset-password-page/RequestResetPassword";
 import ResetPasswordPage from "./pages/reset-password-page/ResetPassword";
-import { BUSINESS_PROFILE_PATH, BUSINESS_REGISTER_PATH, EXPLORATION_PAGE_PATH, HOME_PATH, INVESTOR_PROFILE_PATH, SIGN_IN_PATH, INVESTOR_SIGN_UP_PATH, LOG_OUT_PATH, NOT_AUTH_PATH, NOT_FOUND_PATH } from "./constants";
+import { BUSINESS_PROFILE_PATH, BUSINESS_REGISTER_PATH, EXPLORATION_PAGE_PATH, HOME_PATH, INVESTOR_PROFILE_PATH, SIGN_IN_PATH, INVESTOR_SIGN_UP_PATH, LOG_OUT_PATH, NOT_AUTH_PATH, NOT_FOUND_PATH, PASSWORD_REQUEST, PASSWORD_RESET } from "./constants";
 
 function Logout() {
   localStorage.clear();
@@ -81,8 +81,8 @@ function App() {
         />
         {" Business Profile Page "}
 
-        <Route path="/request" element={<RequestResetPasswordPage />} />
-        <Route path="/resetpass" element={<ResetPasswordPage />} />
+        <Route path={PASSWORD_REQUEST} element={<RequestResetPasswordPage />} />
+        <Route path={PASSWORD_RESET} element={<ResetPasswordPage />} />
 
         <Route path={NOT_AUTH_PATH} element={<NotAuthorized />}></Route>
         <Route path={NOT_FOUND_PATH} element={<NotFound />}></Route>

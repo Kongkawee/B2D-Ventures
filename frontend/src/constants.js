@@ -12,6 +12,8 @@ export const INVESTOR_PROFILE_PATH = "/inv-pro";
 export const BUSINESS_PROFILE_PATH = "/bus-pro";
 export const NOT_AUTH_PATH = "/not-authorized"
 export const NOT_FOUND_PATH = "*"
+export const PASSWORD_REQUEST = "/password/request";
+export const PASSWORD_RESET = "/password/reset/:token";
 
 export const REFRESH_API = "/api/token/refresh/";
 export const SIGN_IN_API = "/api/login/";
@@ -24,6 +26,11 @@ export const INVESTOR_PROFILE_UPDATE_API = "/api/investor/update/";
 export const INVESTOR_INVESTMENT_API = "/api/investor/investment/";
 export const BUSINESS_PROFILE_API = "/api/business/profile/";
 export const BUSINESS_INVESTMENT_API = "/api/business/fundraise/";
+
+export const PASSWORD_REQUEST_API = "/api/password/request/";
+export const PASSWORD_RESET_API = "/api/password/reset/";
+
+
 
 
 
