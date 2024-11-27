@@ -22,17 +22,17 @@ export default function Review({ investmentDetails, business }) {
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Price Per Share" />
           <Typography variant="body2">
-            $ {parseFloat(business.stock_amount).toFixed(2)}
+            ${parseFloat(business.goal)}/{parseFloat(business.stock_amount).toFixed(2)}
           </Typography>
         </ListItem>
 
         <Divider />
 
-        {/* Capital Gained */}
+        {/* Share Gained */}
         <ListItem sx={{ py: 1, px: 0 }}>
-          <ListItemText primary="Capital Gained" />
+          <ListItemText primary="Shares Gained" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            {investmentDetails.capitalGain.toFixed(2)} Units
+            {investmentDetails.sharesGain.toFixed(2)} Units
           </Typography>
         </ListItem>
       </List>

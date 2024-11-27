@@ -38,7 +38,7 @@ function Checkout() {
   const [business, setBusiness] = useState(null);
   const [investmentDetails, setInvestmentDetails] = useState({
     amount: 0,
-    capitalGain: 0,
+    sharesGain: 0,
   });
   const [investmentId, setInvestmentId] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ function Checkout() {
     const fetchBusinessData = async () => {
       try {
         const response = await api.get(
-          `http://localhost:8000/api/business/${id}/`
+          `/api/business/${id}/`
         );
         setBusiness(response.data);
         setLoading(false);
@@ -101,10 +101,10 @@ function Checkout() {
         alert("Please enter a valid investment amount.");
         return;
       }
-      const capitalGain = investmentAmount / business.price_per_share;
+      const sharesGain = investmentAmount / (business.goal / business.amount);
       setInvestmentDetails((prevDetails) => ({
         ...prevDetails,
-        capitalGain,
+        sharesGain,
       }));
     }
 
@@ -129,7 +129,7 @@ function Checkout() {
       const response = await api.post(INVEST_API, {
         business_id: business.id,
         amount: investmentDetails.amount,
-        shares: investmentDetails.capitalGain,
+        shares: investmentDetails.sharesGain,
       });
 
       console.log("Investment successful:", response.data);
