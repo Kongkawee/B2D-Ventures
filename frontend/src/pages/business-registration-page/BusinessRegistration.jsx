@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Select from "@mui/joy/Select";
 import MuiCard from "@mui/material/Card";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import getSignUpTheme from "./theme/getBusinessRegistrationTheme";
@@ -22,9 +21,19 @@ import api from "../../api";
 import { Link, useNavigate } from "react-router-dom";
 import { addDays, addMonths, format } from "date-fns";
 import { validateInputs } from "./formValidation";
-import { BUSINESS_REGISTER_API, SIGN_IN_PATH } from "../../constants";
+import {
+  BUSINESS_REGISTER_API,
+  COUNTRY_CHOICES,
+  SIGN_IN_PATH,
+} from "../../constants";
 import PopUpTerms from "../../components/PopUp/PopUpTerms";
-import { IconButton, Tooltip } from "@mui/material";
+import {
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tooltip,
+} from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -193,23 +202,22 @@ export default function BusinessRegistration() {
       reader.readAsDataURL(file);
     });
   };
-  
+
   const processPitchImages = async (pitch) => {
     const processedPitch = {};
-  
+
     const entries = Object.entries(pitch);
     for (const [key, section] of entries) {
       if (section.image instanceof File || section.image instanceof Blob) {
         const base64Image = await convertToBase64(section.image);
         processedPitch[key] = { ...section, image: base64Image };
       } else {
-        processedPitch[key] = section; 
+        processedPitch[key] = section;
       }
     }
-  
+
     return processedPitch;
   };
-  
 
   const handleFormSubmit = async (event) => {
     console.log("Attempt to Send");
@@ -220,58 +228,53 @@ export default function BusinessRegistration() {
 
     if (isValid) {
       const formDataToSend = new FormData();
-    
-    // Append primitive data to FormData
-    for (const key in formData) {
-      const value = formData[key];
-      if (value instanceof File || value instanceof FileList) {
-        // Skip files here, we'll handle them separately
-        continue;
-      } else if (Array.isArray(value)) {
-        // If it's an array, append each item
-        value.forEach((item) => {
-          formDataToSend.append(key, item);
-        });
-      } else if (typeof value === "object") {
-        // If it's an object, convert it to JSON and append
-        formDataToSend.append(key, JSON.stringify(value));
-      } else {
-        // For primitive types, append directly
-        formDataToSend.append(key, value);
+
+      // Append primitive data to FormData
+      for (const key in formData) {
+        const value = formData[key];
+        if (value instanceof File || value instanceof FileList) {
+          // Skip files here, we'll handle them separately
+          continue;
+        } else if (Array.isArray(value)) {
+          // If it's an array, append each item
+          value.forEach((item) => {
+            formDataToSend.append(key, item);
+          });
+        } else if (typeof value === "object") {
+          // If it's an object, convert it to JSON and append
+          formDataToSend.append(key, JSON.stringify(value));
+        } else {
+          // For primitive types, append directly
+          formDataToSend.append(key, value);
+        }
       }
-    }
 
-    // Append cover image if it exists
-    if (formData.coverImage) {
-      formDataToSend.append("coverImage", formData.coverImage);
-    }
-
-    // Append describe images if they exist
-    if (formData.describeImages) {
-      for (let i = 0; i < formData.describeImages.length; i++) {
-        formDataToSend.append("describeImages", formData.describeImages[i]);
+      // Append cover image if it exists
+      if (formData.coverImage) {
+        formDataToSend.append("coverImage", formData.coverImage);
       }
-    }
 
-    try {
-      const processedPitch = await processPitchImages(formData.pitch);
-      const payload = {
-        ...formData,
-        pitch: processedPitch,
-      };
-      const response = await api.post(
-          BUSINESS_REGISTER_API,
-          payload
-        );
+      // Append describe images if they exist
+      if (formData.describeImages) {
+        for (let i = 0; i < formData.describeImages.length; i++) {
+          formDataToSend.append("describeImages", formData.describeImages[i]);
+        }
+      }
+
+      try {
+        const processedPitch = await processPitchImages(formData.pitch);
+        const payload = {
+          ...formData,
+          pitch: processedPitch,
+        };
+        const response = await api.post(BUSINESS_REGISTER_API, payload);
         console.log("User registered successfully:", response.data);
         navigate(SIGN_IN_PATH);
-      
-    } 
-    catch {
-      console.log("Error to Register business");
+      } catch {
+        console.log("Error to Register business");
+      }
     }
   };
-}
 
   const handleOpen = () => {
     setOpen(true);
@@ -280,6 +283,11 @@ export default function BusinessRegistration() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const countryOptions = COUNTRY_CHOICES.map(([code, name]) => ({
+    value: code,
+    label: name,
+  }));
 
   return (
     <TemplateFrame
@@ -502,7 +510,10 @@ export default function BusinessRegistration() {
                     />
                   </FormControl>
 
-                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  <FormControl
+                    sx={{ width: "calc(50% - 16px)" }}
+                    error={errors.countryLocatedError}
+                  >
                     <Box display="flex" alignItems="center" gap={1}>
                       <FormLabel htmlFor="countryLocated" sx={{ flexGrow: 1 }}>
                         Country Located
@@ -518,18 +529,28 @@ export default function BusinessRegistration() {
                         />
                       </Tooltip>
                     </Box>
-                    <TextField
-                      required
-                      fullWidth
+                    <Select
+                      labelId="country-located-label"
                       id="country-located"
-                      placeholder="Thailand"
                       name="countryLocated"
-                      variant="outlined"
                       value={formData.countryLocated}
                       onChange={handleChange}
-                      error={errors.countryLocatedError}
-                      helperText={errors.countryLocatedErrorMessage}
-                    />
+                      displayEmpty
+                    >
+                      <MenuItem value="" disabled>
+                        Select a country
+                      </MenuItem>
+                      {countryOptions.map((country) => (
+                        <MenuItem key={country.value} value={country.value}>
+                          {country.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.countryLocatedError && (
+                      <FormHelperText>
+                        {errors.countryLocatedErrorMessage}
+                      </FormHelperText>
+                    )}
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>
