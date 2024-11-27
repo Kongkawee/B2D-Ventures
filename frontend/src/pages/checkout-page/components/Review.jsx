@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 
 export default function Review({ investmentDetails, business }) {
   const pricePerShare = parseFloat(business.goal) / parseFloat(business.stock_amount);
+  const sharesGain = investmentDetails.amount/ pricePerShare
   return (
     <Stack spacing={2}>
       <List disablePadding>
@@ -33,7 +34,7 @@ export default function Review({ investmentDetails, business }) {
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Shares Gained" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            {investmentDetails.sharesGain.toFixed(2)} Units
+            {sharesGain.toFixed(2)} Units
           </Typography>
         </ListItem>
       </List>
