@@ -11,7 +11,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import MenuButton from "./MenuButton";
 import { useNavigate } from "react-router-dom";
-import { LOG_OUT_PATH } from "../../../constants";
+import { LOG_OUT_PATH, PASSWORD_REQUEST } from "../../../constants";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
@@ -29,6 +29,9 @@ export default function OptionsMenu() {
   };
   const handleLogout = () => {
     navigate(LOG_OUT_PATH);
+  };
+  const handleResetPassword = () => {
+    navigate(PASSWORD_REQUEST);
   };
   return (
     <React.Fragment>
@@ -59,6 +62,7 @@ export default function OptionsMenu() {
           },
         }}
       >
+        <MenuItem onClick={handleResetPassword}>Change Password</MenuItem>
         {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
         {/* <MenuItem onClick={handleClose}>My account</MenuItem>
         <Divider />

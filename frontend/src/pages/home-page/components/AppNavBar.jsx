@@ -15,7 +15,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, BUSINESS_REGISTER_PATH, INVESTOR_PROFILE_PATH, INVESTOR_SIGN_UP_PATH, LOG_OUT_PATH } from "../../../constants";
+import { ACCESS_TOKEN, BUSINESS_REGISTER_PATH, INVESTOR_PROFILE_PATH, INVESTOR_SIGN_UP_PATH, LOG_OUT_PATH, SIGN_IN_PATH } from "../../../constants";
 import { Button, ListItemText, Drawer } from "@mui/material";
 
 const logoStyle = {
@@ -214,7 +214,7 @@ function AppNavBar({ mode, toggleColorMode, userData }) {
                     variant="contained"
                     size="small"
                     component="a"
-                    href="/sin"
+                    href={SIGN_IN_PATH}
                   >
                     Sign in
                   </Button>
