@@ -6,8 +6,17 @@
 All installation instructions are included in the [Installation Guide](Installation.md). Follow the instructions there to set up the project.
 
 ## How to Run
-To be added
-
+1. Start Backend Server.
+    ```
+    cd backend
+    python manage.py runserver
+    ```
+2. Start Frontend Server.
+    ```
+    cd ../frontend
+    npm run dev
+    ``` 
+3. in your browser go to http://localhost:5173/.
 
 ## Documentation
 All project documentation is available in the [Project Wiki](https://github.com/Kongkawee/B2D-Ventures/wiki).
