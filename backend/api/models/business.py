@@ -289,3 +289,13 @@ class BusinessImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.business.company_name}"
+
+
+class BusinessDocument(models.Model):
+    """Model for storing multiple PDF documents for each Business"""
+    business = models.ForeignKey(Business, related_name='documents', on_delete=models.CASCADE)
+    document = models.FileField(upload_to='business/documents', null=False, blank=False)
+    name = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"Document for {self.business.company_name}: {self.name or 'Unnamed Document'}"
