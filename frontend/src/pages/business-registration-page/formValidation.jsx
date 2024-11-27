@@ -65,20 +65,19 @@ export const validateInputs = (formData, errors) => {
 
   // Validate End Date
   if (!formData.endDate) {
-    newErrors.deadlineDateError = true;
-    newErrors.deadlineDateErrorMessage = "Deadline date is required.";
+    newErrors.endDateError = true;
+    newErrors.endDateErrorMessage = "End date is required.";
     isValid = false;
   } else if (
     formData.publishDate &&
     new Date(formData.endDate) < new Date(formData.publishDate)
   ) {
-    newErrors.deadlineDateError = true;
-    newErrors.deadlineDateErrorMessage =
-      "Deadline date must be after publish date.";
+    newErrors.endDateError = true;
+    newErrors.endDateErrorMessage = "End date must be after publish date.";
     isValid = false;
   } else {
-    newErrors.deadlineDateError = false;
-    newErrors.deadlineDateErrorMessage = "";
+    newErrors.endDateError = false;
+    newErrors.endDateErrorMessage = "";
   }
 
   // Validate Goal
@@ -182,22 +181,55 @@ export const validateInputs = (formData, errors) => {
     newErrors.businessDescriptionErrorMessage = "";
   }
 
+  // Validate Fundraising Purpose
+  if (!formData.fundraisingPurpose.trim()) {
+    newErrors.fundraisingPurposeError = true;
+    newErrors.fundraisingPurposeErrorMessage =
+      "Fundraising purpose is required.";
+    isValid = false;
+  } else if (formData.fundraisingPurpose.trim().length > 200) {
+    newErrors.fundraisingPurposeError = true;
+    newErrors.fundraisingPurposeErrorMessage =
+      "Fundraising purpose cannot exceed 200 characters.";
+    isValid = false;
+  } else {
+    newErrors.fundraisingPurposeError = false;
+    newErrors.fundraisingPurposeErrorMessage = "";
+  }
+
   // Validate Stock Amount
   if (!formData.stockAmount.trim()) {
     newErrors.stockAmountError = true;
-    newErrors.stockAmountErrorMessage = "Price per share is required.";
+    newErrors.stockAmountErrorMessage = "Stock amount is required.";
     isValid = false;
-  } else if (
-    isNaN(formData.stockAmount) ||
-    Number(formData.stockAmount) <= 0
-  ) {
+  } else if (isNaN(formData.stockAmount) || Number(formData.stockAmount) <= 0) {
     newErrors.stockAmountError = true;
     newErrors.stockAmountErrorMessage =
-      "Stock Amount must be a positive number.";
+      "Stock amount must be a positive number.";
     isValid = false;
   } else {
     newErrors.stockAmountError = false;
     newErrors.stockAmountMessage = "";
+  }
+
+  // Validate Country Located
+  if (!formData.countryLocated.trim()) {
+    newErrors.countryLocatedError = true;
+    newErrors.countryLocatedErrorMessage = "Country is required.";
+    isValid = false;
+  } else {
+    newErrors.countryLocatedError = false;
+    newErrors.countryLocatedErrorMessage = "";
+  }
+
+  // Validate City Located
+  if (!formData.cityLocated.trim()) {
+    newErrors.cityLocatedError = true;
+    newErrors.cityLocatedErrorMessage = "City is required.";
+    isValid = false;
+  } else {
+    newErrors.cityLocatedError = false;
+    newErrors.cityLocatedErrorMessage = "";
   }
 
   return { isValid, newErrors };
