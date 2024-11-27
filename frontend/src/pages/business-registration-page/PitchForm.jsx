@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 export default function PitchForm({ onPitchChange }) {
   const [sections, setSections] = useState([{ topic: "", image: null, description: "" }]);
