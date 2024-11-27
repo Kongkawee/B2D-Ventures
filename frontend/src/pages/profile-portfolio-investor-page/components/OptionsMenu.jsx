@@ -9,7 +9,7 @@ import MenuButton from "./MenuButton";
 import ProfileDialog from "./ProfileDialog"; 
 import { useNavigate } from "react-router-dom";
 import api from "../../../api";
-import { INVESTOR_PROFILE_UPDATE_API, LOG_OUT_PATH } from "../../../constants";
+import { INVESTOR_PROFILE_UPDATE_API, LOG_OUT_PATH, PASSWORD_REQUEST } from "../../../constants";
 
 const MenuItem = styled(MuiMenuItem)({
   margin: "2px 0",
@@ -26,6 +26,10 @@ export default function OptionsMenu({ userData }) {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleResetPassword = () => {
+    navigate(PASSWORD_REQUEST);
   };
 
   const handleLogout = () => {
@@ -88,6 +92,8 @@ export default function OptionsMenu({ userData }) {
           },
         }}
       >
+        <MenuItem onClick={handleResetPassword}>Change Password</MenuItem>
+        <Divider />
         <MenuItem onClick={openProfileDialog}>Profile</MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>

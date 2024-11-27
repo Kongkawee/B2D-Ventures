@@ -28,7 +28,7 @@ export const columns = [
   },
   {
     field: 'shares',
-    headerName: 'Price Per Share ($)',
+    headerName: 'Share Gained (Units)',
     headerAlign: 'right',
     align: 'right',
     flex: 1,
@@ -41,12 +41,5 @@ export const columns = [
     align: 'right',
     flex: 1,
     minWidth: 120,
-  },
-  {
-    field: 'status',
-    headerName: 'Status',
-    flex: 0.75,
-    minWidth: 80,
-    renderCell: (params) => renderStatus(params.value),
   },
 ];

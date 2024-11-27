@@ -63,6 +63,7 @@ export default function BusinessProfile(props) {
         return {
           id: investment.id,
           investorName: `${investment.investor.first_name} ${investment.investor.last_name}`,
+          investorEmail: investment.investor.email,
           amount: parseFloat(investment.amount),
           shares: parseFloat(investment.shares),
           investmentDate: formattedDate,
