@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 export default function PitchForm({ onPitchChange }) {
-  const [sections, setSections] = useState([{ topic: "", description: "" }]);
+  const [sections, setSections] = useState([{ topic: "", image: null, description: "" }]);
 
   const addSection = () => {
-    const newSections = [...sections, { topic: "", description: "" }];
+    const newSections = [...sections, { topic: "", image: null, description: "" }];
     setSections(newSections);
     onPitchChange(newSections);
   };
@@ -17,6 +18,30 @@ export default function PitchForm({ onPitchChange }) {
     newSections[index][name] = value;
     setSections(newSections);
     onPitchChange(newSections);
+  };
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result); // Base64 string
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file); // Read file as Base64
+    });
+  };
+
+  const handleImageChange = async (index, event) => {
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        const base64Image = await convertToBase64(file);
+        const newSections = [...sections];
+        newSections[index].image = base64Image; // Store Base64 string
+        setSections(newSections);
+        onPitchChange(newSections);
+      } catch (error) {
+        console.error("Failed to convert image to Base64:", error);
+      }
+    }
   };
 
   const removeSection = (index) => {
@@ -51,15 +76,37 @@ export default function PitchForm({ onPitchChange }) {
             Section {index + 1}
           </Typography>
           <TextField
-            id="pitch-topic"
+            id={`pitch-topic-${index}`}
             label="Title"
             name="topic"
             value={section.topic}
             onChange={(event) => handleInputChange(index, event)}
             fullWidth
           />
+          {section.image && (
+            <Box
+              component="img"
+              src={section.image}
+              alt={`Image for Section ${index + 1}`}
+              sx={{ width: "100%", height: "auto", mt: 2 }}
+            />
+          )}
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<UploadFileIcon />}
+            sx={{ mt: 2, mb: 2 }}
+          >
+            Upload Image
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={(event) => handleImageChange(index, event)}
+            />
+          </Button>
           <TextField
-            id="pitch-description"
+            id={`pitch-description-${index}`}
             label="Description"
             name="description"
             value={section.description}
