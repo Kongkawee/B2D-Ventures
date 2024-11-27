@@ -67,19 +67,9 @@ export default function PitchForm({ onPitchChange }) {
         mb: 2,
       }}
     >
-      <Box display="flex" alignItems="center" gap={1}>
-        <Typography variant="h4" gutterBottom sx={{ flexGrow: 1 }}>
-          Pitch Form
-        </Typography>
-        <Tooltip
-          title="Use this form to structure and present your business pitch effectively. Add sections for specific topics and descriptions."
-          arrow
-          placement="top"
-        >
-          <HelpOutlineIcon sx={{ color: "text.secondary" }} fontSize="" />
-        </Tooltip>
-      </Box>
-
+      <Typography variant="h4" gutterBottom>
+        Pitch Form
+      </Typography>
       {sections.map((section, index) => (
         <Box
           key={index}
