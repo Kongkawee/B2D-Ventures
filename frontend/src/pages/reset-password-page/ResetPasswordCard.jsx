@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -9,6 +10,11 @@ import {
 } from "@mui/material";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
+import api from "../../api";
+import { PASSWORD_RESET, PASSWORD_RESET_API } from "../../constants";
+
+
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -40,6 +46,7 @@ export default function ResetPasswordCard() {
   const [newPasswordErrorMessage, setNewPasswordErrorMessage] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState("");
+  const { token } = useParams();
 
   const validateInputs = () => {
     const newPassword = document.getElementById("new-password").value;
@@ -67,13 +74,29 @@ export default function ResetPasswordCard() {
 
     return isValid;
   };
+  
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateInputs()) {
       // Handle the password change logic
+      const newPassword = document.getElementById("new-password").value;
+      const confirmPassword = document.getElementById("confirm-password").value;
+      try {
+        const response = await api.post(`${PASSWORD_RESET_API}${token}/`, {
+          new_password: newPassword,
+          confirm_password: confirmPassword,
+        });
+
+      if (response.status === 200) {
+        alert("Password reset successful. You can now log in.");
+      }
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      alert("Password reset failed. Please try again.");
     }
-  };
+  }
+};
 
   return (
     <Card variant="outlined">
