@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 export default function PitchForm({ onPitchChange }) {
   const [sections, setSections] = useState([{ topic: "", image: null, description: "" }]);
@@ -31,9 +31,9 @@ export default function PitchForm({ onPitchChange }) {
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result); // Base64 string
+      reader.onload = () => resolve(reader.result); 
       reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file); // Read file as Base64
+      reader.readAsDataURL(file); 
     });
   };
 
@@ -43,7 +43,7 @@ export default function PitchForm({ onPitchChange }) {
       try {
         const base64Image = await convertToBase64(file);
         const newSections = [...sections];
-        newSections[index].image = base64Image; // Store Base64 string
+        newSections[index].image = base64Image; 
         setSections(newSections);
         onPitchChange(newSections);
       } catch (error) {
