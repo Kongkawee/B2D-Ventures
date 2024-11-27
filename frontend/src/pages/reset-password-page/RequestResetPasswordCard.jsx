@@ -11,6 +11,10 @@ import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import LogoLight from "../../images/LogoLight.png";
 import LogoDark from "../../images/LogoDark.png";
+import { PASSWORD_REQUEST_API } from "../../constants";
+import api from "../../api";
+
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -64,10 +68,28 @@ export default function RequestResetPasswordCard({ mode }) {
     return isValid;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateInputs()) {
-      // Handle the password reset logic
+      const email = document.getElementById("email").value;
+  
+      try {
+        const response = await api.post(PASSWORD_REQUEST_API, { email });
+  
+        if (response.status === 200) {
+          alert("Password reset link has been sent to your email.");
+        }
+      } catch (error) {
+        console.error("Error during password reset request:", error);
+        if (error.response) {
+          alert(
+            error.response.data.error ||
+              "Failed to request password reset. Please try again."
+          );
+        } else {
+          alert("Network error. Please try again later.");
+        }
+      }
     }
   };
 
