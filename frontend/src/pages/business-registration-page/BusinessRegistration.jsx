@@ -92,8 +92,6 @@ export default function BusinessRegistration() {
     stockAmount: "",
     countryLocated: "",
     cityLocated: "",
-    coverImage: "",
-    describeImages: "",
     terms: "",
   });
 
@@ -187,16 +185,56 @@ export default function BusinessRegistration() {
   };
 
   const handleFormSubmit = async (event) => {
-    console.log("Attemp to Send");
+    console.log("Attempt to Send");
     event.preventDefault();
+
     const { isValid, newErrors } = validateInputs(formData, errors);
     setErrors(newErrors);
 
     if (isValid) {
+      const formDataToSend = new FormData();
+
+      // Append primitive data to FormData
+      for (const key in formData) {
+        const value = formData[key];
+        if (value instanceof File || value instanceof FileList) {
+          // Skip files here, we'll handle them separately
+          continue;
+        } else if (Array.isArray(value)) {
+          // If it's an array, append each item
+          value.forEach((item) => {
+            formDataToSend.append(key, item);
+          });
+        } else if (typeof value === "object") {
+          // If it's an object, convert it to JSON and append
+          formDataToSend.append(key, JSON.stringify(value));
+        } else {
+          // For primitive types, append directly
+          formDataToSend.append(key, value);
+        }
+      }
+
+      // Append cover image if it exists
+      if (formData.coverImage) {
+        formDataToSend.append("coverImage", formData.coverImage);
+      }
+
+      // Append describe images if they exist
+      if (formData.describeImages) {
+        for (let i = 0; i < formData.describeImages.length; i++) {
+          formDataToSend.append("describeImages", formData.describeImages[i]);
+        }
+      }
+
+      // Submit the form
       try {
-        const response = await api.post(BUSINESS_REGISTER_API, formData);
-        console.log("User registered successfully:", response.data);
-        navigate(SIGN_IN_PATH);
+        const response = await api.post(BUSINESS_REGISTER_API, formDataToSend, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("User  registered successfully:", response.data);
+        // navigate(SIGN_IN_PATH);
       } catch (error) {
         console.error("Registration Failed:", error.response?.data);
       }
