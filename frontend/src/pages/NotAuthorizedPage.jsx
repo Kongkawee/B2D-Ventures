@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Grid2 } from '@mui/material';
 import { Warning as WarningIcon } from '@mui/icons-material';
+import { SIGN_IN_PATH } from '../constants';
 
 function NotAuthorized() {
     return (
@@ -34,7 +35,7 @@ function NotAuthorized() {
                     or{' '}
                     <Typography 
                         component="a" 
-                        href="/sin" 
+                        href={SIGN_IN_PATH} 
                         style={{ color: '#1976d2', textDecoration: 'underline', cursor: 'pointer', margin: '0 5px' }}
                     >
                         login

@@ -35,7 +35,7 @@ class InvestmentTest(BaseTestSetup):
         self.click_element_by_id("terms-button")
         
         # Proceed through the multi-step checkout process
-        for _ in range(3):
+        for _ in range(4):
             self.click_element_by_id("next-step-button")
 
     def handle_alert(self):

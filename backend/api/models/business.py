@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+import os
+import uuid
+
+
 COUNTRY_CHOICES = [
     ('AF', 'Afghanistan'),
     ('AL', 'Albania'),
@@ -284,17 +288,34 @@ class Business(models.Model):
 
 class BusinessImage(models.Model):
     """Model for storing multiple images for each Business"""
+
+    def upload_to(self, filename):
+        # Extract the file extension
+        extension = os.path.splitext(filename)[1]
+        # Generate a unique filename using UUID
+        unique_filename = f"{uuid.uuid4()}{extension}"
+        # Construct the path dynamically
+        return f'business/{self.business.id}/describe_images/{unique_filename}'
+
     business = models.ForeignKey(Business, related_name='describe_images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='business/describe_images')
+    image = models.ImageField(upload_to=upload_to)
 
     def __str__(self):
         return f"Image for {self.business.company_name}"
 
-
 class BusinessDocument(models.Model):
-    """Model for storing multiple PDF documents for each Business"""
+    """Model for storing multiple documents for each Business"""
+
+    def upload_to(self, filename):
+        # Extract the file extension
+        extension = os.path.splitext(filename)[1]
+        # Generate a unique filename using UUID
+        unique_filename = f"{uuid.uuid4()}{extension}"
+        # Construct the path dynamically
+        return f'business/{self.business.id}/documents/{unique_filename}'
+
     business = models.ForeignKey(Business, related_name='documents', on_delete=models.CASCADE)
-    document = models.FileField(upload_to='business/documents', null=False, blank=False)
+    document = models.FileField(upload_to=upload_to, null=False, blank=False)
     name = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):

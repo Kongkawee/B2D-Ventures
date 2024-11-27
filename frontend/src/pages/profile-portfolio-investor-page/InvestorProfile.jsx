@@ -17,6 +17,7 @@ import {
 } from "./theme/customizations";
 import api from "../../api";
 import { INVESTOR_INVESTMENT_API, INVESTOR_PROFILE_API } from "../../constants";
+import { Link } from "react-router-dom";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -51,14 +52,21 @@ export default function InvestorProfile(props) {
       .get(INVESTOR_INVESTMENT_API)
       .then((res) => res.data)
       .then((data) => {
-        const mappedData = data.map((investment) => ({
-          id: investment.id,
-          businessTitle: investment.business.business_name,
-          status: investment.status,
-          amount: parseFloat(investment.amount),
-          shares: parseFloat(investment.shares),
-          goalPercentage: 50, //Mocking, Still progress
-        }));
+        const mappedData = data.map((investment) => {
+          const currentInvestment = parseFloat(
+            investment.business.current_investment
+          );
+          const goal = parseFloat(investment.business.goal);
+          const goalPercentage =
+            goal > 0 ? (currentInvestment / goal) * 100 : 0;
+          return {
+            id: investment.id,
+            businessTitle: investment.business.business_name,
+            amount: parseFloat(investment.amount),
+            shares: parseFloat(investment.shares),
+            goalPercentage: goalPercentage.toFixed(2),
+          };
+        });
         setUserInvestment(mappedData);
       })
       .catch((err) => {

@@ -14,12 +14,13 @@ const FormGrid = styled(Grid)(() => ({
 
 export default function InvestmentForm({ business, onDetailsChange, handleOpenTermsDialog }) {
   const [investmentAmount, setInvestmentAmount] = useState('');
-  const [capitalGain, setCapitalGain] = useState('');
+  const [sharesGain, setSharesGain] = useState('');
 
-  const calculateCapitalGain = (amount) => {
-    const pricePerShare = parseFloat(business.price_per_share);
-    if (pricePerShare && !isNaN(amount)) {
-      return amount / pricePerShare;
+  const calculateShareGain = (amount) => {
+    const stockAmount = parseFloat(business.stock_amount);
+    const goal = parseFloat(business.goal);
+    if (stockAmount && amount) {
+      return amount / (goal / stockAmount);
     }
     return 0;
   };
@@ -33,13 +34,13 @@ export default function InvestmentForm({ business, onDetailsChange, handleOpenTe
     const amount = parseFloat(value);
     setInvestmentAmount(value);
 
-    if (!isNaN(amount)) {
-      const gain = calculateCapitalGain(amount);
-      setCapitalGain(gain.toFixed(2)); 
-      onDetailsChange({ amount, capitalGain: gain });
+    if (amount) {
+      const gain = calculateShareGain(amount);
+      setSharesGain(gain.toFixed(2)); 
+      onDetailsChange({ amount, sharesGain: gain });
     } else {
-      setCapitalGain('');
-      onDetailsChange({ amount: 0, capitalGain: 0 });
+      setSharesGain('');
+      onDetailsChange({ amount: 0, sharesGain: 0 });
     }
   };
 
@@ -62,15 +63,15 @@ export default function InvestmentForm({ business, onDetailsChange, handleOpenTe
       </FormGrid>
       <FormGrid item xs={12} md={10}>
         <FormLabel>
-          Capital Gained
+          Shares Gained
         </FormLabel>
         <OutlinedInput
-          id="capital-gain"
-          name="capital-gain"
-          placeholder="Capital Gained"
+          id="shares-gain"
+          name="shares-gain"
+          placeholder="Shares Gained"
           required
           size="small"
-          value={capitalGain}
+          value={sharesGain}
           readOnly
         />
       </FormGrid>

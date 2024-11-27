@@ -335,7 +335,7 @@ export default function SignUp() {
                 </Button>
                 <Typography sx={{ textAlign: "center" }}>
                   Already have an account?{" "}
-                  <Link href="/sin" variant="body2">
+                  <Link href={ SIGN_IN_PATH } variant="body2">
                     Sign in
                   </Link>
                 </Typography>

@@ -11,6 +11,8 @@ import OptionsMenu from './OptionsMenu';
 
 const drawerWidth = 240;
 
+const placeholderImage = "/static/images/avatar/placeholder.jpg";
+
 const Drawer = styled(MuiDrawer)({
   width: drawerWidth,
   flexShrink: 0,
@@ -48,7 +50,7 @@ export default function SideMenu({ userData }) {
         <Avatar
           sizes="small"
           alt=""
-          src="/static/images/avatar/7.jpg"
+          src={userData?.cover_image || placeholderImage}
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>
