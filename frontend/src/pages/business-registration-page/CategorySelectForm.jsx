@@ -11,9 +11,11 @@ import {
   List,
   ListItem,
   Alert,
+  Tooltip
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Papa from "papaparse";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 export default function CategorySelectForm({ onCategoryChange }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -49,7 +51,9 @@ export default function CategorySelectForm({ onCategoryChange }) {
   const handleCategoryChange = (category) => {
     let newSelectedCategories = [];
     if (selectedCategories.includes(category)) {
-      newSelectedCategories = selectedCategories.filter((item) => item !== category);
+      newSelectedCategories = selectedCategories.filter(
+        (item) => item !== category
+      );
     } else if (selectedCategories.length < 4) {
       newSelectedCategories = [...selectedCategories, category];
     } else {
@@ -75,6 +79,18 @@ export default function CategorySelectForm({ onCategoryChange }) {
         mb: 2,
       }}
     >
+      <Box display="flex" alignItems="center" gap={1}>
+        <Typography variant="h4" gutterBottom sx={{ flexGrow: 1 }}>
+          Business Category
+        </Typography>
+        <Tooltip
+          title="Select up to 4 categories that best describe your business."
+          arrow
+          placement="top"
+        >
+          <HelpOutlineIcon sx={{ color: "text.secondary" }} fontSize="" />
+        </Tooltip>
+      </Box>
       <Button variant="contained" onClick={() => setDrawerOpen(true)}>
         Open Category Selector
       </Button>
