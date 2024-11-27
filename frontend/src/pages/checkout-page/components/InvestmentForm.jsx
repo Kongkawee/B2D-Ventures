@@ -19,7 +19,7 @@ export default function InvestmentForm({ business, onDetailsChange, handleOpenTe
   const calculateShareGain = (amount) => {
     const stockAmount = parseFloat(business.stock_amount);
     const goal = parseFloat(business.goal);
-    if (stockAmount && !isNaN(amount)) {
+    if (stockAmount && amount) {
       return amount / (goal / stockAmount);
     }
     return 0;
@@ -34,7 +34,7 @@ export default function InvestmentForm({ business, onDetailsChange, handleOpenTe
     const amount = parseFloat(value);
     setInvestmentAmount(value);
 
-    if (!isNaN(amount)) {
+    if (amount) {
       const gain = calculateShareGain(amount);
       setSharesGain(gain.toFixed(2)); 
       onDetailsChange({ amount, sharesGain: gain });
