@@ -324,10 +324,6 @@ export default function SignUp() {
                     onChange={handleProfilePictureChange}
                   />
                 </FormControl>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive updates via email."
-                />
                 <Button
                   id="sign-up-button"
                   type="submit"
