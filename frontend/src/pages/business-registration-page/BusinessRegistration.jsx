@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import Select from "@mui/joy/Select";
 import MuiCard from "@mui/material/Card";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import getSignUpTheme from "./theme/getBusinessRegistrationTheme";
@@ -193,85 +192,95 @@ export default function BusinessRegistration() {
       reader.readAsDataURL(file);
     });
   };
-  
+
   const processPitchImages = async (pitch) => {
     const processedPitch = {};
-  
+
     const entries = Object.entries(pitch);
     for (const [key, section] of entries) {
       if (section.image instanceof File || section.image instanceof Blob) {
         const base64Image = await convertToBase64(section.image);
         processedPitch[key] = { ...section, image: base64Image };
       } else {
-        processedPitch[key] = section; 
+        processedPitch[key] = section;
       }
     }
-  
+
     return processedPitch;
   };
-  
 
   const handleFormSubmit = async (event) => {
     console.log("Attempt to Send");
     event.preventDefault();
-
+    console.log(formData);
     const { isValid, newErrors } = validateInputs(formData, errors);
     setErrors(newErrors);
 
     if (isValid) {
       const formDataToSend = new FormData();
-    
-    // Append primitive data to FormData
-    for (const key in formData) {
-      const value = formData[key];
-      if (value instanceof File || value instanceof FileList) {
-        // Skip files here, we'll handle them separately
-        continue;
-      } else if (Array.isArray(value)) {
-        // If it's an array, append each item
-        value.forEach((item) => {
-          formDataToSend.append(key, item);
+
+      // Append primitive data to FormData
+      for (const key in formData) {
+        const value = formData[key];
+        if (key === "pitch") {
+          continue; // Skip pitch, handle it separately
+        }
+        if (value instanceof File || value instanceof FileList) {
+          // Skip files here, we'll handle them separately
+          continue;
+        } else if (Array.isArray(value)) {
+          // If it's an array, append each item
+          value.forEach((item) => {
+            formDataToSend.append(key, item);
+          });
+        } else if (typeof value === "object") {
+          // If it's an object, convert it to JSON and append
+          formDataToSend.append(key, JSON.stringify(value));
+        } else {
+          // For primitive types, append directly
+          formDataToSend.append(key, value);
+        }
+      }
+
+      // Append cover image if it exists
+      if (formData.coverImage) {
+        formDataToSend.append("coverImage", formData.coverImage);
+      }
+
+      // Append describe images if they exist
+      if (formData.describeImages) {
+        for (let i = 0; i < formData.describeImages.length; i++) {
+          formDataToSend.append("describeImages", formData.describeImages[i]);
+        }
+      }
+
+      // Append business documents if they exist
+      if (formData.businessDocuments) {
+        formData.businessDocuments.forEach((doc) => {
+        formDataToSend.append("businessDocuments", doc.file);
+        formDataToSend.append("documentNames", doc.name);
         });
-      } else if (typeof value === "object") {
-        // If it's an object, convert it to JSON and append
-        formDataToSend.append(key, JSON.stringify(value));
-      } else {
-        // For primitive types, append directly
-        formDataToSend.append(key, value);
       }
-    }
 
-    // Append cover image if it exists
-    if (formData.coverImage) {
-      formDataToSend.append("coverImage", formData.coverImage);
-    }
+      try {
+        // Convert pitch to Base64 and append as JSON
+        const processedPitch = await processPitchImages(formData.pitch);
+        formDataToSend.append("pitch", JSON.stringify(processedPitch));
 
-    // Append describe images if they exist
-    if (formData.describeImages) {
-      for (let i = 0; i < formData.describeImages.length; i++) {
-        formDataToSend.append("describeImages", formData.describeImages[i]);
-      }
-    }
-
-    try {
-      const processedPitch = await processPitchImages(formData.pitch);
-      const payload = {
-        ...formData,
-        pitch: processedPitch,
-      };
-      const response = await api.post(
-          BUSINESS_REGISTER_API,
-          payload
-        );
+        // Submit to the backend
+        const response = await api.post(BUSINESS_REGISTER_API, formDataToSend, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         console.log("User registered successfully:", response.data);
         navigate(SIGN_IN_PATH);
-      
-    } 
-    catch {
-      console.log("Error to Register business");
+      } catch (error) {
+        console.error(
+          "Error registering business:",
+          error.response?.data || error
+        );
+      }
     }
   };
-}
 
   const handleOpen = () => {
     setOpen(true);
@@ -803,6 +812,86 @@ export default function BusinessRegistration() {
                         }))
                       }
                     />
+                  </FormControl>
+                  <FormControl sx={{ width: "100%" }}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <FormLabel
+                        htmlFor="businessDocuments"
+                        sx={{ flexGrow: 1 }}
+                      >
+                        Upload Business Documents
+                      </FormLabel>
+                      <Tooltip
+                        title="Upload documents related to your business. Accepted formats: PDF, DOCX. You can upload multiple files."
+                        arrow
+                        placement="top"
+                      >
+                        <HelpOutlineIcon
+                          sx={{ color: "text.secondary" }}
+                          fontSize=""
+                        />
+                      </Tooltip>
+                    </Box>
+                    <input
+                      id="businessDocuments"
+                      name="businessDocuments"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      multiple
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files).map(
+                          (file) => ({
+                            file,
+                            name: file.name.split(".")[0], // Default name derived from the file
+                          })
+                        );
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          businessDocuments: files,
+                        }));
+                      }}
+                    />
+                    <Box>
+                      {formData.businessDocuments &&
+                        formData.businessDocuments.map((doc, index) => (
+                          <Box
+                            key={index}
+                            display="flex"
+                            alignItems="center"
+                            mt={2}
+                            gap={2}
+                            sx={{ flexWrap: "wrap" }}
+                          >
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                flexBasis: "30%",
+                                textAlign: "left",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {doc.file.name}
+                            </Typography>
+                            <TextField
+                              label="Document Name"
+                              value={doc.name}
+                              onChange={(e) => {
+                                const updatedDocuments = [
+                                  ...formData.businessDocuments,
+                                ];
+                                updatedDocuments[index].name = e.target.value;
+                                setFormData((prevData) => ({
+                                  ...prevData,
+                                  businessDocuments: updatedDocuments,
+                                }));
+                              }}
+                              sx={{ flexBasis: "70%" }}
+                            />
+                          </Box>
+                        ))}
+                    </Box>
                   </FormControl>
                 </Box>
 
