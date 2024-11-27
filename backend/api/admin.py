@@ -20,10 +20,15 @@ class BusinessDocumentInline(admin.TabularInline):  # Inline admin for BusinessD
 class InvestorAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'phone_number')
     search_fields = ('first_name', 'last_name', 'email', 'phone_number')
-    list_filter = ('first_name', 'last_name', 'email')
     ordering = ('id',)
     readonly_fields = ('user',)
     #readonly_fields = ('id', 'user', 'first_name', 'last_name', 'email', 'phone_number')
+    
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['title'] = 'Investor Management'
+
+        return super().changelist_view(request, extra_context=extra_context)
     
     def has_add_permission(self, request):
         # Disable the add permission
@@ -43,7 +48,7 @@ class BusinessAdmin(admin.ModelAdmin):
         'revenue',
     )
     search_fields = ('company_name', 'business_name', 'email', 'phone_number', 'status')
-    list_filter = ('company_name', 'business_name', 'status', 'publish_date', 'end_date')
+    list_filter = ('status', 'publish_date', 'end_date')
     ordering = ('status',)
     readonly_fields = ('user','revenue', )
     
@@ -71,6 +76,8 @@ class BusinessAdmin(admin.ModelAdmin):
         # Add total revenue to context
         extra_context = extra_context or {}
         extra_context['total_revenue'] = total_revenue
+        extra_context['title'] = 'Business Management'
+
 
         return super().changelist_view(request, extra_context=extra_context)
 
