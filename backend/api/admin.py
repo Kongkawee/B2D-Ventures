@@ -2,13 +2,19 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.db.models import Sum
-from .models import Investor, Business, Investment, BusinessImage
+from .models import Investor, Business, Investment, BusinessImage, BusinessDocument
 
 class BusinessImageInline(admin.TabularInline):  # Use StackedInline for a stacked layout
     model = BusinessImage
     extra = 1  # Number of empty image forms to display
     fields = ['image']  # Fields to display
     readonly_fields = []  # Add 'image_tag' here if you want to show image previews
+
+class BusinessDocumentInline(admin.TabularInline):  # Inline admin for BusinessDocument
+    model = BusinessDocument
+    extra = 1  # Number of empty document forms to display
+    fields = ['document', 'name']  # Fields to display in the inline admin
+    readonly_fields = []  # Specify any fields you want to make read-only
 
 @admin.register(Investor)
 class InvestorAdmin(admin.ModelAdmin):
@@ -22,6 +28,7 @@ class InvestorAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         # Disable the add permission
         return False
+
 
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
@@ -40,12 +47,12 @@ class BusinessAdmin(admin.ModelAdmin):
     ordering = ('status',)
     readonly_fields = ('user','revenue', )
     
-    def has_add_permission(self, request):
+    #def has_add_permission(self, request):
         # Disable the add permission
-        return False
+    #    return False
     
     # Include the inline for BusinessImage
-    inlines = [BusinessImageInline]
+    inlines = [BusinessImageInline, BusinessDocumentInline]
     
     def revenue(self, obj):
         # Sum the 'amount' for all investments related to this business
@@ -54,6 +61,7 @@ class BusinessAdmin(admin.ModelAdmin):
 
     # Set column name in the admin
     revenue.short_description = "Revenue (3%)"
+    
     
     def changelist_view(self, request, extra_context=None):
         # Calculate total revenue across all businesses
@@ -80,5 +88,7 @@ class BusinessAdmin(admin.ModelAdmin):
     # Register the action
     actions = ['approve_businesses', 'pause_businesses']
     
+    
 admin.site.unregister(User)
 admin.site.unregister(Group)
+
