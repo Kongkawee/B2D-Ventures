@@ -21,9 +21,19 @@ import api from "../../api";
 import { Link, useNavigate } from "react-router-dom";
 import { addDays, addMonths, format } from "date-fns";
 import { validateInputs } from "./formValidation";
-import { BUSINESS_REGISTER_API, SIGN_IN_PATH } from "../../constants";
+import {
+  BUSINESS_REGISTER_API,
+  COUNTRY_CHOICES,
+  SIGN_IN_PATH,
+} from "../../constants";
 import PopUpTerms from "../../components/PopUp/PopUpTerms";
-import { IconButton, Tooltip } from "@mui/material";
+import {
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tooltip,
+} from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -290,6 +300,11 @@ export default function BusinessRegistration() {
     setOpen(false);
   };
 
+  const countryOptions = COUNTRY_CHOICES.map(([code, name]) => ({
+    value: code,
+    label: name,
+  }));
+
   return (
     <TemplateFrame
       toggleCustomTheme={toggleCustomTheme}
@@ -511,7 +526,10 @@ export default function BusinessRegistration() {
                     />
                   </FormControl>
 
-                  <FormControl sx={{ width: "calc(50% - 16px)" }}>
+                  <FormControl
+                    sx={{ width: "calc(50% - 16px)" }}
+                    error={errors.countryLocatedError}
+                  >
                     <Box display="flex" alignItems="center" gap={1}>
                       <FormLabel htmlFor="countryLocated" sx={{ flexGrow: 1 }}>
                         Country Located
@@ -527,18 +545,28 @@ export default function BusinessRegistration() {
                         />
                       </Tooltip>
                     </Box>
-                    <TextField
-                      required
-                      fullWidth
+                    <Select
+                      labelId="country-located-label"
                       id="country-located"
-                      placeholder="Thailand"
                       name="countryLocated"
-                      variant="outlined"
                       value={formData.countryLocated}
                       onChange={handleChange}
-                      error={errors.countryLocatedError}
-                      helperText={errors.countryLocatedErrorMessage}
-                    />
+                      displayEmpty
+                    >
+                      <MenuItem value="" disabled>
+                        Select a country
+                      </MenuItem>
+                      {countryOptions.map((country) => (
+                        <MenuItem key={country.value} value={country.value}>
+                          {country.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {errors.countryLocatedError && (
+                      <FormHelperText>
+                        {errors.countryLocatedErrorMessage}
+                      </FormHelperText>
+                    )}
                   </FormControl>
 
                   <FormControl sx={{ width: "calc(50% - 16px)" }}>

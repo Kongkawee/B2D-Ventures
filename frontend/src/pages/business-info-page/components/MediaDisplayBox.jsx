@@ -6,28 +6,8 @@ import { CardMedia } from "@mui/material";
 
 const defaultImages = [
   {
-    src: "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/684/32684-1725487846-9103ddee4ba95095971afd721de151faa49ce7bb.png",
+    src: "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg",
     alt: "Business Pic 1",
-  },
-  {
-    src: "https://uploads.republic.com/p/offerings/slider_media_items/contents/default_2x/000/032/717/32717-1725500339-913c09bab662aba4b2775879f096a3388b9d4db9.jpg",
-    alt: "Business Pic 2",
-  },
-  {
-    src: "https://uploads.republic.com/p/offerings/slider_media_items/contents/default_2x/000/031/791/31791-1724694627-67c7878404b5a491fb136b8498b0ec19d03dd0f9.png",
-    alt: "Business Pic 3",
-  },
-  {
-    src: "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/229/32229-1724881218-f8b98be82191f5091a4978bf6fb20e86a15c1995.png",
-    alt: "Business Pic 4",
-  },
-  {
-    src: "https://uploads.republic.com/p/offerings/slider_media_items/previews/default_2x/000/032/230/32230-1724881249-cc50d94927a4c7130c82fe313d5dc15306ad71c6.png",
-    alt: "Business Pic 5",
-  },
-  {
-    src: "https://uploads.republic.com/p/offerings/slider_media_items/contents/default_2x/000/032/575/32575-1724956993-a912a11e5ef17a9e6f1bb20fffffe146785535aa.jpg",
-    alt: "Business Pic 6",
   },
 ];
 
