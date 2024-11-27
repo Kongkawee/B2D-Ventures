@@ -9,11 +9,12 @@ import { CardMedia, Divider } from "@mui/material";
 import PitchBox from "./PitchBox";
 import InvestInfoBox from "./InvestInfoBox";
 import DealTermsBox from "./DealTermsBox";
+import DocumentsBox from "./DocumentsBox";
 
 export default function MainGrid({ business }) {
   const defaultImage =
     "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
-
+  console.log(business);
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       <Typography id="business-name" component="h1" variant="h1" sx={{ mb: 0 }}>
@@ -70,6 +71,9 @@ export default function MainGrid({ business }) {
           </Grid>
           <Grid>
             <DealTermsBox business={business} />
+          </Grid>
+          <Grid>
+            <DocumentsBox documents={business.documents}/>
           </Grid>
         </Grid>
       </Grid>

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams, Navigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -11,9 +11,7 @@ import {
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import api from "../../api";
-import { PASSWORD_RESET, PASSWORD_RESET_API } from "../../constants";
-
-
+import { PASSWORD_RESET_API, SIGN_IN_PATH } from "../../constants";
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -90,6 +88,7 @@ export default function ResetPasswordCard() {
 
       if (response.status === 200) {
         alert("Password reset successful. You can now log in.");
+        Navigate(SIGN_IN_PATH);
       }
     } catch (error) {
       console.error("Error resetting password:", error);
