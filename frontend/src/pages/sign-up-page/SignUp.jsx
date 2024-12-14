@@ -67,6 +67,8 @@ export default function SignUp() {
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState("");
   const [nameError, setNameError] =  useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState(false);
@@ -98,6 +100,7 @@ export default function SignUp() {
   const validateInputs = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm_password").value;
     const firstname = document.getElementById("firstname").value;
     const lastname = document.getElementById("lastname").value;
     const phoneNumber = document.getElementById("phonenumber").value;
@@ -120,6 +123,15 @@ export default function SignUp() {
     } else {
       setPasswordError(false);
       setPasswordErrorMessage("");
+    }
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage("Passwords do not match.");
+      isValid = false;
+    } else {
+      setConfirmPasswordError(false);
+      setConfirmPasswordErrorMessage("");
     }
 
     if (!firstname || firstname.length < 1) {
@@ -153,6 +165,7 @@ export default function SignUp() {
   };
 
   const navigate = useNavigate();
+  
   const csrfToken = document.cookie
     .split("; ")
     .find((row) => row.startsWith("csrftoken"))
@@ -314,6 +327,20 @@ export default function SignUp() {
                     helperText={passwordErrorMessage}
                   />
                 </FormControl>
+                <FormControl>
+    <FormLabel htmlFor="confirm_password">Confirm Password</FormLabel>
+    <TextField
+      required
+      fullWidth
+      name="confirm_password"
+      placeholder="•••••••••"
+      type="password"
+      id="confirm_password"
+      variant="outlined"
+      error={confirmPasswordError}
+      helperText={confirmPasswordErrorMessage}
+    />
+  </FormControl>
                 <FormControl>
                   <FormLabel htmlFor="profile_picture">Profile Picture</FormLabel>
                   <input
