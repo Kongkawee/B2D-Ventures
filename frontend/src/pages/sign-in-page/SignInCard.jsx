@@ -217,7 +217,7 @@ export default function SignInCard() {
             name="password"
             placeholder="••••••"
             id="password"
-            type="password"
+            type={type}
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
