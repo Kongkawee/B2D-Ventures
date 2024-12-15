@@ -35,6 +35,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import PopUpPrivacyPolicy from "../../components/PopUp/PopUpPrivacyPolicy";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -82,7 +83,8 @@ export default function BusinessRegistration() {
   const today = new Date();
   const defaultPublishDate = format(addDays(today, 7), "yyyy-MM-dd");
   const defaultEndDate = format(addMonths(today, 1), "yyyy-MM-dd");
-  const [open, setOpen] = useState(false);
+  const [openTerms, setOpenTerms] = useState(false);
+  const [openPrivacy, setOpenPrivacy] = useState(false);
 
   const [formData, setFormData] = useState({
     companyName: "",
@@ -292,12 +294,20 @@ export default function BusinessRegistration() {
     }
   };
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseTerms = () => {
+    setOpenTerms(false);
+  };
+
+  const handleOpenPrivacy = () => {
+    setOpenPrivacy(true);
+  };
+
+  const handleClosePrivacy = () => {
+    setOpenPrivacy(false);
   };
 
   const countryOptions = COUNTRY_CHOICES.map(([code, name]) => ({
@@ -1036,17 +1046,26 @@ export default function BusinessRegistration() {
                       <Link
                         component="button"
                         variant="body2"
-                        onClick={handleOpen}
+                        onClick={handleOpenTerms}
                         sx={{ textDecoration: "underline", cursor: "pointer" }}
                       >
                         Terms of Service
                       </Link>
-                      .
+                      {" "}and{" "}
+                      <Link
+                        component="button"
+                        variant="body2"
+                        onClick={handleOpenPrivacy}
+                        sx={{ textDecoration: "underline", cursor: "pointer" }}
+                      >
+                        Privacy Policies
+                      </Link>
                     </Typography>
                   }
                 />
 
-                <PopUpTerms open={open} handleClose={handleClose} />
+                <PopUpTerms open={openTerms} handleClose={handleCloseTerms} />
+                <PopUpPrivacyPolicy open={openPrivacy} handleClose={handleClosePrivacy} />
 
                 <Box
                   sx={{
