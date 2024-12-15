@@ -18,7 +18,14 @@ import TemplateFrame from "./TemplateFrame";
 import LogoLight from "../../images/LogoLight.png";
 import LogoDark from "../../images/LogoDark.png";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, INVESTOR_REGISTER_API, REFRESH_TOKEN, SIGN_IN_PATH } from "../../constants";
+import {
+  ACCESS_TOKEN,
+  INVESTOR_REGISTER_API,
+  REFRESH_TOKEN,
+  SIGN_IN_PATH,
+} from "../../constants";
+import PopUpTerms from "../../components/PopUp/PopUpTerms";
+import PopUpPrivacyPolicy from "../../components/PopUp/PopUpPrivacyPolicy";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -40,7 +47,6 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
-  height: "100%",
   padding: 4,
   backgroundImage:
     "radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
@@ -68,12 +74,15 @@ export default function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState("");
-  const [nameError, setNameError] =  useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
+    useState("");
+  const [nameError, setNameError] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState(false);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState(null);
+  const [openTerms, setOpenTerms] = useState(false);
+  const [openPrivacy, setOpenPrivacy] = useState(false);
 
   useEffect(() => {
     const savedMode = localStorage.getItem("themeMode");
@@ -95,6 +104,22 @@ export default function SignUp() {
 
   const toggleCustomTheme = () => {
     setShowCustomTheme((prev) => !prev);
+  };
+
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
+  };
+
+  const handleCloseTerms = () => {
+    setOpenTerms(false);
+  };
+
+  const handleOpenPrivacy = () => {
+    setOpenPrivacy(true);
+  };
+
+  const handleClosePrivacy = () => {
+    setOpenPrivacy(false);
   };
 
   const validateInputs = () => {
@@ -165,7 +190,7 @@ export default function SignUp() {
   };
 
   const navigate = useNavigate();
-  
+
   const csrfToken = document.cookie
     .split("; ")
     .find((row) => row.startsWith("csrftoken"))
@@ -181,10 +206,13 @@ export default function SignUp() {
     event.preventDefault();
     if (validateInputs()) {
       const formData = new FormData();
-      formData.append("username", document.getElementById("email").value); 
+      formData.append("username", document.getElementById("email").value);
       formData.append("firstName", document.getElementById("firstname").value);
       formData.append("lastName", document.getElementById("lastname").value);
-      formData.append("phoneNumber", document.getElementById("phonenumber").value);
+      formData.append(
+        "phoneNumber",
+        document.getElementById("phonenumber").value
+      );
       formData.append("email", document.getElementById("email").value);
       formData.append("password", document.getElementById("password").value);
       if (profilePicture) {
@@ -226,11 +254,13 @@ export default function SignUp() {
           <Stack
             sx={{
               justifyContent: "center",
-              height: "100dvh",
               p: 2,
             }}
           >
-            <Card variant="outlined">
+            <Card
+              variant="outlined"
+              sx={{ maxWidth: "none" }}
+            >
               <img
                 src={mode === "light" ? LogoLight : LogoDark}
                 style={logoStyle}
@@ -328,21 +358,25 @@ export default function SignUp() {
                   />
                 </FormControl>
                 <FormControl>
-    <FormLabel htmlFor="confirm_password">Confirm Password</FormLabel>
-    <TextField
-      required
-      fullWidth
-      name="confirm_password"
-      placeholder="•••••••••"
-      type="password"
-      id="confirm_password"
-      variant="outlined"
-      error={confirmPasswordError}
-      helperText={confirmPasswordErrorMessage}
-    />
-  </FormControl>
+                  <FormLabel htmlFor="confirm_password">
+                    Confirm Password
+                  </FormLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="confirm_password"
+                    placeholder="•••••••••"
+                    type="password"
+                    id="confirm_password"
+                    variant="outlined"
+                    error={confirmPasswordError}
+                    helperText={confirmPasswordErrorMessage}
+                  />
+                </FormControl>
                 <FormControl>
-                  <FormLabel htmlFor="profile_picture">Profile Picture</FormLabel>
+                  <FormLabel htmlFor="profile_picture">
+                    Profile Picture
+                  </FormLabel>
                   <input
                     type="file"
                     id="profile_picture"
@@ -351,6 +385,46 @@ export default function SignUp() {
                     onChange={handleProfilePictureChange}
                   />
                 </FormControl>
+
+                <FormControlLabel
+                  sx={{ width: "100%" }}
+                  control={
+                    <Checkbox
+                      id="terms"
+                      name="terms"
+                      color="primary"
+                      required
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">
+                      I have read and agreed to the{" "}
+                      <Link
+                        component="button"
+                        variant="body2"
+                        onClick={handleOpenTerms}
+                        sx={{ textDecoration: "underline", cursor: "pointer" }}
+                      >
+                        Terms of Service
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        component="button"
+                        variant="body2"
+                        onClick={handleOpenPrivacy}
+                        sx={{ textDecoration: "underline", cursor: "pointer" }}
+                      >
+                        Privacy Policies
+                      </Link>
+                    </Typography>
+                  }
+                />
+
+                <PopUpTerms open={openTerms} handleClose={handleCloseTerms} />
+                <PopUpPrivacyPolicy
+                  open={openPrivacy}
+                  handleClose={handleClosePrivacy}
+                />
                 <Button
                   id="sign-up-button"
                   type="submit"
@@ -362,7 +436,7 @@ export default function SignUp() {
                 </Button>
                 <Typography sx={{ textAlign: "center" }}>
                   Already have an account?{" "}
-                  <Link href={ SIGN_IN_PATH } variant="body2">
+                  <Link href={SIGN_IN_PATH} variant="body2">
                     Sign in
                   </Link>
                 </Typography>
