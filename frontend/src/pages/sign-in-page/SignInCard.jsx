@@ -63,8 +63,8 @@ export default function SignInCard() {
   const [password, setPassword] = useState("");
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
-
   const handleClickOpen = () => {
+
     setOpen(true);
   };
 
@@ -218,9 +218,8 @@ export default function SignInCard() {
             placeholder="••••••"
             id="password"
             type={type}
-            autoComplete="current-password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}            autoComplete="current-password"
             required
             fullWidth
             variant="outlined"

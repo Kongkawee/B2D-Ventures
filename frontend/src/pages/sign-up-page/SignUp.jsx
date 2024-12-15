@@ -25,7 +25,6 @@ import {
   REFRESH_TOKEN,
   SIGN_IN_PATH,
 } from "../../constants";
-import PopUpPrivacyPolicy from "../../components/PopUp/PopUpPrivacyPolicy";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -47,6 +46,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
+  height: "100%",
   padding: 4,
   backgroundImage:
     "radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
@@ -112,22 +112,6 @@ export default function SignUp() {
     setShowCustomTheme((prev) => !prev);
   };
 
-  const handleOpenTerms = () => {
-    setOpenTerms(true);
-  };
-
-  const handleCloseTerms = () => {
-    setOpenTerms(false);
-  };
-
-  const handleOpenPrivacy = () => {
-    setOpenPrivacy(true);
-  };
-
-  const handleClosePrivacy = () => {
-    setOpenPrivacy(false);
-  };
-
   const validateInputs = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -147,9 +131,9 @@ export default function SignUp() {
       setEmailErrorMessage("");
     }
 
-    if (!password || password.length < 6) {
+    if (!password || password.length < 8) {
       setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
+      setPasswordErrorMessage("Password must be at least 8 characters long.");
       isValid = false;
     } else {
       setPasswordError(false);
@@ -265,13 +249,11 @@ export default function SignUp() {
           <Stack
             sx={{
               justifyContent: "center",
+              height: "100dvh",
               p: 2,
             }}
           >
-            <Card
-              variant="outlined"
-              sx={{ maxWidth: "none" }}
-            >
+            <Card variant="outlined">
               <img
                 src={mode === "light" ? LogoLight : LogoDark}
                 style={logoStyle}
@@ -396,46 +378,18 @@ export default function SignUp() {
                     onChange={handleProfilePictureChange}
                   />
                 </FormControl>
-
                 <FormControlLabel
-                  sx={{ width: "100%" }}
                   control={
-                    <Checkbox
-                      id="terms"
-                      name="terms"
-                      color="primary"
-                      required
+                    <Checkbox 
+                      onChange={(event) => setDataSharingConsent(event.target.checked)} 
                     />
                   }
-                  label={
-                    <Typography variant="body2">
-                      I have read and agreed to the{" "}
-                      <Link
-                        component="button"
-                        variant="body2"
-                        onClick={handleOpenTerms}
-                        sx={{ textDecoration: "underline", cursor: "pointer" }}
-                      >
-                        Terms of Service
-                      </Link>{" "}
-                      and{" "}
-                      <Link
-                        component="button"
-                        variant="body2"
-                        onClick={handleOpenPrivacy}
-                        sx={{ textDecoration: "underline", cursor: "pointer" }}
-                      >
-                        Privacy Policies
-                      </Link>
-                    </Typography>
-                  }
+                  label="I have read and agree to the Privacy Notice"
                 />
-
-                <PopUpTerms open={openTerms} handleClose={handleCloseTerms} />
-                <PopUpPrivacyPolicy
-                  open={openPrivacy}
-                  handleClose={handleClosePrivacy}
-                />
+                {dataSharingConsentError && (
+                  <Typography color="error">You must agree to the Privacy Notice</Typography>
+                )}
+                <PopUpTerms open={open} handleClose={handleClose} />
                 <Button
                   id="sign-up-button"
                   type="submit"
