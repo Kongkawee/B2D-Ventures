@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import PopUpTerms from "../../components/PopUp/PopUpTerms";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import Link from "@mui/material/Link";
@@ -18,7 +19,12 @@ import TemplateFrame from "./TemplateFrame";
 import LogoLight from "../../images/LogoLight.png";
 import LogoDark from "../../images/LogoDark.png";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, INVESTOR_REGISTER_API, REFRESH_TOKEN, SIGN_IN_PATH } from "../../constants";
+import {
+  ACCESS_TOKEN,
+  INVESTOR_REGISTER_API,
+  REFRESH_TOKEN,
+  SIGN_IN_PATH,
+} from "../../constants";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -68,12 +74,21 @@ export default function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState("");
-  const [nameError, setNameError] =  useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
+    useState("");
+  const [nameError, setNameError] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState(false);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState(null);
+  const [dataSharingConsent, setDataSharingConsent] = useState(false);
+  const [dataSharingConsentError, setDataSharingConsentError] = useState(false);
+  const [open, setOpen] = useState(false);
+
+
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const savedMode = localStorage.getItem("themeMode");
@@ -161,16 +176,18 @@ export default function SignUp() {
       setPhoneErrorMessage("");
     }
 
+    if (!dataSharingConsent) {
+      setDataSharingConsentError(true);
+      isValid = false;
+    } else {
+      setDataSharingConsentError(false);
+    }
+
     return isValid;
   };
 
-  const navigate = useNavigate();
-  
-  const csrfToken = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("csrftoken"))
-    ?.split("=")[1];
 
+  const navigate = useNavigate();
   const handleProfilePictureChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setProfilePicture(e.target.files[0]);
@@ -181,15 +198,21 @@ export default function SignUp() {
     event.preventDefault();
     if (validateInputs()) {
       const formData = new FormData();
-      formData.append("username", document.getElementById("email").value); 
+      formData.append("username", document.getElementById("email").value);
       formData.append("firstName", document.getElementById("firstname").value);
       formData.append("lastName", document.getElementById("lastname").value);
-      formData.append("phoneNumber", document.getElementById("phonenumber").value);
+      formData.append("data_sharing_consent", dataSharingConsent);
+
+      formData.append(
+        "phoneNumber",
+        document.getElementById("phonenumber").value
+      );
       formData.append("email", document.getElementById("email").value);
       formData.append("password", document.getElementById("password").value);
       if (profilePicture) {
         formData.append("profile_picture", profilePicture);
       }
+      
 
       try {
         const response = await api.post(INVESTOR_REGISTER_API, formData);
@@ -328,21 +351,25 @@ export default function SignUp() {
                   />
                 </FormControl>
                 <FormControl>
-    <FormLabel htmlFor="confirm_password">Confirm Password</FormLabel>
-    <TextField
-      required
-      fullWidth
-      name="confirm_password"
-      placeholder="•••••••••"
-      type="password"
-      id="confirm_password"
-      variant="outlined"
-      error={confirmPasswordError}
-      helperText={confirmPasswordErrorMessage}
-    />
-  </FormControl>
+                  <FormLabel htmlFor="confirm_password">
+                    Confirm Password
+                  </FormLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="confirm_password"
+                    placeholder="•••••••••"
+                    type="password"
+                    id="confirm_password"
+                    variant="outlined"
+                    error={confirmPasswordError}
+                    helperText={confirmPasswordErrorMessage}
+                  />
+                </FormControl>
                 <FormControl>
-                  <FormLabel htmlFor="profile_picture">Profile Picture</FormLabel>
+                  <FormLabel htmlFor="profile_picture">
+                    Profile Picture
+                  </FormLabel>
                   <input
                     type="file"
                     id="profile_picture"
@@ -351,6 +378,18 @@ export default function SignUp() {
                     onChange={handleProfilePictureChange}
                   />
                 </FormControl>
+                <FormControlLabel
+                  control={
+                    <Checkbox 
+                      onChange={(event) => setDataSharingConsent(event.target.checked)} 
+                    />
+                  }
+                  label="I have read and agree to the Terms of Service"
+                />
+                {dataSharingConsentError && (
+                  <Typography color="error">You must agree to the Terms of Service</Typography>
+                )}
+                <PopUpTerms open={open} handleClose={handleClose} />
                 <Button
                   id="sign-up-button"
                   type="submit"
@@ -362,7 +401,7 @@ export default function SignUp() {
                 </Button>
                 <Typography sx={{ textAlign: "center" }}>
                   Already have an account?{" "}
-                  <Link href={ SIGN_IN_PATH } variant="body2">
+                  <Link href={SIGN_IN_PATH} variant="body2">
                     Sign in
                   </Link>
                 </Typography>

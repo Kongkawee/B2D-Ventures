@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.db.models import Sum
 from .models import Investor, Business, Investment, BusinessImage, BusinessDocument
+from django.contrib.admin.models import LogEntry
 
 class BusinessImageInline(admin.TabularInline):  # Use StackedInline for a stacked layout
     model = BusinessImage
@@ -20,7 +21,7 @@ class BusinessDocumentInline(admin.TabularInline):  # Inline admin for BusinessD
 class InvestorAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'phone_number')
     search_fields = ('first_name', 'last_name', 'email', 'phone_number')
-    ordering = ('id',)
+    ordering = ('first_name',)
     readonly_fields = ('user',)
     #readonly_fields = ('id', 'user', 'first_name', 'last_name', 'email', 'phone_number')
     
@@ -95,6 +96,23 @@ class BusinessAdmin(admin.ModelAdmin):
     # Register the action
     actions = ['approve_businesses', 'pause_businesses']
     
+    
+@admin.register(LogEntry)
+class LogEntryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'action_time', 'content_type', 'action_flag', 'change_message')
+    search_fields = ['user__username', 'change_message']
+    
+logs = LogEntry.objects.all()
+
+# Filter logs (e.g., only additions)
+addition_logs = LogEntry.objects.filter(action_flag=1)  # 1 = Addition, 2 = Change, 3 = Deletion
+
+# Display details of a log entry
+for log in logs:
+    print(f"Action: {log.get_action_flag_display()}")
+    print(f"User: {log.user.username}")
+    print(f"Model: {log.content_type}")
+    print(f"Message: {log.change_message}")
     
 admin.site.unregister(User)
 admin.site.unregister(Group)

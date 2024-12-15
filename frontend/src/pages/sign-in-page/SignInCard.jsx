@@ -200,6 +200,7 @@ export default function SignInCard() {
             name="password"
             placeholder="••••••"
             id="password"
+            type="password"
             autoComplete="current-password"
             required
             fullWidth

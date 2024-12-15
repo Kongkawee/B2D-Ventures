@@ -261,6 +261,7 @@ STATUS_CHOICES = [
 
 class Business(models.Model):
     """Business Model represents the business, containing their company and business details"""
+    uid=models.UUIDField(default=uuid.uuid4, editable=False, max_length=36)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     company_name = models.CharField(max_length=100)
     business_name = models.CharField(max_length=80)
@@ -288,15 +289,16 @@ class Business(models.Model):
 
 class BusinessImage(models.Model):
     """Model for storing multiple images for each Business"""
-
+    
     def upload_to(self, filename):
         # Extract the file extension
         extension = os.path.splitext(filename)[1]
         # Generate a unique filename using UUID
-        unique_filename = f"{uuid.uuid4()}{extension}"
+        unique_filename = f"{uuid.uuid4}{extension}"
         # Construct the path dynamically
         return f'business/{self.business.id}/describe_images/{unique_filename}'
-
+    
+    uid=models.UUIDField(default=uuid.uuid4, editable=False, max_length=36)
     business = models.ForeignKey(Business, related_name='describe_images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to=upload_to)
 
@@ -305,15 +307,16 @@ class BusinessImage(models.Model):
 
 class BusinessDocument(models.Model):
     """Model for storing multiple documents for each Business"""
-
+    
     def upload_to(self, filename):
         # Extract the file extension
         extension = os.path.splitext(filename)[1]
         # Generate a unique filename using UUID
-        unique_filename = f"{uuid.uuid4()}{extension}"
+        unique_filename = f"{uuid.uuid4}{extension}"
         # Construct the path dynamically
         return f'business/{self.business.id}/documents/{unique_filename}'
-
+    
+    uid=models.UUIDField(default=uuid.uuid4, editable=False, max_length=36)
     business = models.ForeignKey(Business, related_name='documents', on_delete=models.CASCADE)
     document = models.FileField(upload_to=upload_to, null=False, blank=False)
     name = models.CharField(max_length=255, blank=True, null=True)

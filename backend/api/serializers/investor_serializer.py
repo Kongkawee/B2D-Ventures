@@ -6,5 +6,5 @@ class InvestorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Investor
-        fields = ['id', 'user', 'first_name', 'last_name', 'email', 'phone_number', 'profile_picture']
+        fields = ['id', 'user', 'first_name', 'last_name', 'email', 'phone_number', 'profile_picture', 'uid']
         read_only_fields = ['id', 'user']

@@ -11,11 +11,11 @@ import {
 export default function PopUpPrivacyPolicy({ open, handleClose }) {
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Privacy Policy</DialogTitle>
+      <DialogTitle>Privacy Notice</DialogTitle>
       <DialogContent>
         <Typography variant="body2" component="p" gutterBottom>
           At B2D Ventures, we are committed to protecting your privacy. This
-          Privacy Policy outlines the types of information we collect, how we
+          Privacy Notice outlines the types of information we collect, how we
           use and safeguard that information, and your rights regarding your
           personal data.
         </Typography>
@@ -119,10 +119,10 @@ export default function PopUpPrivacyPolicy({ open, handleClose }) {
         </ul>
 
         <Typography variant="h6" component="h6" gutterBottom>
-          6. Changes to this Privacy Policy
+          6. Changes to this Privacy Notice
         </Typography>
         <Typography variant="body2" component="p" gutterBottom>
-          We may update this Privacy Policy from time to time to reflect changes
+          We may update this Privacy Notice from time to time to reflect changes
           in our practices or legal obligations. Any updates will be posted on
           this page, and we encourage you to review it periodically.
         </Typography>
@@ -131,7 +131,7 @@ export default function PopUpPrivacyPolicy({ open, handleClose }) {
           7. Contact Us
         </Typography>
         <Typography variant="body2" component="p" gutterBottom>
-          If you have any questions or concerns about this Privacy Policy,
+          If you have any questions or concerns about this Privacy Notice,
           please contact us at b2dventures@gmail.com
         </Typography>
       </DialogContent>

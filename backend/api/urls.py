@@ -26,7 +26,7 @@ urlpatterns = [
     path('investment/investor/<int:pk>/', InvestmentByInvestorView.as_view(), name='investment_by_investor'),
     path('investment/business/<int:business_id>/', InvestmentByBusinessView.as_view(), name='investment-by-business'),
     
-    path('password/request/', RequestPasswordReset.as_view(), name='reqeust-password-reset'),
+    path('password/request/', RequestPasswordReset.as_view(), name='request-password-reset'),
     path('password/reset/<str:token>/', ResetPassword.as_view(), name='reset-password'),
     
 ]
