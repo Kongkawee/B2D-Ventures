@@ -25,7 +25,6 @@ import {
   REFRESH_TOKEN,
   SIGN_IN_PATH,
 } from "../../constants";
-import PopUpTerms from "../../components/PopUp/PopUpTerms";
 import PopUpPrivacyPolicy from "../../components/PopUp/PopUpPrivacyPolicy";
 
 const Card = styled(MuiCard)(({ theme }) => ({
