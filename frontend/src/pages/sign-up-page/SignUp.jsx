@@ -213,7 +213,6 @@ export default function SignUp() {
       formData.append("username", document.getElementById("email").value);
       formData.append("firstName", document.getElementById("firstname").value);
       formData.append("lastName", document.getElementById("lastname").value);
-      formData.append("data_sharing_consent", dataSharingConsent);
 
       formData.append(
         "phoneNumber",
@@ -392,9 +391,7 @@ export default function SignUp() {
                   sx={{ width: "100%" }}
                   control={
                     <Checkbox
-                      id="terms"
-                      name="terms"
-                      color="primary"
+                      checked={dataSharingConsent}
                       onChange={(event) =>
                         setDataSharingConsent(event.target.checked)
                       }

@@ -19,7 +19,6 @@ def register_investor(request):
     last_name = request.data.get('lastName')
     phone_number = request.data.get('phoneNumber')
     profile_picture = request.FILES.get('profile_picture')
-    data_sharing_consent = request.FILES.get('data_share_consent')
 
     if User.objects.filter(username=username).exists():
         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
@@ -33,7 +32,6 @@ def register_investor(request):
         email=email,
         phone_number=phone_number,
         profile_picture=profile_picture,
-        data_sharing_consent=data_sharing_consent
     )
     
     user.save()

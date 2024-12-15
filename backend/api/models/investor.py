@@ -11,7 +11,7 @@ class Investor(models.Model):
     email = models.EmailField(blank=False, null=False, unique=True)
     phone_number = models.CharField(max_length=10, blank=False, null=False)
     profile_picture = models.ImageField(upload_to='investor/', null=True, blank=True)  # Image field for profile picture
-    data_sharing_consent = models.BooleanField(blank=False, default=False)
+    data_sharing_consent = models.BooleanField(blank=False, default=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
