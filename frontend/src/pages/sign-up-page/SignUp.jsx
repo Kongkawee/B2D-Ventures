@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import PopUpTerms from "../../components/PopUp/PopUpTerms";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import Link from "@mui/material/Link";
@@ -25,6 +24,8 @@ import {
   REFRESH_TOKEN,
   SIGN_IN_PATH,
 } from "../../constants";
+import PopUpTerms from "../../components/PopUp/PopUpTerms";
+import PopUpPrivacyPolicy from "../../components/PopUp/PopUpPrivacyPolicy";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -46,7 +47,6 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
-  height: "100%",
   padding: 4,
   backgroundImage:
     "radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
@@ -83,12 +83,25 @@ export default function SignUp() {
   const [profilePicture, setProfilePicture] = useState(null);
   const [dataSharingConsent, setDataSharingConsent] = useState(false);
   const [dataSharingConsentError, setDataSharingConsentError] = useState(false);
-  const [open, setOpen] = useState(false);
 
+  const [openTerms, setOpenTerms] = useState(false);
+  const [openPrivacy, setOpenPrivacy] = useState(false);
 
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
+  };
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleCloseTerms = () => {
+    setOpenTerms(false);
+  };
+
+  const handleOpenPrivacy = () => {
+    setOpenPrivacy(true);
+  };
+
+  const handleClosePrivacy = () => {
+    setOpenPrivacy(false);
+  };
 
   useEffect(() => {
     const savedMode = localStorage.getItem("themeMode");
@@ -186,7 +199,6 @@ export default function SignUp() {
     return isValid;
   };
 
-
   const navigate = useNavigate();
   const handleProfilePictureChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -212,7 +224,6 @@ export default function SignUp() {
       if (profilePicture) {
         formData.append("profile_picture", profilePicture);
       }
-      
 
       try {
         const response = await api.post(INVESTOR_REGISTER_API, formData);
@@ -249,11 +260,10 @@ export default function SignUp() {
           <Stack
             sx={{
               justifyContent: "center",
-              height: "100dvh",
               p: 2,
             }}
           >
-            <Card variant="outlined">
+            <Card variant="outlined" sx={{ maxWidth: "none" }}>
               <img
                 src={mode === "light" ? LogoLight : LogoDark}
                 style={logoStyle}
@@ -379,17 +389,50 @@ export default function SignUp() {
                   />
                 </FormControl>
                 <FormControlLabel
+                  sx={{ width: "100%" }}
                   control={
-                    <Checkbox 
-                      onChange={(event) => setDataSharingConsent(event.target.checked)} 
+                    <Checkbox
+                      id="terms"
+                      name="terms"
+                      color="primary"
+                      onChange={(event) =>
+                        setDataSharingConsent(event.target.checked)
+                      }
                     />
                   }
-                  label="I have read and agree to the Privacy Notice"
+                  label={
+                    <Typography variant="body2">
+                      I have read and agreed to the{" "}
+                      <Link
+                        variant="body2"
+                        onClick={handleOpenTerms}
+                        sx={{ textDecoration: "underline", cursor: "pointer" }}
+                      >
+                        Terms of Service
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        variant="body2"
+                        onClick={handleOpenPrivacy}
+                        sx={{ textDecoration: "underline", cursor: "pointer" }}
+                      >
+                        Privacy Notice
+                      </Link>
+                    </Typography>
+                  }
                 />
                 {dataSharingConsentError && (
-                  <Typography color="error">You must agree to the Privacy Notice</Typography>
+                  <Typography color="error">
+                    You must agree to the Privacy Notice
+                  </Typography>
                 )}
-                <PopUpTerms open={open} handleClose={handleClose} />
+
+                <PopUpTerms open={openTerms} handleClose={handleCloseTerms} />
+                <PopUpPrivacyPolicy
+                  open={openPrivacy}
+                  handleClose={handleClosePrivacy}
+                />
+
                 <Button
                   id="sign-up-button"
                   type="submit"
