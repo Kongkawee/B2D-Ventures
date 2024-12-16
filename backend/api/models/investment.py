@@ -2,10 +2,13 @@ from django.db import models
 from .business import Business
 from .investor import Investor
 from django.utils import timezone
+import uuid
+
 
 
 class Investment(models.Model):
     """Investment Model represents the investment, containing the information of the investor and business."""
+    uid=models.UUIDField(default=uuid.uuid4, editable=False, max_length=36)
     investor = models.ForeignKey(Investor, on_delete=models.CASCADE)
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=20, decimal_places=2)

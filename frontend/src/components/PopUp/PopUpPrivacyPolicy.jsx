@@ -11,11 +11,11 @@ import {
 export default function PopUpPrivacyPolicy({ open, handleClose }) {
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Privacy Policy</DialogTitle>
+      <DialogTitle>Privacy Notice</DialogTitle>
       <DialogContent>
         <Typography variant="body2" component="p" gutterBottom>
           At B2D Ventures, we are committed to protecting your privacy. This
-          Privacy Policy outlines the types of information we collect, how we
+          Privacy Notice outlines the types of information we collect, how we
           use and safeguard that information, and your rights regarding your
           personal data.
         </Typography>
@@ -119,33 +119,49 @@ export default function PopUpPrivacyPolicy({ open, handleClose }) {
         </ul>
 
         <Typography variant="h6" component="h6" gutterBottom>
-          6. Changes to this Privacy Policy
+          6. Data Retention and Destruction
         </Typography>
         <Typography variant="body2" component="p" gutterBottom>
-          We may update this Privacy Policy from time to time to reflect changes
-          in our practices or legal obligations. Any updates will be posted on
-          this page, and we encourage you to review it periodically.
+          We will retain your personal information only for as long as is necessary for the purposes set out in this Privacy Notice. When we no longer need your personal information, we will securely delete or destroy it.
         </Typography>
 
         <Typography variant="h6" component="h6" gutterBottom>
-          7. Contact Us
+          7. Compliance and Enforcement
         </Typography>
         <Typography variant="body2" component="p" gutterBottom>
-          If you have any questions or concerns about this Privacy Policy,
-          please contact us at b2dventures@gmail.com
+          Failure to comply with this Privacy Notice may result in disciplinary action or legal consequences as per applicable laws.
         </Typography>
+
+        <Typography variant="h6" component="h6" gutterBottom>
+          8. Changes to this Privacy Notice
+        </Typography>
+        <Typography variant="body2" component="p" gutterBottom>
+          We may update this Privacy Notice from time to time to reflect changes in our practices or legal obligations. Any updates will be posted on this page, and we encourage you to review it periodically.
+        </Typography>
+
+        <Typography variant="h6" component="h6" gutterBottom>
+          9. Contact Us
+        </Typography>
+        <Typography variant="body2" component="p" gutterBottom> 
+           If you have any questions or concerns about this Privacy Notice,
+           please contact our Data Protection Officer (DPO) at b2dventures@gmail.com.
+         </Typography>
+
+         {/* Additional Information */}
+         <Typography variant='h6' component='h6' gutterBottom> 
+           10. Effective Date 
+         </Typography> 
+         <Typography variant='body2' component='p' gutterBottom> 
+           This Privacy Notice is effective as of 1 Jan 2024.
+         </Typography> 
       </DialogContent>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          p: 2,
-        }}
-      >
+
+      {/* Close Button */}
+      <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
         <Button onClick={handleClose} variant="contained">
           Close
-        </Button>
-      </Box>
-    </Dialog>
-  );
+        </Button> 
+      </Box> 
+    </Dialog> 
+  ); 
 }

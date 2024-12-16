@@ -12,6 +12,7 @@ import {
   Link,
   ToggleButtonGroup,
   ToggleButton,
+  InputAdornment,
 } from "@mui/material";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
@@ -29,6 +30,9 @@ import {
   SIGN_IN_API,
   INVESTOR_SIGN_UP_PATH,
 } from "../../constants";
+import { Icon } from "react-icons-kit";
+import { eyeOff } from "react-icons-kit/feather/eyeOff";
+import { eye } from "react-icons-kit/feather/eye";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -56,13 +60,26 @@ export default function SignInCard() {
   const [loginType, setLoginType] = useState("investor");
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
+  const [password, setPassword] = useState("");
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(eyeOff);
   const handleClickOpen = () => {
+
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleToggle = () => {
+    if (type === "password") {
+      setIcon(eye);
+      setType("text");
+    } else {
+      setIcon(eyeOff);
+      setType("password");
+    }
   };
 
   const handleLoginTypeChange = (event, newLoginType) => {
@@ -200,11 +217,22 @@ export default function SignInCard() {
             name="password"
             placeholder="••••••"
             id="password"
-            autoComplete="current-password"
+            type={type}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}            autoComplete="current-password"
             required
             fullWidth
             variant="outlined"
             color={passwordError ? "error" : "primary"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleToggle} edge="end">
+                    <Icon icon={icon} size={25} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </FormControl>
         {/* <FormControlLabel
